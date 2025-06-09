@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ficha Técnica de Preparação Alimentar</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="container">
+    <header class="header">
+        <h1>Ficha Técnica</h1>
+    </header>
+
+    <form>
+        <!-- Cabeçalho da Ficha Técnica -->
+        <section class="section">
+            <div class="section-content">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nome-preparacao">Nome da preparação:</label>
+                        <input type="text" id="nome-preparacao" name="nome-preparacao">
+                    </div>
+                    <div class="form-group medium">
+                        <label for="categoria">Categoria:</label>
+                        <select id="categoria" name="categoria">
+                            <option value="" disabled selected>Selecione uma categoria</option>
+                            <option value="entrada">Entrada</option>
+                            <option value="prato-principal">Prato Principal</option>
+                            <option value="guarnicao">Guarnição</option>
+                            <option value="salada">Salada</option>
+                            <option value="sobremesa">Sobremesa</option>
+                            <option value="bebida">Bebida</option>
+                        </select>
+                    </div>
+                    <div class="form-group small">
+                        <label for="numero">Nº:</label>
+                        <input type="number" id="numero" name="numero">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção de Ingredientes -->
+        <section class="section">
+            <h2 class="section-title">🥬 Ingredientes</h2>
+            <div class="section-content">
+                <div class="table-container">
+                    <table id="ingredientes-table">
+                        <thead>
+                        <tr>
+                            <th>Ingredientes</th>
+                            <th>Medida caseira</th>
+                            <th>PB (g)</th>
+                            <th>PL (g)</th>
+                            <th>FC</th>
+                            <th>Custo (forma de compra)</th>
+                            <th>Custo (quantidade utilizada)</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td><input type="text" placeholder="Ingrediente"></td>
+                            <td><input type="text" placeholder="Medida"></td>
+                            <td><input type="number" step="0.01" placeholder="0.00"></td>
+                            <td><input type="number" step="0.01" placeholder="0.00"></td>
+                            <td><input type="number" step="0.01" placeholder="0.00"></td>
+                            <td><input type="number" step="0.01" placeholder="R$ 0,00"></td>
+                            <td><input type="number" step="0.01" placeholder="R$ 0,00"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <button type="button" class="btn btn-icon" onclick="adicionarIngrediente()">
+                    Adicionar
+                </button>
+
+                <div class="water-calc">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="agua-fcc">Quantidade de água (Cálculo de FCC):</label>
+                            <select id="agua-fcc" name="agua-fcc">
+                                <option value="opcao1">Opção 1</option>
+                                <option value="opcao2">Opção 2</option>
+                                <option value="opcao3">Opção 3</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Modo de Preparo e Equipamentos -->
+        <section class="section">
+            <h2 class="section-title">📝 Modo de preparo e Equipamentos</h2>
+            <div class="section-content">
+                <div class="two-column">
+                    <div class="form-group">
+                        <label for="modo-preparo">Modo de preparo:</label>
+                        <textarea id="modo-preparo" name="modo-preparo" placeholder="Descreva o modo de preparo..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="equipamentos">Equipamentos e utensílios utilizados:</label>
+                        <textarea id="equipamentos" name="equipamentos" placeholder="Liste os equipamentos e utensílios..."></textarea>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Informações Complementares -->
+        <section class="section">
+            <h2 class="section-title">📊 Informações Complementares</h2>
+            <div class="section-content">
+                <div class="grid-4">
+                    <div class="form-group">
+                        <label for="custo-total">Custo total:</label>
+                        <input type="number" step="0.01" id="custo-total" name="custo-total" placeholder="R$ 0,00">
+                    </div>
+                    <div class="form-group">
+                        <label for="custo-per-capita">Custo per capita:</label>
+                        <input type="number" step="0.01" id="custo-per-capita" name="custo-per-capita" placeholder="R$ 0,00">
+                    </div>
+                    <div class="form-group">
+                        <label for="tempo-preparo">Tempo de preparo:</label>
+                        <input type="text" id="tempo-preparo" name="tempo-preparo" placeholder="00:00">
+                    </div>
+                    <div class="form-group">
+                        <label for="medida-caseira">Medida caseira:</label>
+                        <input type="text" id="medida-caseira" name="medida-caseira">
+                    </div>
+                    <div class="form-group">
+                        <label for="rendimento">Rendimento:</label>
+                        <input type="text" id="rendimento" name="rendimento">
+                    </div>
+                    <div class="form-group">
+                        <label for="peso-porcao">Peso da porção:</label>
+                        <input type="number" step="0.01" id="peso-porcao" name="peso-porcao" placeholder="0.00g">
+                    </div>
+                    <div class="form-group">
+                        <label for="numero-porcoes">Número de porções:</label>
+                        <input type="number" id="numero-porcoes" name="numero-porcoes">
+                    </div>
+                    <div class="form-group">
+                        <label for="fcc">Fcc:</label>
+                        <input type="number" step="0.01" id="fcc" name="fcc" placeholder="0.00">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Perfil Nutricional -->
+        <section class="section">
+            <h2 class="section-title">🍎 Perfil Nutricional</h2>
+            <div class="section-content">
+                <div class="table-container">
+                    <table id="nutricional-table">
+                        <thead>
+                        <tr>
+                            <th>Ingredientes</th>
+                            <th>Per capita (PL)</th>
+                            <th>PTN</th>
+                            <th>CHO</th>
+                            <th>LIP</th>
+                            <th>Sódio</th>
+                            <th>Gordura Saturada</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td><input type="text" placeholder="Ingrediente"></td>
+                            <td><input type="number" step="0.01" placeholder="0.00"></td>
+                            <td><input type="number" step="0.01" placeholder="0.00"></td>
+                            <td><input type="number" step="0.01" placeholder="0.00"></td>
+                            <td><input type="number" step="0.01" placeholder="0.00"></td>
+                            <td><input type="number" step="0.01" placeholder="0.00"></td>
+                            <td><input type="number" step="0.01" placeholder="0.00"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <button type="button" class="btn btn-icon" onclick="adicionarNutriente()">
+                    Adicionar
+                </button>
+
+                <div class="nutrition-extras">
+                    <div class="form-group">
+                        <label for="total-macros-g">Total dos Macros (g):</label>
+                        <input type="number" step="0.01" id="total-macros-g" name="total-macros-g" placeholder="0.00">
+                    </div>
+                    <div class="form-group">
+                        <label for="total-macros-kcal">Total dos Macros (Kcal):</label>
+                        <input type="number" step="0.01" id="total-macros-kcal" name="total-macros-kcal" placeholder="0.00">
+                    </div>
+                    <div class="form-group">
+                        <label for="total-macros-percent">Total dos Macros (%):</label>
+                        <input type="number" step="0.01" id="total-macros-percent" name="total-macros-percent" placeholder="0.00%">
+                    </div>
+                    <div class="form-group">
+                        <label for="vct">VCT (Kcal):</label>
+                        <input type="number" step="0.01" id="vct" name="vct" placeholder="0.00">
+                    </div>
+                </div>
+            </div>
+        </section>
+    </form>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
