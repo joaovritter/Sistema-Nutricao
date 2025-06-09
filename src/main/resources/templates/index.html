@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fichas Técnicas de Nutrição</title>
+    <link rel="stylesheet" href="/css/index.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <div class="content-left">
+        <h1 class="main-title">Fichas Técnicas de Nutrição</h1>
+
+        <div class="description">
+            <h2>Gerencie suas<br>fichas técnicas<br>de maneira simples<br>e descomplicada.</h2>
+
+            <p>Aqui você pode criar, editar e organizar fichas técnicas nutricionais com facilidade.
+                Tenha acesso rápido a informações como ingredientes, valores nutricionais, porções e custos, tudo em um só lugar.
+                Ideal para nutricionistas, restaurantes e indústrias alimentícias que buscam praticidade e precisão no controle
+                de suas receitas. Simplifique seu fluxo de trabalho e garante padrões consistentes em cada preparação!
+        </div>
+    </div>
+
+    <div class="content-right">
+        <div class="login-box">
+            <form th:action="@{/login}" method="post">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" placeholder="username">
+                </div>
+                <div class="form-group">
+                    <label for="senha">Senha</label>
+                    <input type="password" id="senha" placeholder="senha">
+                </div>
+                <button type="submit" class="login-btn">Login</button>
+
+                <div class="register">
+                    <button type="submit" class="register-btn">Cadastrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

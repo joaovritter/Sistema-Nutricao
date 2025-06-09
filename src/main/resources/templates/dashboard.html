@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fichas Técnicas de Nutrição</title>
+    <link rel="stylesheet" href="/css/dashboard.css">
+</head>
+<body>
+<header class="header">
+    <div class="logo-container">
+        <img src="images/nutrition-logo.png" alt="Logo Nutrição" class="logo">
+        <h1>Fichas Técnicas de Nutrição</h1>
+    </div>
+    <button class="logout-btn">Logout</button>
+</header>
+
+
+<main class="container">
+    <div class="card criar">
+        <div class="card-content">
+            <div class="card-icon">
+                <img src="images/create-icon.png" alt="Criar" class="icon">
+            </div>
+            <div class="card-text">
+                <h2>Criar Ficha Técnica</h2>
+                <p>Cadastre uma ficha ténica no sistema</p>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="card visualizar">
+        <div class="card-content">
+            <div class="card-icon">
+                <img src="images/view-icon.png" alt="Visualizar" class="icon">
+            </div>
+            <div class="card-text">
+                <h2>Visualizar Fichas Técnicas</h2>
+                <p>Visualize as fichas técnicas cadastradas no sistema</p>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+<script>
+    document.querySelectorAll('.card').forEach(card => {
+        card.addEventListener('click', function() {
+            // Adicionar funcionalidade aos cards quando clicados
+            const title = this.querySelector('h2').textContent;
+            console.log(`Clicou em: ${title}`);
+        });
+    });
+
+    document.querySelector('.logout-btn').addEventListener('click', function() {
+        console.log('Logout clicado');
+        // Adicionar lógica de logout aqui
+    });
+</script>
+</body>
+</html>
