@@ -23,7 +23,7 @@ public class IngredienteNutricionista {
 
     @ManyToOne
     @JoinColumn(name = "nutricionista_id")
-    private Nutricionista nutricionista;
+    private User nutricionista;
 
     // Getters e Setters
 }

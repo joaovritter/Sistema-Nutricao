@@ -12,15 +12,15 @@ import java.util.stream.Collectors;
 public class IngredienteService {
 
     private final IngredienteRepository ingredienteRepository;
-    private final IngredienteNutricionistaRepository ingredienteNutricionistaRepository;
-    private final NutricionistaRepository nutricionistaRepository;
+    private final IngredienteUserRepository ingredienteUserRepository;
+    private final UserRepository userRepository;
 
     public IngredienteService(IngredienteRepository ingredienteRepository,
-                              IngredienteNutricionistaRepository ingredienteNutricionistaRepository,
-                              NutricionistaRepository nutricionistaRepository) {
+                              IngredienteUserRepository ingredienteUserRepository,
+                              UserRepository userRepository) {
         this.ingredienteRepository = ingredienteRepository;
-        this.ingredienteNutricionistaRepository = ingredienteNutricionistaRepository;
-        this.nutricionistaRepository = nutricionistaRepository;
+        this.ingredienteUserRepository = ingredienteUserRepository;
+        this.userRepository = userRepository;
     }
 
     public List<IngredienteDTO> listarIngredientes() {
@@ -29,17 +29,17 @@ public class IngredienteService {
                 .collect(Collectors.toList());
     }
 
-    public List<IngredienteNutricionistaDTO> listarIngredientesNutricionista(String usernameNutricionista) {
-        Nutricionista nutricionista = nutricionistaRepository.findByUsername(usernameNutricionista)
+    public List<IngredienteUserDTO> listarIngredientesNutricionista(String usernameNutricionista) {
+        User nutricionista = userRepository.findByUsername(usernameNutricionista)
                 .orElseThrow(() -> new RuntimeException("Nutricionista não encontrado"));
-        return ingredienteNutricionistaRepository.findByNutricionistaId(nutricionista.getId()).stream()
+        return ingredienteUserRepository.findByNutricionistaId(nutricionista.getId()).stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
 
-    public IngredienteNutricionistaDTO criarIngredienteNutricionista(
-            IngredienteNutricionistaDTO ingredienteDTO, String usernameNutricionista) {
-        Nutricionista nutricionista = nutricionistaRepository.findByUsername(usernameNutricionista)
+    public IngredienteUserDTO criarIngredienteNutricionista(
+            IngredienteUserDTO ingredienteDTO, String usernameNutricionista) {
+        User nutricionista = userRepository.findByUsername(usernameNutricionista)
                 .orElseThrow(() -> new RuntimeException("Nutricionista não encontrado"));
 
         IngredienteNutricionista ingrediente = new IngredienteNutricionista();
@@ -51,7 +51,7 @@ public class IngredienteService {
         ingrediente.setGorduraSaturada(ingredienteDTO.getGorduraSaturada());
         ingrediente.setNutricionista(nutricionista);
 
-        IngredienteNutricionista salvo = ingredienteNutricionistaRepository.save(ingrediente);
+        IngredienteNutricionista salvo = ingredienteUserRepository.save(ingrediente);
         return convertToDTO(salvo);
     }
 
@@ -73,8 +73,8 @@ public class IngredienteService {
         return dto;
     }
 
-    private IngredienteNutricionistaDTO convertToDTO(IngredienteNutricionista ingrediente) {
-        IngredienteNutricionistaDTO dto = new IngredienteNutricionistaDTO();
+    private IngredienteUserDTO convertToDTO(IngredienteNutricionista ingrediente) {
+        IngredienteUserDTO dto = new IngredienteUserDTO();
         dto.setId(ingrediente.getId());
         dto.setNome(ingrediente.getNome());
         dto.setCarboidrato(ingrediente.getCarboidrato());

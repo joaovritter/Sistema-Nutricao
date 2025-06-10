@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface IngredienteNutricionistaRepository extends JpaRepository<IngredienteNutricionista, Long> {
+public interface IngredienteUserRepository extends JpaRepository<IngredienteNutricionista, Long> {
 
     // Busca ingredientes criados por um nutricionista
     List<IngredienteNutricionista> findByNutricionistaId(Long nutricionistaId);

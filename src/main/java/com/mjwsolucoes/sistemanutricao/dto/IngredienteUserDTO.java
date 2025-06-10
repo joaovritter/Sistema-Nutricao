@@ -6,7 +6,7 @@ import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Data;
 
 @Data
-public class IngredienteNutricionistaDTO {
+public class IngredienteUserDTO {
     private Long id;
 
     @NotBlank(message = "Nome do ingrediente é obrigatório")

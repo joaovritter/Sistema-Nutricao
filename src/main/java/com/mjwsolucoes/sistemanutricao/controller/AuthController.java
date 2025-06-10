@@ -18,7 +18,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginDTO loginDTO) {
-        boolean autenticado = authService.autenticar(loginDTO);
+        boolean autenticado = Boolean.parseBoolean(authService.autenticar(loginDTO));
         if (autenticado) {
             return ResponseEntity.ok().body("Login bem-sucedido");
         }

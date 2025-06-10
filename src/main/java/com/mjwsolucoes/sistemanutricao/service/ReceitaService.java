@@ -14,23 +14,23 @@ import java.util.stream.Collectors;
 public class ReceitaService {
 
     private final ReceitaRepository receitaRepository;
-    private final NutricionistaRepository nutricionistaRepository;
+    private final UserRepository userRepository;
     private final PerfilNutricionalRepository perfilNutricionalRepository;
     private final ReceitaIngredienteRepository receitaIngredienteRepository;
 
     public ReceitaService(ReceitaRepository receitaRepository,
-                          NutricionistaRepository nutricionistaRepository,
+                          UserRepository userRepository,
                           PerfilNutricionalRepository perfilNutricionalRepository,
                           ReceitaIngredienteRepository receitaIngredienteRepository) {
         this.receitaRepository = receitaRepository;
-        this.nutricionistaRepository = nutricionistaRepository;
+        this.userRepository = userRepository;
         this.perfilNutricionalRepository = perfilNutricionalRepository;
         this.receitaIngredienteRepository = receitaIngredienteRepository;
     }
 
     @Transactional
     public ReceitaDTO criarReceita(ReceitaDTO receitaDTO, String usernameNutricionista) {
-        Nutricionista nutricionista = nutricionistaRepository.findByUsername(usernameNutricionista)
+        User nutricionista = userRepository.findByUsername(usernameNutricionista)
                 .orElseThrow(() -> new RuntimeException("Nutricionista não encontrado"));
 
         Receita receita = new Receita();

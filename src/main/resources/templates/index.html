@@ -24,7 +24,7 @@
 
     <div class="content-right">
         <div class="login-box">
-            <form th:action="@{/login}" method="post">
+            <form th:action="@{/dashboard}" method="get">
                 <div class="form-group">
                     <label for="username">Username</label>
                     <input type="text" id="username" placeholder="username">
@@ -36,7 +36,7 @@
                 <button type="submit" class="login-btn">Login</button>
 
                 <div class="register">
-                    <button type="submit" class="register-btn">Cadastrar</button>
+                    <a href="/registro" class="register-link">Não tem uma conta? Cadastre-se</a>
                 </div>
             </form>
         </div>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,23 +16,9 @@
     <button class="logout-btn">Logout</button>
 </header>
 
-
 <main class="container">
-    <div class="card criar">
-        <div class="card-content">
-            <div class="card-icon">
-                <img src="images/create-icon.png" alt="Criar" class="icon">
-            </div>
-            <div class="card-text">
-                <h2>Criar Ficha Técnica</h2>
-                <p>Cadastre uma ficha ténica no sistema</p>
-            </div>
-        </div>
-    </div>
-
-
     <div class="card visualizar">
-        <div class="card-content">
+        <div class="card-content" >
             <div class="card-icon">
                 <img src="images/view-icon.png" alt="Visualizar" class="icon">
             </div>
@@ -42,6 +29,17 @@
         </div>
     </div>
 
+    <div class="card criar" sec:authorize="hasAnyAuthority('NUTRICIONISTA', 'ADMIN')">
+        <div class="card-content">
+            <div class="card-icon">
+                <img src="images/create-icon.png" alt="Criar" class="icon">
+            </div>
+            <div class="card-text">
+                <h2>Criar Ficha Técnica</h2>
+                <p>Cadastre uma ficha ténica no sistema</p>
+            </div>
+        </div>
+    </div>
 </main>
 
 <script>

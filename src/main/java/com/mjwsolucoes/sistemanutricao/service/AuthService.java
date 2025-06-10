@@ -2,70 +2,63 @@ package com.mjwsolucoes.sistemanutricao.service;
 
 import com.mjwsolucoes.sistemanutricao.dto.LoginDTO;
 import com.mjwsolucoes.sistemanutricao.dto.RegistroDTO;
-import com.mjwsolucoes.sistemanutricao.model.Estabelecimento;
-import com.mjwsolucoes.sistemanutricao.model.Nutricionista;
-import com.mjwsolucoes.sistemanutricao.repository.EstabelecimentoRepository;
-import com.mjwsolucoes.sistemanutricao.repository.NutricionistaRepository;
+import com.mjwsolucoes.sistemanutricao.model.User;
+import com.mjwsolucoes.sistemanutricao.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+import static com.mjwsolucoes.sistemanutricao.model.Role.NUTRICIONISTA;
+import static com.mjwsolucoes.sistemanutricao.model.Role.USER;
+
 @Service
 public class AuthService {
 
-    private final NutricionistaRepository nutricionistaRepository;
-    private final EstabelecimentoRepository estabelecimentoRepository;
+    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public AuthService(NutricionistaRepository nutricionistaRepository,
-                       EstabelecimentoRepository estabelecimentoRepository,
+    public AuthService(UserRepository userRepository,
                        PasswordEncoder passwordEncoder) {
-        this.nutricionistaRepository = nutricionistaRepository;
-        this.estabelecimentoRepository = estabelecimentoRepository;
+        this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
     public boolean registrar(RegistroDTO registroDTO) {
-        if (registroDTO.getRole().equals("NUTRICIONISTA")) {
-            if (nutricionistaRepository.existsByUsername(registroDTO.getUsername())) {
+        if (registroDTO.getRole().equals(NUTRICIONISTA)) {
+            if (userRepository.existsByUsername(registroDTO.getUsername())) {
                 return false;
             }
 
-            Nutricionista nutricionista = new Nutricionista();
+            User nutricionista = new User();
             nutricionista.setUsername(registroDTO.getUsername());
             nutricionista.setPassword(passwordEncoder.encode(registroDTO.getPassword()));
-            nutricionista.setRole("NUTRICIONISTA");
-            nutricionistaRepository.save(nutricionista);
+            nutricionista.setRole(NUTRICIONISTA);
+            userRepository.save(nutricionista);
             return true;
-        } else if (registroDTO.getRole().equals("ESTABELECIMENTO")) {
-            if (estabelecimentoRepository.existsByUsername(registroDTO.getUsername())) {
+        } else if (registroDTO.getRole().equals(USER)) {
+            if (userRepository.existsByUsername(registroDTO.getUsername())) {
                 return false;
             }
 
-            Estabelecimento estabelecimento = new Estabelecimento();
-            estabelecimento.setUsername(registroDTO.getUsername());
-            estabelecimento.setSenha(passwordEncoder.encode(registroDTO.getPassword()));
-            estabelecimento.setRole("ESTABELECIMENTO");
-            estabelecimentoRepository.save(estabelecimento);
+            User user = new User();
+            user.setUsername(registroDTO.getUsername());
+            user.setPassword(passwordEncoder.encode(registroDTO.getPassword()));
+            user.setRole(USER);
+            userRepository.save(user);
             return true;
         }
         return false;
     }
 
-    public boolean autenticar(LoginDTO loginDTO) {
-        // Verifica se é nutricionista
-        Optional<Nutricionista> nutricionistaOpt = nutricionistaRepository.findByUsername(loginDTO.getUsername());
-        if (nutricionistaOpt.isPresent()) {
-            return passwordEncoder.matches(loginDTO.getPassword(), nutricionistaOpt.get().getPassword());
+    public String autenticar(LoginDTO loginDTO) {
+        Optional<User> userOpt = userRepository.findByUsername(loginDTO.getUsername());
+        if (userOpt.isPresent()) {
+            User user = userOpt.get();
+            if (passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())) {
+                return user.getRole().name(); // Retorna "NUTRICIONISTA", "USER" ou "ADMIN"
+            }
         }
-
-        // Verifica se é estabelecimento
-        Optional<Estabelecimento> estabelecimentoOpt = estabelecimentoRepository.findByUsername(loginDTO.getUsername());
-        if (estabelecimentoOpt.isPresent()) {
-            return passwordEncoder.matches(loginDTO.getPassword(), estabelecimentoOpt.get().getSenha());
-        }
-
-        return false;
+        return null;
     }
 }

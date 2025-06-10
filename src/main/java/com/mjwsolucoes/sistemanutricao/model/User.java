@@ -1,11 +1,8 @@
+// src/main/java/com/mjwsolucoes/sistemanutricao/model/User.java
 package com.mjwsolucoes.sistemanutricao.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-
+import lombok.*;
 import java.util.List;
 
 @Data
@@ -13,7 +10,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Entity
-public class Nutricionista {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -24,10 +21,10 @@ public class Nutricionista {
     @Column(name = "password", nullable = false)
     private String password;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
-    private String role;
+    private Role role;
 
-    // Relacionamentos
     @OneToMany(mappedBy = "nutricionista", cascade = CascadeType.ALL)
     private List<Receita> receitas;
 

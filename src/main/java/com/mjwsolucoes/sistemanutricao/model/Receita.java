@@ -26,7 +26,7 @@ public class Receita {
 
     @ManyToOne
     @JoinColumn(name = "nutricionista_id")
-    private Nutricionista nutricionista;
+    private User nutricionista;
 
     @OneToOne(mappedBy = "receita", cascade = CascadeType.ALL)
     private PerfilNutricional perfilNutricional;

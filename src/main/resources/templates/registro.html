@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/registro.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="content-right">
+    <div class="login-box">
+        <form th:action="@{/registro.html}" method="post">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" placeholder="username">
+            </div>
+            <div class="form-group">
+                <label for="senha">Senha</label>
+                <input type="password" id="senha" placeholder="senha">
+            </div>
+            <button type="submit" class="login-btn">Confirmar</button>
+        </form>
+    </div>
+</div>
+</div>
+</body>
+</html>

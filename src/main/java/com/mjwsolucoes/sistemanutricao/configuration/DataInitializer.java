@@ -1,24 +1,26 @@
 package com.mjwsolucoes.sistemanutricao.configuration;
 
-import com.mjwsolucoes.sistemanutricao.model.Nutricionista;
-import com.mjwsolucoes.sistemanutricao.repository.NutricionistaRepository;
+import com.mjwsolucoes.sistemanutricao.model.User;
+import com.mjwsolucoes.sistemanutricao.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+
+import static com.mjwsolucoes.sistemanutricao.model.Role.*;
 
 // A anotação @Component indica que esta classe é um componente gerenciado pelo Spring.
 @Component
 public class DataInitializer implements CommandLineRunner {
 
     // Repositório para interagir com a entidade Nutricionista no banco de dados.
-    private final NutricionistaRepository nutricionistaRepository;
+    private final UserRepository userRepository;
 
     // Encoder para criptografar as senhas dos nutricionistas.
     private final PasswordEncoder passwordEncoder;
 
     // Construtor para injetar as dependências necessárias.
-    public DataInitializer(NutricionistaRepository nutricionistaRepository, PasswordEncoder passwordEncoder) {
-        this.nutricionistaRepository = nutricionistaRepository;
+    public DataInitializer(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -26,25 +28,27 @@ public class DataInitializer implements CommandLineRunner {
     @Override
     public void run (String... args) {
         // Verifica se o nutricionista "admin" já existe no banco de dados.
-        if (nutricionistaRepository.findByUsername("admin").isEmpty()) {
+        if (userRepository.findByUsername("admin").isEmpty()) {
             // Cria um novo nutricionista com a role ADMIN.
-            Nutricionista admin = new Nutricionista();
+            User admin = new User();
             admin.setUsername("admin");
             admin.setPassword(passwordEncoder.encode("123456")); // Criptografa a senha.
-            admin.setRole("ADMIN");
-            nutricionistaRepository.save(admin); // Salva o nutricionista no banco de dados.
-            System.out.println("Nutricionista admin criado.");
+            admin.setRole(ADMIN);
+            userRepository.save(admin); // Salva o nutricionista no banco de dados.
+            System.out.println("Admin Criado.");
         }
 
         // Verifica se o nutricionista "user" já existe no banco de dados.
-        if (nutricionistaRepository.findByUsername("user").isEmpty()) {
+        if (userRepository.findByUsername("user").isEmpty()) {
             // Cria um novo nutricionista com a role USER.
-            Nutricionista nutricionista = new Nutricionista();
-            nutricionista.setUsername("user");
+            User nutricionista = new User();
+            nutricionista.setUsername("nutricionista");
             nutricionista.setPassword(passwordEncoder.encode("123456")); // Criptografa a senha.
-            nutricionista.setRole("USER");
-            nutricionistaRepository.save(nutricionista); // Salva o nutricionista no banco de dados.
-            System.out.println("Nutricionista user criado.");
+            nutricionista.setRole(NUTRICIONISTA);
+            userRepository.save(nutricionista); // Salva o nutricionista no banco de dados.
+            System.out.println("Nutricionista Criado.");
         }
+
+
     }
 }

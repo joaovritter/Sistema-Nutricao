@@ -24,17 +24,17 @@ public class IngredienteController {
     }
 
     @GetMapping("/nutricionista/{username}")
-    public ResponseEntity<List<IngredienteNutricionistaDTO>> listarIngredientesNutricionista(
+    public ResponseEntity<List<IngredienteUserDTO>> listarIngredientesNutricionista(
             @PathVariable String username) {
-        List<IngredienteNutricionistaDTO> ingredientes = ingredienteService.listarIngredientesNutricionista(username);
+        List<IngredienteUserDTO> ingredientes = ingredienteService.listarIngredientesNutricionista(username);
         return ResponseEntity.ok(ingredientes);
     }
 
     @PostMapping("/nutricionista/{username}")
-    public ResponseEntity<IngredienteNutricionistaDTO> criarIngredienteNutricionista(
-            @RequestBody IngredienteNutricionistaDTO ingredienteDTO,
+    public ResponseEntity<IngredienteUserDTO> criarIngredienteNutricionista(
+            @RequestBody IngredienteUserDTO ingredienteDTO,
             @PathVariable String username) {
-        IngredienteNutricionistaDTO ingredienteCriado =
+        IngredienteUserDTO ingredienteCriado =
                 ingredienteService.criarIngredienteNutricionista(ingredienteDTO, username);
         return ResponseEntity.ok(ingredienteCriado);
     }
