@@ -43,7 +43,7 @@ public class DataInitializer implements CommandLineRunner {
             // Cria um novo nutricionista com a role USER.
             User nutricionista = new User();
             nutricionista.setUsername("nutricionista");
-            nutricionista.setPassword(passwordEncoder.encode("123456")); // Criptografa a senha.
+            nutricionista.setPassword(passwordEncoder.encode("nutricionista")); // Criptografa a senha.
             nutricionista.setRole(NUTRICIONISTA);
             userRepository.save(nutricionista); // Salva o nutricionista no banco de dados.
             System.out.println("Nutricionista Criado.");

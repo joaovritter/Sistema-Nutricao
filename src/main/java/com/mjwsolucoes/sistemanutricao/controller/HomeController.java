@@ -26,9 +26,5 @@ public class HomeController {
         return "criarFichatecnica";
     }
 
-    @GetMapping("/registro")
-    public String registro() {
-        return "registro";
-    }
 
 }

@@ -1,36 +1,35 @@
 package com.mjwsolucoes.sistemanutricao.controller;
 
-import com.mjwsolucoes.sistemanutricao.dto.LoginDTO;
-import com.mjwsolucoes.sistemanutricao.dto.RegistroDTO;
+import com.mjwsolucoes.sistemanutricao.dto.RegistroDTO; // Remova LoginDTO e AuthService se não forem mais usados aqui
 import com.mjwsolucoes.sistemanutricao.service.AuthService;
-import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
-@RequestMapping("/api/auth")
+@Controller
 public class AuthController {
 
-    private final AuthService authService;
+    private final AuthService authService; // Você ainda pode precisar do AuthService para o registro
 
     public AuthController(AuthService authService) {
         this.authService = authService;
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginDTO loginDTO) {
-        boolean autenticado = Boolean.parseBoolean(authService.autenticar(loginDTO));
-        if (autenticado) {
-            return ResponseEntity.ok().body("Login bem-sucedido");
-        }
-        return ResponseEntity.status(401).body("Credenciais inválidas");
+    @GetMapping("/login") // Este é para exibir a página de login
+    public String showLoginForm() {
+        return "index";
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegistroDTO registroDTO) {
-        boolean registrado = authService.registrar(registroDTO);
-        if (registrado) {
-            return ResponseEntity.ok().body("Usuário registrado com sucesso");
+
+    @GetMapping("/registro")
+    public String showRegisterForm() {
+        return "registro";
+    }
+
+    @PostMapping("/registro")
+    public String processRegister(@ModelAttribute RegistroDTO registroDTO) {
+        if (authService.registrar(registroDTO)) {
+            return "redirect:/login?registered";
         }
-        return ResponseEntity.badRequest().body("Nome de usuário já existe ou tipo de usuário inválido");
+        return "redirect:/registro?error";
     }
 }

@@ -69,6 +69,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
 }
 
 .login-box {
@@ -130,6 +131,15 @@ body {
 
 .register button:hover {
     text-decoration: underline;
+}
+
+.error-message {
+    color: #fff;
+    background: #e74c3c;
+    padding: 10px;
+    border-radius: 4px;
+    margin-top: 10px;
+    text-align: center;
 }
 
 /* Responsividade */

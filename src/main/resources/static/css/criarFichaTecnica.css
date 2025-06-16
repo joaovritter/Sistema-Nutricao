@@ -18,13 +18,14 @@ body {
     margin: 0 auto;
     background: white;
     border-radius: 8px;
+    border: 2px solid  #4a7c59;
     overflow: hidden;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
 /* Cabeçalho */
 .header {
-    background: linear-gradient(135deg, #2d5016, #4a7c59);
+    background-color: #4a7c59;
     color: white;
     text-align: center;
     padding: 20px;

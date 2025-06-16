@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="pt-BR"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,11 +13,14 @@
         <img src="images/nutrition-logo.png" alt="Logo Nutrição" class="logo">
         <h1>Fichas Técnicas de Nutrição</h1>
     </div>
-    <button class="logout-btn">Logout</button>
+    <button class="logout-btn">
+        <a href="/login?logout">Logout</a>
+    </button>
 </header>
 
 <main class="container">
     <div class="card visualizar">
+        <a href="/visualizarFichaTecnica">
         <div class="card-content" >
             <div class="card-icon">
                 <img src="images/view-icon.png" alt="Visualizar" class="icon">
@@ -27,18 +30,21 @@
                 <p>Visualize as fichas técnicas cadastradas no sistema</p>
             </div>
         </div>
+        </a>
     </div>
 
     <div class="card criar" sec:authorize="hasAnyAuthority('NUTRICIONISTA', 'ADMIN')">
-        <div class="card-content">
-            <div class="card-icon">
-                <img src="images/create-icon.png" alt="Criar" class="icon">
+        <a href="/criarFichaTecnica">
+            <div class="card-content">
+                <div class="card-icon">
+                    <img src="images/create-icon.png" alt="Criar" class="icon">
+                </div>
+                <div class="card-text">
+                    <h2>Criar Ficha Técnica</h2>
+                    <p>Cadastre uma ficha ténica no sistema</p>
+                </div>
             </div>
-            <div class="card-text">
-                <h2>Criar Ficha Técnica</h2>
-                <p>Cadastre uma ficha ténica no sistema</p>
-            </div>
-        </div>
+        </a>
     </div>
 </main>
 

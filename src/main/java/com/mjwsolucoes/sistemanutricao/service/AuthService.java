@@ -9,8 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-import static com.mjwsolucoes.sistemanutricao.model.Role.NUTRICIONISTA;
-import static com.mjwsolucoes.sistemanutricao.model.Role.USER;
+import static com.mjwsolucoes.sistemanutricao.model.Role.USER; // Importe apenas USER, se NUTRICIONISTA não for padrão de registro
 
 @Service
 public class AuthService {
@@ -25,30 +24,22 @@ public class AuthService {
     }
 
     public boolean registrar(RegistroDTO registroDTO) {
-        if (registroDTO.getRole().equals(NUTRICIONISTA)) {
-            if (userRepository.existsByUsername(registroDTO.getUsername())) {
-                return false;
-            }
-
-            User nutricionista = new User();
-            nutricionista.setUsername(registroDTO.getUsername());
-            nutricionista.setPassword(passwordEncoder.encode(registroDTO.getPassword()));
-            nutricionista.setRole(NUTRICIONISTA);
-            userRepository.save(nutricionista);
-            return true;
-        } else if (registroDTO.getRole().equals(USER)) {
-            if (userRepository.existsByUsername(registroDTO.getUsername())) {
-                return false;
-            }
-
-            User user = new User();
-            user.setUsername(registroDTO.getUsername());
-            user.setPassword(passwordEncoder.encode(registroDTO.getPassword()));
-            user.setRole(USER);
-            userRepository.save(user);
-            return true;
+        // Verifica se o username já existe no banco de dados
+        if (userRepository.existsByUsername(registroDTO.getUsername())) {
+            return false; // O username já existe, não é possível registrar
         }
-        return false;
+
+        // Cria um novo usuário
+        User newUser = new User();
+        newUser.setUsername(registroDTO.getUsername());
+        newUser.setPassword(passwordEncoder.encode(registroDTO.getPassword()));
+
+        // Define a role como USER por padrão
+        newUser.setRole(USER);
+
+        // Salva o novo usuário no banco de dados
+        userRepository.save(newUser);
+        return true;
     }
 
     public String autenticar(LoginDTO loginDTO) {
@@ -59,6 +50,6 @@ public class AuthService {
                 return user.getRole().name(); // Retorna "NUTRICIONISTA", "USER" ou "ADMIN"
             }
         }
-        return null;
+        return null; // Autenticação falhou
     }
 }

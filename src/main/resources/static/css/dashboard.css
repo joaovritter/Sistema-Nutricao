@@ -40,6 +40,10 @@ body {
     font-weight: bold;
     transition: background-color 0.3s;
 }
+.logout-btn a{
+    color: white;
+    text-decoration: none;
+}
 
 .logout-btn:hover {
     background-color: #555;
@@ -63,12 +67,17 @@ body {
     transition: transform 0.3s, box-shadow 0.3s;
 }
 
+.card a{
+    text-decoration: none;
+    color: inherit;
+}
 .card:hover {
     transform: translateY(-5px);
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
 }
 
 .card-content {
+
     display: flex;
     padding: 20px;
     gap: 20px;

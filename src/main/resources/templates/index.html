@@ -23,15 +23,21 @@
     </div>
 
     <div class="content-right">
+        <div class="error-message" th:if="${param.error}">
+            Usuário ou senha inválidos.
+        </div>
+        <div class="error-message" th:if="${param.disabled}">
+            Usuário desativado.
+        </div>
         <div class="login-box">
-            <form th:action="@{/dashboard}" method="get">
+            <form th:action="@{/login}" method="post">
                 <div class="form-group">
                     <label for="username">Username</label>
-                    <input type="text" id="username" placeholder="username">
+                    <input type="text" id="username" name="username" placeholder="username" required>
                 </div>
                 <div class="form-group">
-                    <label for="senha">Senha</label>
-                    <input type="password" id="senha" placeholder="senha">
+                    <label for="password">Senha</label>
+                    <input type="password" id="password" name="password" placeholder="senha" required>
                 </div>
                 <button type="submit" class="login-btn">Login</button>
 
@@ -39,6 +45,7 @@
                     <a href="/registro" class="register-link">Não tem uma conta? Cadastre-se</a>
                 </div>
             </form>
+
         </div>
     </div>
 
