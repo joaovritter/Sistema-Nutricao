@@ -3,7 +3,6 @@ package com.mjwsolucoes.sistemanutricao.configuration;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.*;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration; // Mantenha este se usar authenticationManager bean
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,37 +22,60 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        // Define as rotas que não exigem autenticação
-                        // A página de login e registro estão aqui
-                        .requestMatchers("/login", "/registro",
-                                "/css/**", "/js/**", "/images/**", "/support").permitAll()
-                        // Protege rotas baseadas na autoridade
+                        // 1. ROTAS PÚBLICAS (acesso sem autenticação)
+                        // Inclua todas as páginas de "entrada", recursos estáticos e suporte.
+                        .requestMatchers(
+                                "/",                // A raiz, que retorna 'index.html' (página de login)
+                                "/home",            // /home, que também retorna 'index.html'
+                                "/login",           // A página de login explicitamente
+                                "/registro",        // A página de registro
+                                "/css/**",          // Todos os arquivos CSS
+                                "/js/**",           // Todos os arquivos JavaScript
+                                "/images/**",       // Todas as imagens
+                                "/support"          // Sua rota de suporte, se houver
+                        ).permitAll()
+
+                        // 2. ROTAS PROTEGIDAS POR AUTORIDADE ESPECÍFICA (precisam estar logado E ter a role)
                         .requestMatchers("/admin/**").hasAuthority("ADMIN")
-                        .requestMatchers("/fichatecnica/**").hasAnyAuthority("NUTRICIONISTA", "ADMIN", "USER")
-                        // Qualquer outra requisição que não foi explicitamente permitida ou protegida deve ser autenticada
+                        // Ajustado para incluir o endpoint EXATO /fichatecnica, além do padrão /**
+                        .requestMatchers("/fichatecnica", "/fichatecnica/**").hasAnyAuthority("NUTRICIONISTA", "ADMIN", "USER")
+                        // Se você tiver mais endpoints como /criarFichaTecnica que são separados,
+                        // mas devem ter as mesmas roles, adicione-os aqui, ex:
+                        // .requestMatchers("/criarFichaTecnica").hasAnyAuthority("NUTRICIONISTA", "ADMIN")
+
+
+                        // 3. ROTAS PROTEGIDAS POR AUTENTICAÇÃO (apenas precisa estar logado, qualquer role)
+                        // O dashboard é um exemplo típico de página que qualquer usuário logado deve ver
+                        .requestMatchers("/dashboard", "/visualizar/**").authenticated() // Protege explicitamente o dashboard
+
+                        // 4. CATCH-ALL: Qualquer outra requisição que não foi explicitamente permitida acima, DEVE ser autenticada.
+                        // Esta é a regra de "default deny" (negar por padrão).
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
-                        .loginPage("/login")
-                        .loginProcessingUrl("/login")
+                        .loginPage("/login") // O GET para exibir o formulário de login
+                        .loginProcessingUrl("/login") // O POST para processar o login
                         .failureHandler((request, response, exception) -> {
-                            // Este failureHandler é bom para depuração de erros específicos
+                            // Handler para erros de login
                             if (exception.getClass().getSimpleName().equals("DisabledException")) {
                                 response.sendRedirect("/login?disabled");
                             } else {
                                 response.sendRedirect("/login?error");
                             }
                         })
-                        .defaultSuccessUrl("/dashboard", true) // Redireciona para o dashboard após login bem-sucedido
-                        .permitAll() // Permite acesso às URLs do formLogin (GET /login e POST /login)
+                        .defaultSuccessUrl("/dashboard", true) // Redireciona após login bem-sucedido
+                        .permitAll() // Permite acesso a todo o fluxo de login (GET e POST)
                 )
                 .logout(logout -> logout
-                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET")) // URL para logout via GET
-                        .logoutSuccessUrl("/login?logout") // Redireciona para /login com status de logout
-                        .permitAll()
+                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "POST")) // Mude para POST, é mais seguro
+                        // OU use .logoutUrl("/logout") se não quiser um matcher específico e quer o padrão POST
+                        .logoutSuccessUrl("/login?logout") // Redireciona para /login com um parâmetro de sucesso
+                        .invalidateHttpSession(true) // Garante que a sessão seja invalidada
+                        .deleteCookies("JSESSIONID") // Garante que o cookie de sessão seja removido
+                        .permitAll() // Permite que a URL de logout seja acessada
                 )
-                .csrf(csrf -> csrf.disable()) // Desabilita CSRF (para desenvolvimento, reativar em produção)
-                .cors(cors -> cors.disable()); // Desabilita CORS (para desenvolvimento, reativar em produção)
+                .csrf(csrf -> csrf.disable()) // Desabilitado para dev, ATIVAR em produção!
+                .cors(cors -> cors.disable()); // Desabilitado para dev, CONFIGURAR em produção!
 
         return http.build();
     }
@@ -70,12 +92,4 @@ public class SecurityConfig {
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }
-
-    // O bean AuthenticationManager é útil se você for injetá-lo em algum lugar
-    // para autenticação manual, mas o DaoAuthenticationProvider já cuida do fluxo padrão.
-    // @Bean
-    // public AuthenticationManager authenticationManager(
-    //         AuthenticationConfiguration config) throws Exception {
-    //     return config.getAuthenticationManager();
-    // }
 }

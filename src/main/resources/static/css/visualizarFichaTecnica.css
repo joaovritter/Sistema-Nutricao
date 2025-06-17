@@ -1,0 +1,194 @@
+*{
+    font-family: Arial, sans-serif;
+}
+/* Estilos para o cabeçalho da página de visualização */
+.header .header-actions {
+    display: flex; /* Para alinhar os botões lado a lado */
+    gap: 15px; /* Espaço entre os botões */
+    align-items: center;
+    background-color: #6baa75;
+}
+
+/* Estilos gerais para botões (se não estiverem bem definidos em dashboard.css) */
+.btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    text-align: center;
+    display: inline-block; /* Para que padding e margin funcionem corretamente */
+    border: none; /* Remover borda padrão de botões */
+    font-size: 1rem;
+}
+
+.btn-voltar {
+    background-color: #6c757d; /* Cinza */
+    color: white;
+}
+
+.btn-voltar:hover {
+    background-color: #5a6268;
+}
+
+.btn-criar {
+    background-color: #28a745; /* Verde */
+    color: white;
+}
+
+.btn-criar:hover {
+    background-color: #218838;
+}
+
+/* Seção de lista de receitas */
+.receita-list-section {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    margin-top: 20px; /* Espaçamento do cabeçalho */
+    text-align: center; /* Centralizar o h2 e mensagem inicial */
+}
+
+.receita-list-section h2 {
+    color: #333;
+    margin-bottom: 25px;
+    font-size: 2em;
+    text-align: center;
+}
+
+/* Mensagem de "nenhuma receita" */
+.no-receitas-message {
+    padding: 20px;
+    background-color: #f8d7da; /* Fundo vermelho claro */
+    color: #721c24; /* Texto vermelho escuro */
+    border: 1px solid #f5c6cb;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 1.1em;
+}
+
+.no-receitas-message a {
+    color: #007bff; /* Cor de link padrão */
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.no-receitas-message a:hover {
+    text-decoration: underline;
+}
+
+/* Estilos para a tabela de receitas */
+.receitas-table-container {
+    overflow-x: auto; /* Para tabelas que excedem a largura da tela em dispositivos menores */
+    margin-top: 20px;
+}
+
+.receitas-table-container table {
+    width: 100%;
+    border-collapse: collapse; /* Remove espaços entre as células da tabela */
+    margin: 0 auto; /* Centraliza a tabela */
+}
+
+.receitas-table-container th,
+.receitas-table-container td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.receitas-table-container th {
+    background-color: #f2f2f2;
+    color: #555;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.9em;
+}
+
+.receitas-table-container tr:hover {
+    background-color: #f5f5f5; /* Cor de fundo ao passar o mouse */
+}
+
+/* Estilos para os botões dentro da tabela */
+.receitas-table-container .btn {
+    font-size: 0.85rem;
+    padding: 8px 12px;
+    border-radius: 5px;
+    margin-right: 5px; /* Espaço entre os botões de ação */
+}
+
+.btn-detalhes {
+    background-color: #007bff; /* Azul */
+    color: white;
+}
+
+.btn-detalhes:hover {
+    background-color: #0056b3;
+}
+
+.btn-editar {
+    background-color: #ffc107; /* Amarelo */
+    color: #333; /* Texto escuro para contraste */
+}
+
+.btn-editar:hover {
+    background-color: #e0a800;
+}
+
+.btn-excluir {
+    background-color: #dc3545; /* Vermelho */
+    color: white;
+}
+
+.btn-excluir:hover {
+    background-color: #c82333;
+}
+
+/* Responsividade básica para tabelas */
+@media screen and (max-width: 768px) {
+    .receitas-table-container table,
+    .receitas-table-container thead,
+    .receitas-table-container tbody,
+    .receitas-table-container th,
+    .receitas-table-container td,
+    .receitas-table-container tr {
+        display: block;
+    }
+
+    .receitas-table-container thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+
+    .receitas-table-container tr {
+        border: 1px solid #ccc;
+        margin-bottom: 15px;
+        border-radius: 8px;
+        overflow: hidden; /* Para garantir que o border-radius funcione */
+    }
+
+    .receitas-table-container td {
+        border: none;
+        border-bottom: 1px solid #eee;
+        position: relative;
+        padding-left: 50%;
+        text-align: right;
+    }
+
+    .receitas-table-container td:before {
+        position: absolute;
+        top: 0;
+        left: 6px;
+        width: 45%;
+        padding-right: 10px;
+        white-space: nowrap;
+        text-align: left;
+        font-weight: bold;
+        content: attr(data-label); /* Usa um atributo data-label para os cabeçalhos */
+    }
+
+    /* Adicione data-label a cada <td> no HTML para esta funcionalidade */
+    /* Exemplo: <td data-label="Nome da Receita" th:text="${receita.nome}"></td> */
+}

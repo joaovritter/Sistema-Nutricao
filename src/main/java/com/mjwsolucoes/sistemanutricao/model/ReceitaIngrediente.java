@@ -14,7 +14,7 @@ public class ReceitaIngrediente {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private int medidaCaseira;
+    private String medidaCaseira;
     private double pesoBruto;
     private double pesoLiquido;
     private double fatorCorrecao;

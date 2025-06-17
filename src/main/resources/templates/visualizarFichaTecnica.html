@@ -1,10 +1,66 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualizar Receitas</title>
+    <link rel="stylesheet" href="/css/dashboard.css">
+    <link rel="stylesheet" href="/css/visualizarFichaTecnica.css">
 </head>
+
 <body>
+<header class="header">
+    <div class="logo-container">
+        <h1>Visualizar Receitas</h1> </div>
+    <div class="header-actions">
+        <a th:href="@{/dashboard}" class="btn btn-voltar">Voltar ao Dashboard</a>
+        <a th:href="@{/fichatecnica}" class="btn btn-criar" sec:authorize="hasAnyAuthority('NUTRICIONISTA', 'ADMIN')">
+            Criar Nova Receita
+        </a>
+    </div>
+</header>
+
+<main class="container">
+    <div class="receita-list-section">
+        <h2>Receitas Cadastradas</h2>
+
+        <div th:if="${receitas.isEmpty()}" class="no-receitas-message">
+            <p>Nenhuma receita cadastrada ainda. <a th:href="@{/fichatecnica}">Crie uma agora!</a></p>
+        </div>
+
+        <div th:unless="${receitas.isEmpty()}" class="receitas-table-container">
+            <table>
+                <thead>
+                <tr>
+                    <th>Nome da Receita</th>
+                    <th>Categoria</th>
+                    <th>Nutricionista</th>
+                    <th>Tempo de Preparo (min)</th>
+                    <th>Rendimento (porções)</th>
+                    <th>Ações</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="receita : ${receitas}">
+                    <td th:text="${receita.nome}">Salada de Frutas</td>
+                    <td th:text="${receita.categoria}">Sobremesa</td>
+                    <td th:text="${receita.nutricionista?.username ?: 'N/A'}">Fulano de Tal</td>
+                    <td th:text="${receita.tempoPreparo}">30</td>
+                    <td th:text="${receita.numeroPorcoes}">4</td>
+                    <td>
+                        <a th:href="@{/receita/detalhes/{id}(id=${receita.id})}" class="btn btn-detalhes">Detalhes</a>
+                        <a th:href="@{/receita/editar/{id}(id=${receita.id})}" class="btn btn-editar" sec:authorize="hasAnyAuthority('NUTRICIONISTA', 'ADMIN')">Editar</a>
+                        <form th:action="@{/receita/excluir/{id}(id=${receita.id})}" method="post" style="display:inline;" sec:authorize="hasAnyAuthority('ADMIN')">
+                            <button type="submit" class="btn btn-excluir">Excluir</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
 
 </body>
 </html>

@@ -97,7 +97,7 @@ public class ReceitaService {
     private void salvarIngredientesReceita(List<ReceitaIngredienteDTO> ingredientesDTO, Receita receita) {
         ingredientesDTO.forEach(ingDTO -> {
             ReceitaIngrediente ri = new ReceitaIngrediente();
-            ri.setMedidaCaseira(ingDTO.getMedidaCaseira());
+            ri.setMedidaCaseira(String.valueOf(ingDTO.getMedidaCaseira()));
             ri.setPesoBruto(ingDTO.getPesoBruto());
             ri.setPesoLiquido(ingDTO.getPesoLiquido());
             ri.setFatorCorrecao(ingDTO.getFatorCorrecao());

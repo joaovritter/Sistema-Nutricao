@@ -7,11 +7,18 @@
     <link rel="stylesheet" href="/css/criarFichaTecnica.css">
 </head>
 <body>
+<header class="header-1">
+    <div class="logo-container">
+        <img src="images/logo.png" alt="Logo Nutrição" class="logo topo" id="topo">
+        <h1>Fichas Técnicas de Nutrição</h1>
+    </div>
+    <button type="button" class="btn btn-back" onclick="window.location.href='/dashboard'">Voltar</button>
+</header>
+<div class="overlay">
 <div class="container">
-    <header class="header">
+    <header class="header-2">
         <h1>Ficha Técnica</h1>
     </header>
-
     <form>
         <!-- Cabeçalho da Ficha Técnica -->
         <section class="section">
@@ -72,7 +79,7 @@
                     </table>
                 </div>
 
-                <button type="button" class="btn btn-icon" onclick="adicionarIngrediente()">
+                <button type="button" class="btn-form btn-icon" onclick="adicionarIngrediente()">
                     Adicionar
                 </button>
 
@@ -180,7 +187,7 @@
                     </table>
                 </div>
 
-                <button type="button" class="btn btn-icon" onclick="adicionarNutriente()">
+                <button type="button" class="btn-fomr btn-icon" onclick="adicionarNutriente()">
                     Adicionar
                 </button>
 
@@ -206,7 +213,10 @@
         </section>
     </form>
 </div>
-
+    <a href="#topo" alt="setaTopo" title="Go to top">
+        <img class="setaTopo" src="images/setaTopo.png" alt="setaTopo">
+    </a>
+</div>
 <script src="script.js"></script>
 </body>
 </html>

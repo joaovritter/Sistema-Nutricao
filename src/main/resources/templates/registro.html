@@ -7,7 +7,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-<div class="content-right">
+<div class="content">
+        <div class="error-message" th:if="${param.error}">
+            Usuário já cadastrado. Faça login ou escolha outro nome de usuário.
+        </div>
     <div class="login-box">
         <form th:action="@{/registro}" method="post">
             <div class="form-group">
