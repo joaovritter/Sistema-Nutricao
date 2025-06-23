@@ -1,0 +1,92 @@
+/* Estilos específicos para a página de detalhes da receita */
+
+.detalhes-container {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    max-width: 900px;
+    margin: 20px auto;
+}
+
+.detalhes-container section {
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.detalhes-container h2 {
+    color: #333;
+    font-size: 1.8em;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 5px;
+}
+
+.receita-info p {
+    margin-bottom: 8px;
+    font-size: 1.1em;
+    color: #555;
+}
+
+.receita-info p strong {
+    color: #333;
+    width: 150px; /* Alinha os dois pontos */
+    display: inline-block;
+}
+
+.table-container {
+    overflow-x: auto; /* Permite rolagem em telas pequenas */
+}
+
+.ingredientes-info table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.ingredientes-info th,
+.ingredientes-info td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+    vertical-align: top;
+}
+
+.ingredientes-info th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+    color: #333;
+}
+
+.ingredientes-info tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.ingredientes-info tr:hover {
+    background-color: #f1f1f1;
+}
+
+.nutrition-details p {
+    margin-bottom: 8px;
+    font-size: 1.1em;
+    color: #555;
+}
+
+.nutrition-details p strong {
+    color: #333;
+    width: 200px; /* Alinha os dois pontos */
+    display: inline-block;
+}
+
+.no-data-message {
+    padding: 15px;
+    background-color: #ffeeba;
+    border: 1px solid #ffda6a;
+    border-radius: 5px;
+    color: #856404;
+    text-align: center;
+    font-weight: bold;
+}

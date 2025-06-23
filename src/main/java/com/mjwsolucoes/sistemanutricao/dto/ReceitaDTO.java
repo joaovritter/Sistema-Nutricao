@@ -1,3 +1,4 @@
+// src/main/java/com/mjwsolucoes/sistemanutricao/dto/ReceitaDTO.java
 package com.mjwsolucoes.sistemanutricao.dto;
 
 import jakarta.validation.constraints.NotBlank;
@@ -15,7 +16,10 @@ public class ReceitaDTO {
     private String nome;
 
     @NotBlank(message = "Categoria é obrigatória")
-    private String categoria;
+    private String categoria; // Corresponde ao nome do Enum (ex: "ENTRADA")
+
+    @NotBlank(message = "Equipamento é obrigatório")
+    private String equipamentos;
 
     @NotBlank(message = "Modo de preparo é obrigatório")
     private String modoPreparo;
@@ -26,19 +30,23 @@ public class ReceitaDTO {
 
     @NotNull(message = "Peso da porção é obrigatório")
     @Positive(message = "Peso da porção deve ser positivo")
-    private Integer pesoPorcao;
+    private Double pesoPorcao; // Tipo Double no DTO
 
     @NotNull(message = "Rendimento é obrigatório")
     @Positive(message = "Rendimento deve ser positivo")
-    private Integer rendimento;
+    private Double rendimento; // Tipo Double no DTO
 
     @NotNull(message = "Número de porções é obrigatório")
     @Positive(message = "Número de porções deve ser positivo")
     private Integer numeroPorcoes;
 
-    private Long nutricionistaId;
-    private String nutricionistaUsername;
-    private PerfilNutricionalDTO perfilNutricional;
-    private List<ReceitaIngredienteDTO> ingredientes;
-}
+    private Double fcc; // Tipo Double no DTO
+    private String medidaCaseira;
 
+    // Estes campos para o username/userId do nutricionista são preenchidos no serviço, não enviados pelo frontend
+    private Long userId; // Para resposta DTO, para que o frontend saiba o ID do nutricionista
+    private String nutricionistaUsername; // Para resposta DTO, para que o frontend saiba o username do nutricionista
+
+    private PerfilNutricionalDTO perfilNutricional;
+    private List<ReceitaIngredienteInputDTO> ingredientes; // Lista do DTO de input para ingredientes
+}

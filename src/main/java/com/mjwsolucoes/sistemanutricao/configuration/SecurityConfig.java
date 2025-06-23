@@ -46,7 +46,7 @@ public class SecurityConfig {
 
                         // 3. ROTAS PROTEGIDAS POR AUTENTICAÇÃO (apenas precisa estar logado, qualquer role)
                         // O dashboard é um exemplo típico de página que qualquer usuário logado deve ver
-                        .requestMatchers("/dashboard", "/visualizar/**").authenticated() // Protege explicitamente o dashboard
+                        .requestMatchers("/dashboard").authenticated() // Protege explicitamente o dashboard
 
                         // 4. CATCH-ALL: Qualquer outra requisição que não foi explicitamente permitida acima, DEVE ser autenticada.
                         // Esta é a regra de "default deny" (negar por padrão).

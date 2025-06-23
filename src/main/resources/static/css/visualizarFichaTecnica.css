@@ -1,12 +1,10 @@
-*{
-    font-family: Arial, sans-serif;
-}
+/* src/main/resources/static/css/visualizarReceitas.css */
+
 /* Estilos para o cabeçalho da página de visualização */
 .header .header-actions {
     display: flex; /* Para alinhar os botões lado a lado */
     gap: 15px; /* Espaço entre os botões */
     align-items: center;
-    background-color: #6baa75;
 }
 
 /* Estilos gerais para botões (se não estiverem bem definidos em dashboard.css) */

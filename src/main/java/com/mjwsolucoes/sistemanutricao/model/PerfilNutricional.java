@@ -14,19 +14,25 @@ public class PerfilNutricional {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private int perCapita;
-    private int totalGramas;
-    private int totalKcal;  // Verifique se o nome do campo está exatamente assim
-    private int totalPorcentagem;
-    private int vct;
+    @Column(nullable = false)
+    private Double perCapita; // Corrigido para Double
+
+    @Column(nullable = false)
+    private Double totalGramas; // Corrigido para Double
+
+    @Column(nullable = false)
+    private Double totalKcal;  // Corrigido para Double
+
+    @Column(nullable = false)
+    private Double totalPorcentagem; // Corrigido para Double
+
+    @Column(nullable = false)
+    private Double vct; // Corrigido para Double
 
     @OneToOne
-    @JoinColumn(name = "receita_id")
+    @JoinColumn(name = "receita_id", unique = true, nullable = false) // Garante que uma Receita tenha apenas um PerfilNutricional
     private Receita receita;
 
-
-    public void ifPresent(Object o) {
-    }
-
-    // Getters e Setters
+    // Getters e Setters são gerados pelo Lombok (@Data), não precisa escrevê-los.
+    // O método 'ifPresent(Object o)' foi removido pois não pertence a uma entidade.
 }

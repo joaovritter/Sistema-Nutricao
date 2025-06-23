@@ -10,4 +10,7 @@ public class IngredienteInfoDTO {
     private Double quantidade;
     private String medida;
     private Double custoPorcao;
+    private boolean ingredienteSistema; // true= do sistema, false= de nutricionista
+    private int nutricionistaId;
+
 }

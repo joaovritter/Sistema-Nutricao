@@ -7,15 +7,18 @@
     <title>Visualizar Receitas</title>
     <link rel="stylesheet" href="/css/dashboard.css">
     <link rel="stylesheet" href="/css/visualizarFichaTecnica.css">
+    <link rel="stylesheet" href="/css/navbar.css">
 </head>
 
 <body>
 <header class="header">
     <div class="logo-container">
-        <h1>Visualizar Receitas</h1> </div>
+        <img src="/images/logo.png" alt="Logo Nutrição" class="logo">
+        <h1>Fichas Técnicas de Nutrição</h1>
+    </div>
     <div class="header-actions">
-        <a th:href="@{/dashboard}" class="btn btn-voltar">Voltar ao Dashboard</a>
-        <a th:href="@{/fichatecnica}" class="btn btn-criar" sec:authorize="hasAnyAuthority('NUTRICIONISTA', 'ADMIN')">
+        <a th:href="@{/dashboard}" class="btn navbar-btn">Voltar ao Dashboard</a>
+        <a th:href="@{/fichatecnica}" class="btn navbar-btn" sec:authorize="hasAnyAuthority('NUTRICIONISTA', 'ADMIN')">
             Criar Nova Receita
         </a>
     </div>

@@ -1,3 +1,4 @@
+// src/main/java/com/mjwsolucoes/sistemanutricao/dto/IngredienteDTO.java
 package com.mjwsolucoes.sistemanutricao.dto;
 
 import jakarta.validation.constraints.NotBlank;
@@ -31,4 +32,6 @@ public class IngredienteDTO {
     @NotNull(message = "Gordura saturada é obrigatória")
     @PositiveOrZero(message = "Gordura saturada não pode ser negativa")
     private Double gorduraSaturada;
+
+    // Não inclui campos de nutricionista, pois este DTO é para ingredientes gerais/sistema
 }

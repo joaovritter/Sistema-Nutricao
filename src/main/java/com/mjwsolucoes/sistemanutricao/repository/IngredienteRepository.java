@@ -1,3 +1,4 @@
+// src/main/java/com/mjwsolucoes/sistemanutricao/repository/IngredienteRepository.java
 package com.mjwsolucoes.sistemanutricao.repository;
 
 import com.mjwsolucoes.sistemanutricao.model.Ingrediente;
@@ -12,6 +13,10 @@ public interface IngredienteRepository extends JpaRepository<Ingrediente, Long> 
 
     // Busca ingrediente por nome (exato)
     Ingrediente findByNome(String nome);
+
+    // Busca ingredientes criados por um nutricionista
+    // Retorna ingredientes onde isIngredienteSistema é false e o nutricionista é o ID fornecido
+    List<Ingrediente> findByNutricionistaIdAndIsIngredienteSistemaFalse(Long nutricionistaId);
 
     // Busca ingredientes por parte do nome (case insensitive)
     List<Ingrediente> findByNomeContainingIgnoreCase(String nome);

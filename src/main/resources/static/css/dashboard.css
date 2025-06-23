@@ -1,3 +1,4 @@
+/* Estilos para o Dashboard */
 * {
     margin: 0;
     padding: 0;
@@ -8,45 +9,6 @@
 body {
     background-color: #f5f5f5;
     min-height: 100vh;
-}
-
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #6baa75;
-    padding: 15px 20px;
-    color: #fff;
-}
-
-.logo-container {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.logo {
-    width: 40px;
-    height: 40px;
-}
-
-.logout-btn {
-    background-color: #333;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 8px 15px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background-color 0.3s;
-}
-.logout-btn a{
-    color: white;
-    text-decoration: none;
-}
-
-.logout-btn:hover {
-    background-color: #555;
 }
 
 .container {
@@ -69,15 +31,15 @@ body {
 
 .card a{
     text-decoration: none;
-    color: inherit;
+    color: inherit; /* Garante que a cor do texto do card seja herdada ou padrão */
 }
+
 .card:hover {
     transform: translateY(-5px);
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
 }
 
 .card-content {
-
     display: flex;
     padding: 20px;
     gap: 20px;
@@ -108,19 +70,18 @@ body {
     font-size: 16px;
 }
 
+/* Media Query para responsividade do CONTEÚDO (cards) */
 @media (max-width: 768px) {
-    .header {
-        flex-direction: column;
-        gap: 10px;
-        text-align: center;
-    }
-
-    .logo-container {
-        flex-direction: column;
-    }
+    /* Removido: Media queries para .header e .logo-container */
 
     .card-content {
-        flex-direction: column;
+        flex-direction: column; /* Cards empilhados em telas pequenas */
         text-align: center;
+    }
+
+    /* Ajustes para o container em telas pequenas */
+    .container {
+        margin: 20px auto; /* Reduz margem superior/inferior */
+        padding: 0 15px; /* Ajusta o padding lateral */
     }
 }

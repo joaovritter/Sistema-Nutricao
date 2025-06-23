@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${'Detalhes da Receita: ' + receitaDetalhes.receita.nome}"></title>
+    <link rel="stylesheet" href="/css/dashboard.css"> <link rel="stylesheet" href="/css/detalhesReceita.css"> </head>
+<body>
+<header class="header">
+    <div class="logo-container">
+        <h1 th:text="${'Detalhes da Receita: ' + receitaDetalhes.receita.nome}"></h1>
+    </div>
+    <div class="header-actions">
+        <a th:href="@{/dashboard}" class="btn btn-voltar">Voltar para a Lista</a>
+    </div>
+</header>
+
+<main class="container detalhes-container">
+    <section class="receita-info">
+        <h2>Informações Gerais</h2>
+        <p><strong>Nome:</strong> <span th:text="${receitaDetalhes.receita.nome}"></span></p>
+        <p><strong>Categoria:</strong> <span th:text="${receitaDetalhes.receita.categoria}"></span></p>
+        <p><strong>Equipamentos:</strong> <span th:text="${receitaDetalhes.receita.equipamentos}"></span></p>
+        <p><strong>Modo de Preparo:</strong> <span th:text="${receitaDetalhes.receita.modoPreparo}"></span></p>
+        <p><strong>Tempo de Preparo:</strong> <span th:text="${receitaDetalhes.receita.tempoPreparo + ' minutos'}"></span></p>
+        <p><strong>Rendimento:</strong> <span th:text="${receitaDetalhes.receita.rendimento + ' porções'}"></span></p>
+        <p><strong>Número de Porções:</strong> <span th:text="${receitaDetalhes.receita.numeroPorcoes}"></span></p>
+        <p><strong>Peso da Porção:</strong> <span th:text="${receitaDetalhes.receita.pesoPorcao + ' g'}"></span></p>
+        <p><strong>FCC:</strong> <span th:text="${receitaDetalhes.receita.fcc}"></span></p>
+        <p><strong>Medida Caseira:</strong> <span th:text="${receitaDetalhes.receita.medidaCaseira}"></span></p>
+        <p><strong>Nutricionista:</strong> <span th:text="${receitaDetalhes.receita.nutricionistaUsername}"></span></p>
+    </section>
+
+    <section class="ingredientes-info">
+        <h2>Ingredientes</h2>
+        <div th:if="${receitaDetalhes.ingredientes == null or receitaDetalhes.ingredientes.isEmpty()}" class="no-data-message">
+            <p>Nenhum ingrediente associado a esta receita.</p>
+        </div>
+        <div th:unless="${receitaDetalhes.ingredientes == null or receitaDetalhes.ingredientes.isEmpty()}" class="table-container">
+            <table>
+                <thead>
+                <tr>
+                    <th>Ingrediente</th>
+                    <th>Quantidade (g/ml)</th>
+                    <th>Medida Caseira</th>
+                    <th>Custo p/ Porção</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="ingrediente : ${receitaDetalhes.ingredientes}">
+                    <td th:text="${ingrediente.nome}"></td>
+                    <td th:text="${ingrediente.quantidade}"></td>
+                    <td th:text="${ingrediente.medida}"></td>
+                    <td th:text="${'R$ ' + #numbers.formatDecimal(ingrediente.custoPorcao, 1, 2)}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="perfil-nutricional-info">
+        <h2>Perfil Nutricional</h2>
+        <div th:if="${receitaDetalhes.perfilNutricional == null}" class="no-data-message">
+            <p>Nenhum perfil nutricional calculado para esta receita.</p>
+        </div>
+        <div th:unless="${receitaDetalhes.perfilNutricional == null}" class="nutrition-details">
+            <p><strong>Porção Per Capita:</strong> <span th:text="${receitaDetalhes.perfilNutricional.perCapita + ' g'}"></span></p>
+            <p><strong>Total de Gramas:</strong> <span th:text="${receitaDetalhes.perfilNutricional.totalGramas + ' g'}"></span></p>
+            <p><strong>Total de Kcal:</strong> <span th:text="${receitaDetalhes.perfilNutricional.totalKcal + ' kcal'}"></span></p>
+            <p><strong>Porcentagem Total:</strong> <span th:text="${receitaDetalhes.perfilNutricional.totalPorcentagem + '%'}"></span></p>
+            <p><strong>VCT:</strong> <span th:text="${receitaDetalhes.perfilNutricional.vct + ' kcal'}"></span></p>
+        </div>
+    </section>
+</main>
+</body>
+</html>

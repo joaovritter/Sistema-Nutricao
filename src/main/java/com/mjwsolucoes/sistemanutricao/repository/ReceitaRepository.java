@@ -21,7 +21,8 @@ public interface ReceitaRepository extends JpaRepository<Receita, Long> {
     List<Receita> findByNomeContainingIgnoreCase(String nome);
 
     // Busca personalizada com JOIN
-    @Query("SELECT r FROM Receita r JOIN r.ingredientes ri WHERE ri.ingrediente.id = :ingredienteId")
+    // CORREÇÃO AQUI: 'r.ingredientesReceita' em vez de 'r.ingredientesAssociados'
+    @Query("SELECT r FROM Receita r JOIN r.ingredientesReceita ri WHERE ri.ingrediente.id = :ingredienteId")
     List<Receita> findByIngredienteId(@Param("ingredienteId") Long ingredienteId);
 
     // Verifica se existe receita com determinado nome para um nutricionista

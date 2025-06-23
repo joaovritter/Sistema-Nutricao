@@ -5,39 +5,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ficha Técnica de Preparação Alimentar</title>
     <link rel="stylesheet" href="/css/criarFichaTecnica.css">
+    <link rel="stylesheet" href="/css/navbar.css">
 </head>
 <body>
-<header class="header-1">
+
+<header class="header">
     <div class="logo-container">
-        <img src="images/logo.png" alt="Logo Nutrição" class="logo topo" id="topo">
+        <img src="/images/logo.png" alt="Logo Nutrição" class="logo">
         <h1>Fichas Técnicas de Nutrição</h1>
     </div>
-    <button type="button" class="btn btn-back" onclick="window.location.href='/dashboard'">Voltar</button>
+    <button type="button" class="navbar-btn" onclick="window.location.href='/dashboard'">Voltar</button>
+
 </header>
-<div class="overlay">
+
 <div class="container">
-    <header class="header-2">
-        <h1>Ficha Técnica</h1>
-    </header>
-    <form>
-        <!-- Cabeçalho da Ficha Técnica -->
+    <span class="titulo-ficha">Ficha Técnica</span>
+    <form id="fichaTecnicaForm">
         <section class="section">
             <div class="section-content">
                 <div class="form-row">
                     <div class="form-group">
                         <label for="nome-preparacao">Nome da preparação:</label>
-                        <input type="text" id="nome-preparacao" name="nome-preparacao">
+                        <input type="text" id="nome-preparacao" name="nome-preparacao" required>
                     </div>
                     <div class="form-group medium">
                         <label for="categoria">Categoria:</label>
-                        <select id="categoria" name="categoria">
+                        <select id="categoria" name="categoria" required>
                             <option value="" disabled selected>Selecione uma categoria</option>
-                            <option value="entrada">Entrada</option>
-                            <option value="prato-principal">Prato Principal</option>
-                            <option value="guarnicao">Guarnição</option>
-                            <option value="salada">Salada</option>
-                            <option value="sobremesa">Sobremesa</option>
-                            <option value="bebida">Bebida</option>
+                            <option value="ENTRADA">Entrada</option>
+                            <option value="PRATO_PRINCIPAL">Prato Principal</option>
+                            <option value="GUARNICAO">Guarnição</option>
+                            <option value="SALADA">Salada</option>
+                            <option value="SOBREMESA">Sobremesa</option>
+                            <option value="BEBIDA">Bebida</option>
                         </select>
                     </div>
                     <div class="form-group small">
@@ -48,7 +48,6 @@
             </div>
         </section>
 
-        <!-- Seção de Ingredientes -->
         <section class="section">
             <h2 class="section-title">🥬 Ingredientes</h2>
             <div class="section-content">
@@ -63,24 +62,26 @@
                             <th>FC</th>
                             <th>Custo (forma de compra)</th>
                             <th>Custo (quantidade utilizada)</th>
+                            <th>Ações</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr>
-                            <td><input type="text" placeholder="Ingrediente"></td>
-                            <td><input type="text" placeholder="Medida"></td>
-                            <td><input type="number" step="0.01" placeholder="0.00"></td>
-                            <td><input type="number" step="0.01" placeholder="0.00"></td>
-                            <td><input type="number" step="0.01" placeholder="0.00"></td>
-                            <td><input type="number" step="0.01" placeholder="R$ 0,00"></td>
-                            <td><input type="number" step="0.01" placeholder="R$ 0,00"></td>
+                            <td><input type="text" class="ingrediente-nome" placeholder="Ingrediente"></td>
+                            <td><input type="text" class="medida-caseira-ingrediente" placeholder="Medida"></td>
+                            <td><input type="number" step="0.01" class="pb-ingrediente" placeholder="0.00"></td>
+                            <td><input type="number" step="0.01" class="pl-ingrediente" placeholder="0.00"></td>
+                            <td><input type="number" step="0.01" class="fc-ingrediente" placeholder="0.00" readonly></td>
+                            <td><input type="number" step="0.01" class="custo-compra-ingrediente" placeholder="R$ 0,00"></td>
+                            <td><input type="number" step="0.01" class="custo-utilizado-ingrediente" placeholder="R$ 0,00" readonly></td>
+                            <td><button type="button" class="btn-remover" onclick="removerLinha(this)">Remover</button></td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
 
-                <button type="button" class="btn-form btn-icon" onclick="adicionarIngrediente()">
-                    Adicionar
+                <button type="button" class="btn btn-icon" onclick="adicionarIngrediente()">
+                    Adicionar Ingrediente
                 </button>
 
                 <div class="water-calc">
@@ -88,9 +89,10 @@
                         <div class="form-group">
                             <label for="agua-fcc">Quantidade de água (Cálculo de FCC):</label>
                             <select id="agua-fcc" name="agua-fcc">
-                                <option value="opcao1">Opção 1</option>
-                                <option value="opcao2">Opção 2</option>
-                                <option value="opcao3">Opção 3</option>
+                                <option value="opcao1">25%</option>
+                                <option value="opcao2">50%</option>
+                                <option value="opcao3">75%</option>
+                                <option value="opcao3">100%</option>
                             </select>
                         </div>
                     </div>
@@ -98,7 +100,6 @@
             </div>
         </section>
 
-        <!-- Modo de Preparo e Equipamentos -->
         <section class="section">
             <h2 class="section-title">📝 Modo de preparo e Equipamentos</h2>
             <div class="section-content">
@@ -115,48 +116,46 @@
             </div>
         </section>
 
-        <!-- Informações Complementares -->
         <section class="section">
             <h2 class="section-title">📊 Informações Complementares</h2>
             <div class="section-content">
                 <div class="grid-4">
                     <div class="form-group">
                         <label for="custo-total">Custo total:</label>
-                        <input type="number" step="0.01" id="custo-total" name="custo-total" placeholder="R$ 0,00">
+                        <input type="number" step="0.01" id="custo-total" name="custo-total" placeholder="R$ 0,00" readonly>
                     </div>
                     <div class="form-group">
                         <label for="custo-per-capita">Custo per capita:</label>
-                        <input type="number" step="0.01" id="custo-per-capita" name="custo-per-capita" placeholder="R$ 0,00">
+                        <input type="number" step="0.01" id="custo-per-capita" name="custo-per-capita" placeholder="R$ 0,00" readonly>
                     </div>
                     <div class="form-group">
-                        <label for="tempo-preparo">Tempo de preparo:</label>
-                        <input type="text" id="tempo-preparo" name="tempo-preparo" placeholder="00:00">
+                        <label for="tempo-preparo">Tempo de preparo (minutos):</label>
+                        <input type="number" id="tempo-preparo" name="tempo-preparo" placeholder="00">
                     </div>
                     <div class="form-group">
-                        <label for="medida-caseira">Medida caseira:</label>
+                        <label for="medida-caseira">Medida caseira final:</label>
                         <input type="text" id="medida-caseira" name="medida-caseira">
                     </div>
                     <div class="form-group">
-                        <label for="rendimento">Rendimento:</label>
-                        <input type="text" id="rendimento" name="rendimento">
+                        <label for="rendimento">Rendimento (g ou ml):</label>
+                        <input type="number" step="0.01" id="rendimento" name="rendimento" placeholder="0.00">
                     </div>
                     <div class="form-group">
-                        <label for="peso-porcao">Peso da porção:</label>
-                        <input type="number" step="0.01" id="peso-porcao" name="peso-porcao" placeholder="0.00g">
+                        <label for="peso-porcao">Peso da porção (g):</label>
+                        <input type="number" step="0.01" id="peso-porcao" name="peso-porcao" placeholder="0.00">
                     </div>
                     <div class="form-group">
                         <label for="numero-porcoes">Número de porções:</label>
                         <input type="number" id="numero-porcoes" name="numero-porcoes">
                     </div>
                     <div class="form-group">
-                        <label for="fcc">Fcc:</label>
-                        <input type="number" step="0.01" id="fcc" name="fcc" placeholder="0.00">
+                        <label for="fcc">Fcc Geral:</label>
+                        <input type="number" step="0.01" id="fcc" name="fcc" placeholder="0.00" readonly>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Perfil Nutricional -->
         <section class="section">
             <h2 class="section-title">🍎 Perfil Nutricional</h2>
             <div class="section-content">
@@ -171,52 +170,426 @@
                             <th>LIP</th>
                             <th>Sódio</th>
                             <th>Gordura Saturada</th>
+                            <th>Ações</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td><input type="text" placeholder="Ingrediente"></td>
-                            <td><input type="number" step="0.01" placeholder="0.00"></td>
-                            <td><input type="number" step="0.01" placeholder="0.00"></td>
-                            <td><input type="number" step="0.01" placeholder="0.00"></td>
-                            <td><input type="number" step="0.01" placeholder="0.00"></td>
-                            <td><input type="number" step="0.01" placeholder="0.00"></td>
-                            <td><input type="number" step="0.01" placeholder="0.00"></td>
-                        </tr>
                         </tbody>
                     </table>
                 </div>
 
-                <button type="button" class="btn-fomr btn-icon" onclick="adicionarNutriente()">
-                    Adicionar
+                <button type="button" class="btn btn-icon" onclick="adicionarNutriente()">
+                    Adicionar Nutriente (Apenas para demonstração, idealmente preenchido pelos ingredientes)
                 </button>
 
                 <div class="nutrition-extras">
                     <div class="form-group">
                         <label for="total-macros-g">Total dos Macros (g):</label>
-                        <input type="number" step="0.01" id="total-macros-g" name="total-macros-g" placeholder="0.00">
+                        <input type="number" step="0.01" id="total-macros-g" name="total-macros-g" placeholder="0.00" readonly>
                     </div>
                     <div class="form-group">
                         <label for="total-macros-kcal">Total dos Macros (Kcal):</label>
-                        <input type="number" step="0.01" id="total-macros-kcal" name="total-macros-kcal" placeholder="0.00">
+                        <input type="number" step="0.01" id="total-macros-kcal" name="total-macros-kcal" placeholder="0.00" readonly>
                     </div>
                     <div class="form-group">
                         <label for="total-macros-percent">Total dos Macros (%):</label>
-                        <input type="number" step="0.01" id="total-macros-percent" name="total-macros-percent" placeholder="0.00%">
+                        <input type="text" id="total-macros-percent" name="total-macros-percent" placeholder="0.00%" readonly>
                     </div>
                     <div class="form-group">
                         <label for="vct">VCT (Kcal):</label>
-                        <input type="number" step="0.01" id="vct" name="vct" placeholder="0.00">
+                        <input type="number" step="0.01" id="vct" name="vct" placeholder="0.00" readonly>
                     </div>
                 </div>
             </div>
         </section>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Salvar Ficha Técnica</button>
+        </div>
     </form>
 </div>
-    <a href="#topo" alt="setaTopo" title="Go to top">
-        <img class="setaTopo" src="images/setaTopo.png" alt="setaTopo">
-    </a>
-</div>
-<script src="script.js"></script>
+
+<script>
+    // Função para buscar ingredientes do backend para autocomplete
+    async function buscarIngredientes(query) {
+        try {
+            const response = await fetch(`/api/ingredientes/buscar?nome=${encodeURIComponent(query)}`, {
+                credentials: 'include' // IMPORTANTE: Inclui o cookie JSESSIONID na requisição
+            });
+
+            if (response.ok) {
+                return await response.json();
+            } else if (response.status === 401 || response.status === 403) {
+                // Se a sessão expirou ou não está autorizada, redireciona para o login
+                alert('Sua sessão expirou ou você não está autorizado. Faça login novamente.');
+                window.location.href = '/login';
+                return []; // Retorna lista vazia para evitar erros
+            } else {
+                console.error('Erro ao buscar ingredientes:', response.statusText);
+                return [];
+            }
+        } catch (error) {
+            console.error('Erro na requisição de buscar ingredientes:', error);
+            alert('Ocorreu um erro na comunicação com o servidor ao buscar ingredientes.');
+            return [];
+        }
+    }
+
+    // Função para adicionar uma nova linha na tabela de ingredientes
+    function adicionarIngrediente() {
+        const tableBody = document.querySelector('#ingredientes-table tbody');
+        const newRow = tableBody.insertRow();
+        newRow.innerHTML = `
+            <td><input type="text" class="ingrediente-nome" placeholder="Ingrediente"></td>
+            <td><input type="text" class="medida-caseira-ingrediente" placeholder="Medida"></td>
+            <td><input type="number" step="0.01" class="pb-ingrediente" placeholder="0.00"></td>
+            <td><input type="number" step="0.01" class="pl-ingrediente" placeholder="0.00"></td>
+            <td><input type="number" step="0.01" class="fc-ingrediente" placeholder="0.00" readonly></td>
+            <td><input type="number" step="0.01" class="custo-compra-ingrediente" placeholder="R$ 0,00"></td>
+            <td><input type="number" step="0.01" class="custo-utilizado-ingrediente" placeholder="R$ 0,00" readonly></td>
+            <td><button type="button" class="btn-remover" onclick="removerLinha(this)">Remover</button></td>
+        `;
+        setupAutocompleteForElement(newRow.querySelector('.ingrediente-nome'));
+
+        // Adiciona event listeners para os novos campos da linha
+        const pbInput = newRow.querySelector('.pb-ingrediente');
+        const plInput = newRow.querySelector('.pl-ingrediente');
+        const custoCompraInput = newRow.querySelector('.custo-compra-ingrediente');
+
+        // Chame a função de cálculo sempre que esses inputs mudarem
+        pbInput.addEventListener('input', atualizarCalculosIngrediente);
+        plInput.addEventListener('input', atualizarCalculosIngrediente);
+        custoCompraInput.addEventListener('input', atualizarCalculosIngrediente);
+
+        // Também recalcule tudo após adicionar uma nova linha
+        atualizarCalculosGlobais();
+    }
+
+    // Função para adicionar uma nova linha na tabela nutricional (exemplo)
+    // OBS: Esta função é mais um placeholder, o ideal é que a tabela nutricional seja preenchida automaticamente.
+    function adicionarNutriente() {
+        const tableBody = document.querySelector('#nutricional-table tbody');
+        const newRow = tableBody.insertRow();
+        newRow.innerHTML = `
+            <td><input type="text" placeholder="Ingrediente"></td>
+            <td><input type="number" step="0.01" placeholder="0.00"></td>
+            <td><input type="number" step="0.01" placeholder="0.00"></td>
+            <td><input type="number" step="0.01" placeholder="0.00"></td>
+            <td><input type="number" step="0.01" placeholder="0.00"></td>
+            <td><input type="number" step="0.01" placeholder="0.00"></td>
+            <td><input type="number" step="0.01" placeholder="0.00"></td>
+            <td><button type="button" class="btn-remover" onclick="removerLinha(this)">Remover</button></td>
+        `;
+    }
+
+    // Função para remover uma linha da tabela
+    function removerLinha(button) {
+        const row = button.parentNode.parentNode;
+        row.parentNode.removeChild(row);
+        atualizarCalculosGlobais(); // Recalcular tudo após remover uma linha
+    }
+
+    // Função para autocomplete no campo de ingrediente
+    async function setupAutocompleteForElement(inputElement) {
+        let timeout = null; // Para debounce
+        inputElement.addEventListener('input', async function(e) {
+            clearTimeout(timeout); // Limpa o timeout anterior
+            const query = e.target.value;
+
+            // Limpa o ID do ingrediente quando o usuário digita novamente
+            e.target.dataset.ingredienteId = ''; // Limpa o ID do input
+            // Limpa dados nutricionais associados à linha se o ingrediente mudar
+            const currentRow = e.target.closest('tr');
+            if (currentRow) {
+                currentRow.dataset.proteina = '';
+                currentRow.dataset.carboidrato = '';
+                currentRow.dataset.lipidio = '';
+                currentRow.dataset.sodio = '';
+                currentRow.dataset.gorduraSaturada = '';
+                currentRow.dataset.kcal = ''; // Se você tiver calorias por 100g no Ingrediente
+            }
+
+            let old = inputElement.parentNode.querySelector('.autocomplete-list');
+            if (old) old.remove();
+
+            if (query.length < 2) return; // Não busca se a query for muito curta
+
+            timeout = setTimeout(async () => { // Debounce para evitar muitas chamadas à API
+                const lista = await buscarIngredientes(query);
+
+                if (lista.length > 0) {
+                    let dropdown = document.createElement('div');
+                    dropdown.className = 'autocomplete-list';
+                    dropdown.style.position = 'absolute';
+                    dropdown.style.background = '#fff';
+                    dropdown.style.border = '1px solid #ccc';
+                    dropdown.style.zIndex = 1000;
+                    dropdown.style.maxHeight = '200px'; // Limita a altura do dropdown
+                    dropdown.style.overflowY = 'auto'; // Adiciona scroll se necessário
+                    dropdown.style.width = inputElement.offsetWidth + 'px'; // Mesma largura do input
+
+                    lista.forEach(item => {
+                        let option = document.createElement('div');
+                        option.textContent = item.nome;
+                        option.dataset.ingredienteId = item.id;
+                        // Armazena todos os dados nutricionais no dataset do option
+                        option.dataset.proteina = item.proteina;
+                        option.dataset.carboidrato = item.carboidrato;
+                        option.dataset.lipidio = item.lipidio;
+                        option.dataset.sodio = item.sodio;
+                        option.dataset.gorduraSaturada = item.gorduraSaturada;
+                        // Certifique-se que o IngredienteDTO tenha o campo `kcal` (ou calcule aqui)
+                        option.dataset.kcal = (item.proteina * 4) + (item.carboidrato * 4) + (item.lipidio * 9); // Kcal por 100g
+
+                        option.onclick = () => {
+                            e.target.value = item.nome;
+                            e.target.dataset.ingredienteId = item.id; // <--- ESTA LINHA É CRUCIAL PARA O INPUT
+
+                            const tr = e.target.closest('tr');
+                            tr.dataset.ingredienteId = item.id; // <--- ESTA LINHA É CRUCIAL PARA A LINHA
+                            tr.dataset.proteina = item.proteina;
+                            tr.dataset.carboidrato = item.carboidrato;
+                            tr.dataset.lipidio = item.lipidio;
+                            tr.dataset.sodio = item.sodio;
+                            tr.dataset.gorduraSaturada = item.gorduraSaturada;
+                            tr.dataset.kcal = option.dataset.kcal;
+
+                            dropdown.remove();
+                            atualizarCalculosGlobais();
+                        };
+                        dropdown.appendChild(option);
+                    });
+                    inputElement.parentNode.appendChild(dropdown);
+                }
+            }, 300); // Debounce de 300ms
+        });
+
+        // Remover dropdown ao clicar fora
+        inputElement.addEventListener('blur', function() {
+            setTimeout(() => { // Pequeno delay para permitir o click no item do dropdown
+                let old = inputElement.parentNode.querySelector('.autocomplete-list');
+                if (old) old.remove();
+            }, 100);
+        });
+    }
+
+    // Função que coleta todos os dados do formulário para envio
+    function coletarDadosFormulario() {
+        const dados = {
+            nome: document.getElementById('nome-preparacao').value,
+            categoria: document.getElementById('categoria').value,
+            modoPreparo: document.getElementById('modo-preparo').value,
+            tempoPreparo: parseFloat(document.getElementById('tempo-preparo').value) || 0,
+            pesoPorcao: parseFloat(document.getElementById('peso-porcao').value) || 0.0,
+            rendimento: parseFloat(document.getElementById('rendimento').value) || 0.0,
+            numeroPorcoes: parseInt(document.getElementById('numero-porcoes').value) || 0,
+            fcc: parseFloat(document.getElementById('fcc').value) || 0.0, // fcc geral
+            medidaCaseira: document.getElementById('medida-caseira').value, // Medida caseira final
+            equipamentos: document.getElementById('equipamentos').value,
+        };
+
+        // Coletar ingredientes
+        const ingredientes = [];
+        document.querySelectorAll('#ingredientes-table tbody tr').forEach(row => {
+            const ingredienteNomeInput = row.querySelector('.ingrediente-nome');
+            const ingredienteId = ingredienteNomeInput.dataset.ingredienteId; // AQUI ESTÁ A CHAVE!
+
+            // Validar se o ingredienteId está presente e se o nome não está vazio
+            if (ingredienteId && ingredienteNomeInput.value.trim() !== '') {
+                ingredientes.push({
+                    ingredienteId: parseInt(ingredienteId), // Converter para número inteiro
+                    ingredienteNome: ingredienteNomeInput.value.trim(),
+                    medidaCaseira: row.querySelector('.medida-caseira-ingrediente').value,
+                    pesoBruto: parseFloat(row.querySelector('.pb-ingrediente').value) || 0.0,
+                    pesoLiquido: parseFloat(row.querySelector('.pl-ingrediente').value) || 0.0,
+                    fatorCorrecao: parseFloat(row.querySelector('.fc-ingrediente').value) || 0.0,
+                    custoCompra: parseFloat(row.querySelector('.custo-compra-ingrediente').value) || 0.0,
+                    custoUtilizado: parseFloat(row.querySelector('.custo-utilizado-ingrediente').value) || 0.0
+                });
+            } else {
+                console.warn(`Ingrediente ignorado por falta de nome ou ID: ${ingredienteNomeInput.value}, ID: ${ingredienteId}`);
+            }
+        });
+        dados.ingredientes = ingredientes;
+
+        // Coletar perfil nutricional (assumindo que você preenche isso no JS ou que está no DTO)
+        const perfilNutricional = {
+            perCapita: parseFloat(document.getElementById('peso-porcao').value) || 0.0, // Assumindo que perCapita seja o peso da porção
+            totalGramas: parseFloat(document.getElementById('total-macros-g').value) || 0.0,
+            totalKcal: parseFloat(document.getElementById('total-macros-kcal').value) || 0.0,
+            // totalPorcentagem é string, mas seu DTO espera Double. Adapte se necessário.
+            totalPorcentagem: parseFloat(document.getElementById('total-macros-percent').value.replace('%', '')) || 0.0,
+            vct: parseFloat(document.getElementById('vct').value) || 0.0
+        };
+
+        // Só adicione o perfil se ele tiver dados significativos (para evitar enviar objeto vazio)
+        if (perfilNutricional.totalKcal > 0 || perfilNutricional.totalGramas > 0 || perfilNutricional.vct > 0) {
+            dados.perfilNutricional = perfilNutricional;
+        } else {
+            dados.perfilNutricional = null;
+        }
+
+        return dados;
+    }
+
+    // Função de envio do formulário
+    document.getElementById('fichaTecnicaForm').addEventListener('submit', async function(event) {
+        event.preventDefault(); // Impede o envio padrão do formulário
+
+        const dadosParaEnviar = coletarDadosFormulario();
+        console.log("Dados a serem enviados:", dadosParaEnviar); // Verifique o objeto antes de enviar
+
+        try {
+            const response = await fetch('/api/receitas', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                    // REMOVIDO: Nenhuma necessidade de cabeçalho 'Authorization' para autenticação baseada em sessão
+                },
+                body: JSON.stringify(dadosParaEnviar),
+                credentials: 'include' // **CRUCIAL: Isso garante que o cookie JSESSIONID seja enviado**
+            });
+
+            if (response.ok) {
+                alert('Ficha Técnica salva com sucesso!');
+                window.location.href = '/visualizar'; // Redirecionar para a página de receitas
+            } else if (response.status === 401 || response.status === 403) {
+                // Se o servidor retornar 401 (Não Autorizado) ou 403 (Proibido),
+                // é porque a sessão expirou ou o usuário não tem permissão.
+                alert('Sua sessão expirou ou você não está autorizado. Faça login novamente.');
+                window.location.href = '/login'; // Redirecionar para a página de login
+            } else {
+                const errorData = await response.json();
+                console.error('Erro ao salvar ficha técnica:', errorData);
+                alert('Erro ao salvar ficha técnica: ' + (errorData.message || response.statusText));
+            }
+        } catch (error) {
+            console.error('Erro na requisição:', error);
+            alert('Ocorreu um erro na comunicação com o servidor.');
+        }
+    });
+
+    // Certifique-se de que todos os inputs de ingrediente existentes ao carregar a página
+    // e os novos adicionados recebam o autocomplete.
+    document.querySelectorAll('.ingrediente-nome').forEach(input => {
+        setupAutocompleteForElement(input);
+    });
+
+    // Event listeners para cálculos no frontend
+    document.querySelectorAll('.pb-ingrediente, .pl-ingrediente, .custo-compra-ingrediente').forEach(input => {
+        input.addEventListener('input', atualizarCalculosIngrediente);
+    });
+
+    // Event listener para o número de porções, afeta o custo per capita
+    document.getElementById('numero-porcoes').addEventListener('input', atualizarCalculosGlobais);
+
+    // Função para atualizar cálculos de ingrediente (FC e Custo Utilizado)
+    function atualizarCalculosIngrediente(event) {
+        const row = event.target.closest('tr');
+        const pb = parseFloat(row.querySelector('.pb-ingrediente').value) || 0;
+        const pl = parseFloat(row.querySelector('.pl-ingrediente').value) || 0;
+        const custoCompra = parseFloat(row.querySelector('.custo-compra-ingrediente').value) || 0;
+
+        // Cálculo do Fator de Correção (FC)
+        const fc = (pb > 0 && pl > 0) ? (pb / pl) : 0;
+        row.querySelector('.fc-ingrediente').value = fc.toFixed(2);
+
+        // Cálculo do Custo Utilizado
+        const custoUtilizado = (pb > 0) ? (custoCompra * (pl / pb)) : 0;
+        row.querySelector('.custo-utilizado-ingrediente').value = custoUtilizado.toFixed(2);
+
+        atualizarCalculosGlobais(); // Recalcular totais globais
+    }
+
+    // Função para atualizar cálculos globais (Custo Total, Custo Per Capita, FCC Geral, Totais Nutricionais)
+    function atualizarCalculosGlobais() {
+        let custoTotal = 0;
+        let totalPesoLiquido = 0;
+        let totalPesoBruto = 0;
+        let totalProteina = 0;
+        let totalCarboidrato = 0;
+        let totalLipidio = 0;
+        let totalSodio = 0;
+        let totalGorduraSaturada = 0;
+        let totalKcal = 0;
+
+        document.querySelectorAll('#ingredientes-table tbody tr').forEach(row => {
+            const custoUtilizado = parseFloat(row.querySelector('.custo-utilizado-ingrediente').value) || 0;
+            const pl = parseFloat(row.querySelector('.pl-ingrediente').value) || 0;
+            const pb = parseFloat(row.querySelector('.pb-ingrediente').value) || 0;
+
+            custoTotal += custoUtilizado;
+            totalPesoLiquido += pl;
+            totalPesoBruto += pb;
+
+            // Coleta dados nutricionais do dataset da linha (preenchido pelo autocomplete)
+            const proteina = parseFloat(row.dataset.proteina || 0);
+            const carboidrato = parseFloat(row.dataset.carboidrato || 0);
+            const lipidio = parseFloat(row.dataset.lipidio || 0);
+            const sodio = parseFloat(row.dataset.sodio || 0);
+            const gorduraSaturada = parseFloat(row.dataset.gorduraSaturada || 0);
+            const kcalPor100g = parseFloat(row.dataset.kcal || 0);
+
+            // Calcula a contribuição de cada ingrediente para os totais
+            // Assumindo que os valores nutricionais no backend são por 100g
+            if (pl > 0) {
+                const fatorProporcional = pl / 100;
+                totalProteina += proteina * fatorProporcional;
+                totalCarboidrato += carboidrato * fatorProporcional;
+                totalLipidio += lipidio * fatorProporcional;
+                totalSodio += sodio * fatorProporcional;
+                totalGorduraSaturada += gorduraSaturada * fatorProporcional;
+                totalKcal += kcalPor100g * fatorProporcional;
+            }
+        });
+
+        // Atualizar Custo Total
+        document.getElementById('custo-total').value = custoTotal.toFixed(2);
+
+        // Atualizar Custo Per Capita (se houver número de porções)
+        const numeroPorcoes = parseInt(document.getElementById('numero-porcoes').value) || 1;
+        const custoPerCapita = numeroPorcoes > 0 ? (custoTotal / numeroPorcoes) : 0;
+        document.getElementById('custo-per-capita').value = custoPerCapita.toFixed(2);
+
+        // Atualizar FCC Geral
+        const fccGeral = (totalPesoBruto > 0 && totalPesoLiquido > 0) ? (totalPesoBruto / totalPesoLiquido) : 0;
+        document.getElementById('fcc').value = fccGeral.toFixed(2);
+
+        // Atualizar totais nutricionais
+        document.getElementById('total-macros-g').value = (totalProteina + totalCarboidrato + totalLipidio).toFixed(2);
+        document.getElementById('total-macros-kcal').value = totalKcal.toFixed(2);
+
+        // VCT - Valor Calórico Total (geralmente é o total de Kcal)
+        document.getElementById('vct').value = totalKcal.toFixed(2);
+
+        // Porcentagens de macros em relação ao VCT (se VCT > 0)
+        let totalMacrosPercent = "0.00%";
+        if (totalKcal > 0) {
+            const percentCHO = (totalCarboidrato * 4 / totalKcal * 100);
+            const percentPTN = (totalProteina * 4 / totalKcal * 100);
+            const percentLIP = (totalLipidio * 9 / totalKcal * 100);
+            totalMacrosPercent = `${(percentPTN + percentCHO + percentLIP).toFixed(2)}%`;
+        }
+        document.getElementById('total-macros-percent').value = totalMacrosPercent;
+    }
+
+    // Chamar para cálculos iniciais ao carregar a página
+    document.addEventListener('DOMContentLoaded', () => {
+        // Aplica o autocomplete nos inputs de ingrediente já existentes ao carregar a página
+        document.querySelectorAll('.ingrediente-nome').forEach(input => {
+            setupAutocompleteForElement(input);
+        });
+
+        // Adiciona listeners para inputs de cálculo existentes
+        document.querySelectorAll('.pb-ingrediente, .pl-ingrediente, .custo-compra-ingrediente').forEach(input => {
+            input.addEventListener('input', atualizarCalculosIngrediente);
+        });
+
+        // Listener para o número de porções, afeta o custo per capita
+        document.getElementById('numero-porcoes').addEventListener('input', atualizarCalculosGlobais);
+
+        atualizarCalculosGlobais(); // Realiza os cálculos iniciais
+    });
+</script>
 </body>
 </html>

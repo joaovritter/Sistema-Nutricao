@@ -1,0 +1,78 @@
+/* css/navbar.css */
+
+/* Reset básico, pode estar no seu arquivo global ou aqui se for só para a navbar */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+
+}
+
+/* Estilos do cabeçalho principal (sua navbar) */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #6baa75; /* Sua cor de fundo atual */
+    padding: 15px 20px;
+    color: #fff; /* Cor do texto no cabeçalho */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3); /* Opcional: Adiciona uma sombra sutil */
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Espaço entre a logo e o título */
+}
+
+.logo {
+    width: 40px; /* Tamanho da sua logo */
+    height: 40px;
+    vertical-align: middle; /* Alinha a logo verticalmente com o texto */
+}
+
+.header h1 {
+    font-size: 24px; /* Tamanho do título */
+    margin: 0; /* Remove margem padrão do h1 */
+}
+
+/* Estilos para o botão de Logout */
+.navbar-btn {
+    background-color: #333; /* Cor de fundo do botão */
+    color: white; /* Cor do texto do botão */
+    border: none;
+    border-radius: 5px;
+    padding: 8px 15px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease; /* Transição suave ao passar o mouse */
+}
+
+.navbar-btn:hover {
+    background-color: #555; /* Cor de fundo ao passar o mouse */
+}
+
+/* Estilos para links dentro do botão (se houver) */
+.navbar-btn a {
+    color: white;
+    text-decoration: none;
+}
+
+
+/* Media Query para Responsividade da Navbar (Celulares e Tablets) */
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column; /* Itens empilhados em telas menores */
+        gap: 10px; /* Espaçamento entre os itens empilhados */
+        text-align: center; /* Centraliza o texto */
+        padding: 15px 10px; /* Ajuste o padding para telas menores */
+    }
+
+    .logo-container {
+        flex-direction: column; /* Logo e título empilhados */
+    }
+
+    .header h1 {
+        font-size: 20px; /* Reduz o tamanho do título em telas pequenas */
+    }
+}

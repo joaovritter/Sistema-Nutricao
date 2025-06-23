@@ -28,6 +28,5 @@ public class User {
     @OneToMany(mappedBy = "nutricionista", cascade = CascadeType.ALL)
     private List<Receita> receitas;
 
-    @OneToMany(mappedBy = "nutricionista", cascade = CascadeType.ALL)
-    private List<IngredienteNutricionista> ingredientesCriados;
+
 }

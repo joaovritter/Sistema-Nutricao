@@ -1,3 +1,4 @@
+// src/main/java/com/mjwsolucoes/sistemanutricao/dto/IngredienteUserDTO.java
 package com.mjwsolucoes.sistemanutricao.dto;
 
 import jakarta.validation.constraints.NotBlank;
@@ -22,7 +23,7 @@ public class IngredienteUserDTO {
 
     @NotNull(message = "Lipídio é obrigatório")
     @PositiveOrZero(message = "Lipídio não pode ser negativo")
-    private Double lipido;
+    private Double lipidio;
 
     @NotNull(message = "Sódio é obrigatório")
     @PositiveOrZero(message = "Sódio não pode ser negativo")
@@ -32,6 +33,6 @@ public class IngredienteUserDTO {
     @PositiveOrZero(message = "Gordura saturada não pode ser negativa")
     private Double gorduraSaturada;
 
-    private Long nutricionistaId;
-    private String nutricionistaUsername;
+    private Long nutricionistaId; // ID do nutricionista
+    private String nutricionistaUsername; // Username do nutricionista
 }

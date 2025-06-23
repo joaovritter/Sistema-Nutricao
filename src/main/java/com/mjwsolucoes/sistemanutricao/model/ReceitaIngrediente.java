@@ -7,33 +7,48 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Data
+@IdClass(Receita_Ingrediente_Id.class)
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReceitaIngrediente {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
-    private String medidaCaseira;
-    private double pesoBruto;
-    private double pesoLiquido;
-    private double fatorCorrecao;
-    private double custoCompra;
-    private double custoUtilizado;
-    private double custoTotal;
-    private double custoPercapita;
+    @Id
+    @Column(name = "receita_id") // Nome da coluna no banco
+    private Long receitaId;
+
+    @Id
+    @Column(name = "ingrediente_id") // Nome da coluna no banco
+    private Long ingredienteId;
 
     @ManyToOne
-    @JoinColumn(name = "receita_id")
+    @JoinColumn(name = "receita_id", referencedColumnName = "id", insertable = false, updatable = false) // Mapeia o ID para o objeto
     private Receita receita;
 
     @ManyToOne
-    @JoinColumn(name = "ingrediente_id")
+    @JoinColumn(name = "ingrediente_id", referencedColumnName = "id", insertable = false, updatable = false) // Mapeia o ID para o objeto
     private Ingrediente ingrediente;
 
-    @ManyToOne
-    @JoinColumn(name = "ingrediente_nutricionista_id")
-    private IngredienteNutricionista ingredienteNutricionista;
+    @Column(nullable = false)
+    private String medidaCaseira;
 
-    // Getters e Setters
+    @Column(nullable = false)
+    private Double pesoBruto;
+
+    @Column(nullable = false)
+    private Double pesoLiquido;
+
+    @Column(nullable = false)
+    private Double fatorCorrecao;
+
+    @Column(nullable = false)
+    private Double custoCompra;
+
+    @Column(nullable = false)
+    private Double custoUtilizado;
+
+    @Column(nullable = false)
+    private Double custoTotal;
+
+    @Column(nullable = false)
+    private Double custoPercapita;
 }

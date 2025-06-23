@@ -4,13 +4,9 @@ import lombok.Data;
 
 import java.util.List;
 
-@Data
+@Data // do Lombok
 public class ReceitaDetalhadaDTO {
-    private ReceitaDTO receita;
-    private List<IngredienteInfoDTO> ingredientes;
-    private PerfilNutricionalDTO perfilNutricional;
-
-    public void setPerfilNutricional(PerfilNutricionalDTO perfilNutricional) {
-        this.perfilNutricional = perfilNutricional;
-    }
+    private ReceitaDTO receita; // Contém nome, categoria, modoPreparo, etc.
+    private List<IngredienteInfoDTO> ingredientes; // Contém nome, quantidade, medida, custoPorcao, etc.
+    private PerfilNutricionalDTO perfilNutricional; // Contém perCapita, totalGramas, totalKcal, etc.
 }

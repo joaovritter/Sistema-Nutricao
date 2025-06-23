@@ -6,19 +6,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fichas Técnicas de Nutrição</title>
     <link rel="stylesheet" href="/css/dashboard.css">
+    <link rel="stylesheet" href="/css/navbar.css">
 </head>
 <body>
 <header class="header">
     <div class="logo-container">
-        <img src="images/logo.png" alt="Logo Nutrição" class="logo">
+        <img src="/images/logo.png" alt="Logo Nutrição" class="logo">
         <h1>Fichas Técnicas de Nutrição</h1>
     </div>
     <form th:action="@{/logout}" method="post" style="display:inline;">
-        <button type="submit" class="logout-btn">Logout</button>
+        <button type="submit" class="navbar-btn">Logout</button>
     </form>
 </header>
 
 <main class="container">
+
     <div class="card visualizar">
         <a href="/visualizar">
             <div class="card-content" >

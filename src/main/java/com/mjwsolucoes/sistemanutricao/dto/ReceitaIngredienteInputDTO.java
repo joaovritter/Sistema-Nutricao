@@ -1,15 +1,21 @@
+// src/main/java/com/mjwsolucoes/sistemanutricao/dto/ReceitaIngredienteInputDTO.java
 package com.mjwsolucoes.sistemanutricao.dto;
+
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Data;
 
 @Data
-public class ReceitaIngredienteDTO {
-    private int receitaId;
-    private int ingredienteId;
+public class ReceitaIngredienteInputDTO {
+    // ID do ingrediente existente no banco de dados (obtido do autocomplete no frontend)
+    @NotNull(message = "ID do ingrediente é obrigatório para associação")
+    private Long ingredienteId;
 
-    @NotNull(message = "Medida caseira é obrigatória")
-    @PositiveOrZero(message = "Medida caseira não pode ser somente numeros")
+    // O nome do ingrediente é opcional aqui, mas pode ser útil para validação ou logging
+    private String ingredienteNome;
+
+    @NotBlank(message = "Medida caseira é obrigatória")
     private String medidaCaseira;
 
     @NotNull(message = "Peso bruto é obrigatório")
@@ -32,15 +38,6 @@ public class ReceitaIngredienteDTO {
     @PositiveOrZero(message = "Custo utilizado não pode ser negativo")
     private Double custoUtilizado;
 
-    @NotNull(message = "Custo total é obrigatório")
-    @PositiveOrZero(message = "Custo total não pode ser negativo")
-    private Double custoTotal;
-
-    @NotNull(message = "Custo per capita é obrigatório")
-    @PositiveOrZero(message = "Custo per capita não pode ser negativo")
-    private Double custoPercapita;
-
-
-    private String ingredienteNome;
-    private Long userId;
+    // Campos como custoTotal e custoPercapita são calculados no backend para a entidade ReceitaIngrediente
+    // ou são totais da Receita/PerfilNutricional, então não são necessários aqui para INPUT.
 }
