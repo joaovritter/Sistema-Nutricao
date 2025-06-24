@@ -36,6 +36,11 @@ public class HomeController {
         return "criarFichatecnica";
     }
 
+    @GetMapping("/criarIngrediente")
+    public String criarIngrediente() {
+        return "criarIngrediente";
+    }
+
     @GetMapping("/visualizar") // <-- URL ajustada para /visualizarFichaTecnica
     public String visualizarFichas(Model model) { // <-- Adicionado 'Model model'
         List<Receita> receitas = receitaRepository.findAll(); // <-- Busca as receitas

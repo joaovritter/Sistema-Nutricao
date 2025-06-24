@@ -29,7 +29,7 @@
         <h2>Receitas Cadastradas</h2>
 
         <div th:if="${receitas.isEmpty()}" class="no-receitas-message">
-            <p>Nenhuma receita cadastrada ainda. <a th:href="@{/fichatecnica}">Crie uma agora!</a></p>
+            <p>Nenhuma receita cadastrada ainda. <a th:href="@{/fichatecnica}" sec:authorize="hasAnyAuthority('NUTRICIONISTA', 'ADMIN')">Crie uma agora!</a></p>
         </div>
 
         <div th:unless="${receitas.isEmpty()}" class="receitas-table-container">
