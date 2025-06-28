@@ -61,6 +61,7 @@
                             <th>PL (g)</th>
                             <th>FC</th>
                             <th>Custo (forma de compra)</th>
+                            <th>Peso da compra (g)</th>
                             <th>Custo (quantidade utilizada)</th>
                             <th>Ações</th>
                         </tr>
@@ -134,7 +135,7 @@
                     </div>
                     <div class="form-group">
                         <label for="rendimento">Rendimento (g ou ml):</label>
-                        <input type="number" step="0.01" id="rendimento" name="rendimento" placeholder="0.00" readonly>
+                        <input type="number" step="0.01" id="rendimento" name="rendimento" placeholder="0.00">
                     </div>
                     <div class="form-group">
                         <label for="peso-porcao">Peso da porção (g):</label>
@@ -174,23 +175,39 @@
                     </table>
                 </div>
 
-                <button type="button" class="btn btn-icon" onclick="adicionarNutriente()">
-                    Adicionar Nutriente (Apenas para demonstração, idealmente preenchido pelos ingredientes)
-                </button>
 
                 <div class="nutrition-extras">
-                    <div class="form-group">
-                        <label for="total-macros-g">Total dos Macros (g):</label>
-                        <input type="number" step="0.01" id="total-macros-g" name="total-macros-g" placeholder="0.00" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label for="total-macros-kcal">Total dos Macros (Kcal):</label>
-                        <input type="number" step="0.01" id="total-macros-kcal" name="total-macros-kcal" placeholder="0.00" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label for="total-macros-percent">Total dos Macros (%):</label>
-                        <input type="text" id="total-macros-percent" name="total-macros-percent" placeholder="0.00%" readonly>
-                    </div>
+                    <table id="totais-macros-table">
+                        <thead>
+                            <tr>
+                                <th>Total</th>
+                                <th>Proteínas</th>
+                                <th>Carboidratos</th>
+                                <th>Lipídios</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Gramas</strong></td>
+                                <td id="total-proteinas-g">0.00</td>
+                                <td id="total-carboidratos-g">0.00</td>
+                                <td id="total-lipidios-g">0.00</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Kcal</strong></td>
+                                <td id="total-proteinas-kcal">0.00</td>
+                                <td id="total-carboidratos-kcal">0.00</td>
+                                <td id="total-lipidios-kcal">0.00</td>
+                            </tr>
+                            <tr>
+                                <td><strong>%</strong></td>
+                                <td id="total-proteinas-percent">0.00%</td>
+                                <td id="total-carboidratos-percent">0.00%</td>
+                                <td id="total-lipidios-percent">0.00%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
                     <div class="form-group">
                         <label for="vct">VCT (Kcal):</label>
                         <input type="number" step="0.01" id="vct" name="vct" placeholder="0.00" readonly>
@@ -237,60 +254,71 @@
 
     // Função para adicionar uma nova linha na tabela de ingredientes
     function adicionarIngrediente(ingredienteData = null) {
-        console.log("[DEBUG - UI] Adicionando nova linha de ingrediente.");
-        const tableBody = document.querySelector('#ingredientes-table tbody');
-        const newRow = tableBody.insertRow();
-        newRow.innerHTML = `
-            <td><input type="text" class="ingrediente-nome" placeholder="Ingrediente"></td>
-            <td><input type="text" class="medida-caseira-ingrediente" placeholder="Medida"></td>
-            <td><input type="number" step="0.01" class="pb-ingrediente" placeholder="0.00"></td>
-            <td><input type="number" step="0.01" class="pl-ingrediente" placeholder="0.00"></td>
-            <td><input type="number" step="0.01" class="fc-ingrediente" placeholder="0.00" readonly></td>
-            <td><input type="number" step="0.01" class="custo-compra-ingrediente" placeholder="R$ 0,00"></td>
-            <td><input type="number" step="0.01" class="custo-utilizado-ingrediente" placeholder="R$ 0,00" readonly></td>
-            <td><button type="button" class="btn-remover" onclick="removerLinha(this)">Remover</button></td>
-        `;
+        try {
+            console.log("[DEBUG - UI] Adicionando nova linha de ingrediente.");
+            const tableBody = document.querySelector('#ingredientes-table tbody');
+            const newRow = tableBody.insertRow();
+            newRow.innerHTML = `
+                <td><input type="text" class="ingrediente-nome" placeholder="Ingrediente"></td>
+                <td><input type="text" class="medida-caseira-ingrediente" placeholder="Medida"></td>
+                <td><input type="number" step="0.01" class="pb-ingrediente" placeholder="0.00"></td>
+                <td><input type="number" step="0.01" class="pl-ingrediente" placeholder="0.00"></td>
+                <td><input type="number" step="0.01" class="fc-ingrediente" placeholder="0.00" readonly></td>
+                <td><input type="number" step="0.01" class="custo-compra-ingrediente" placeholder="R$ 0,00"></td>
+                <td><input type="number" step="0.01" class="peso-compra-ingrediente" placeholder="0.00"></td>
+                <td><input type="number" step="0.01" class="custo-utilizado-ingrediente" placeholder="R$ 0,00" readonly></td>
+                <td><button type="button" class="btn-remover" onclick="removerLinha(this)">Remover</button></td>
+            `;
 
-        const ingredienteNomeInput = newRow.querySelector('.ingrediente-nome');
-        const medidaCaseiraInput = newRow.querySelector('.medida-caseira-ingrediente');
-        const pbInput = newRow.querySelector('.pb-ingrediente');
-        const plInput = newRow.querySelector('.pl-ingrediente');
-        const fcInput = newRow.querySelector('.fc-ingrediente');
-        const custoCompraInput = newRow.querySelector('.custo-compra-ingrediente');
-        const custoUtilizadoInput = newRow.querySelector('.custo-utilizado-ingrediente');
+            const ingredienteNomeInput = newRow.querySelector('.ingrediente-nome');
+            const medidaCaseiraInput = newRow.querySelector('.medida-caseira-ingrediente');
+            const pbInput = newRow.querySelector('.pb-ingrediente');
+            const plInput = newRow.querySelector('.pl-ingrediente');
+            const fcInput = newRow.querySelector('.fc-ingrediente');
+            const custoCompraInput = newRow.querySelector('.custo-compra-ingrediente');
+            const pesoCompraInput = newRow.querySelector('.peso-compra-ingrediente');
+            const custoUtilizadoInput = newRow.querySelector('.custo-utilizado-ingrediente');
 
-        // Se dados de ingrediente forem fornecidos (quando carregando do banco ou do autocomplete)
-        if (ingredienteData) {
-            ingredienteNomeInput.value = ingredienteData.ingredienteNome || '';
-            ingredienteNomeInput.dataset.ingredienteId = ingredienteData.ingredienteId; // Salva o ID
-            medidaCaseiraInput.value = ingredienteData.medidaCaseira || '';
-            pbInput.value = (ingredienteData.pesoBruto || 0).toFixed(2);
-            plInput.value = (ingredienteData.pesoLiquido || 0).toFixed(2);
-            fcInput.value = (ingredienteData.fatorCorrecao || 0).toFixed(2);
-            custoCompraInput.value = (ingredienteData.custoCompra || 0).toFixed(2);
-            custoUtilizadoInput.value = (ingredienteData.custoUtilizado || 0).toFixed(2);
+            // Se dados de ingrediente forem fornecidos (quando carregando do banco ou do autocomplete)
+            if (ingredienteData) {
+                ingredienteNomeInput.value = ingredienteData.ingredienteNome || '';
+                ingredienteNomeInput.dataset.ingredienteId = ingredienteData.ingredienteId; // Salva o ID
+                medidaCaseiraInput.value = ingredienteData.medidaCaseira || '';
+                pbInput.value = (ingredienteData.pesoBruto || 0).toFixed(2);
+                plInput.value = (ingredienteData.pesoLiquido || 0).toFixed(2);
+                fcInput.value = (ingredienteData.fatorCorrecao || 0).toFixed(2);
+                custoCompraInput.value = (ingredienteData.custoCompra || 0).toFixed(2);
+                custoUtilizadoInput.value = (ingredienteData.custoUtilizado || 0).toFixed(2);
+                pesoCompraInput.value = (ingredienteData.pesoCompra || 0).toFixed(2);
 
-            // Armazenar dados nutricionais no dataset da linha para cálculos
-            newRow.dataset.proteina = ingredienteData.proteina || 0;
-            newRow.dataset.carboidrato = ingredienteData.carboidrato || 0;
-            newRow.dataset.lipidio = ingredienteData.lipidio || 0;
-            newRow.dataset.sodio = ingredienteData.sodio || 0;
-            newRow.dataset.gorduraSaturada = ingredienteData.gorduraSaturada || 0;
-            newRow.dataset.kcal = (ingredienteData.proteina * 4) + (ingredienteData.carboidrato * 4) + (ingredienteData.lipidio * 9);
+                // Armazenar dados nutricionais no dataset da linha para cálculos
+                newRow.dataset.proteina = ingredienteData.proteina || 0;
+                newRow.dataset.carboidrato = ingredienteData.carboidrato || 0;
+                newRow.dataset.lipidio = ingredienteData.lipidio || 0;
+                newRow.dataset.sodio = ingredienteData.sodio || 0;
+                newRow.dataset.gorduraSaturada = ingredienteData.gorduraSaturada || 0;
+                newRow.dataset.kcal = (ingredienteData.proteina * 4) + (ingredienteData.carboidrato * 4) + (ingredienteData.lipidio * 9);
 
-            console.log("[DEBUG - LOAD] Ingrediente carregado/preenchido, dados na linha (tr.dataset):", newRow.dataset);
-        }
+                console.log("[DEBUG - LOAD] Ingrediente carregado/preenchido, dados na linha (tr.dataset):", newRow.dataset);
+            }
 
-        setupAutocompleteForElement(ingredienteNomeInput);
+            setupAutocompleteForElement(ingredienteNomeInput);
 
-        pbInput.addEventListener('input', atualizarCalculosIngrediente);
-        plInput.addEventListener('input', atualizarCalculosIngrediente);
-        custoCompraInput.addEventListener('input', atualizarCalculosIngrediente);
+            pbInput.addEventListener('input', atualizarCalculosIngrediente);
+            plInput.addEventListener('input', atualizarCalculosIngrediente);
+            custoCompraInput.addEventListener('input', atualizarCalculosIngrediente);
+            pesoCompraInput.addEventListener('input', atualizarCalculosIngrediente);
 
-        // Se não for uma carga de dados (ou seja, é uma adição manual de linha),
-        // chamamos atualizarCalculosGlobais. Se for uma carga, será chamado no final da carga.
-        if (!ingredienteData) {
-            atualizarCalculosGlobais();
+            // Se não for uma carga de dados (ou seja, é uma adição manual de linha),
+            // chamamos atualizarCalculosGlobais. Se for uma carga, será chamado no final da carga.
+            if (!ingredienteData) {
+                atualizarCalculosGlobais();
+            }
+            
+            console.log("[DEBUG - UI] Nova linha de ingrediente adicionada com sucesso.");
+        } catch (error) {
+            console.error("[DEBUG - UI] Erro ao adicionar ingrediente:", error);
+            alert('Erro ao adicionar ingrediente: ' + error.message);
         }
     }
 
@@ -383,6 +411,7 @@
                             const fcInput = tr.querySelector('.fc-ingrediente');
                             const custoUtilizadoInput = tr.querySelector('.custo-utilizado-ingrediente');
                             const custoCompraInput = tr.querySelector('.custo-compra-ingrediente');
+                            const pesoCompraInput = tr.querySelector('.peso-compra-ingrediente');
 
                             tr.dataset.ingredienteId = item.id;
                             tr.dataset.proteina = item.proteina;
@@ -401,6 +430,7 @@
                             const custoUtilizado = (defaultPl > 0) ? (custoCompra * (defaultPl / defaultPl)) : 0; // Se PL=PB, custoUtilizado = custoCompra
                             custoUtilizadoInput.value = custoUtilizado.toFixed(2);
 
+                            pesoCompraInput.value = defaultPl.toFixed(2); // Define o peso da compra igual ao PL inicial
 
                             console.log("[DEBUG - AUTOC] Item selecionado do autocomplete. Dados na linha (tr.dataset):", tr.dataset);
                             console.log(`[DEBUG - AUTOC] PL e PB definidos para ${defaultPl}g. Recalculando.`);
@@ -457,9 +487,17 @@
                 }
 
                 if (fichaTecnica.perfilNutricional) {
-                    document.getElementById('total-macros-g').value = (fichaTecnica.perfilNutricional.totalGramas || 0).toFixed(2);
-                    document.getElementById('total-macros-kcal').value = (fichaTecnica.perfilNutricional.totalKcal || 0).toFixed(2);
-                    document.getElementById('total-macros-percent').value = (fichaTecnica.perfilNutricional.totalPorcentagem || 0).toFixed(2) + '%';
+                    // Carregar valores individuais dos macros (por enquanto usando valores padrão)
+                    // Estes valores serão recalculados quando atualizarCalculosGlobais() for chamado
+                    document.getElementById('total-proteinas-g').textContent = '0.00';
+                    document.getElementById('total-carboidratos-g').textContent = '0.00';
+                    document.getElementById('total-lipidios-g').textContent = '0.00';
+                    document.getElementById('total-proteinas-kcal').textContent = '0.00';
+                    document.getElementById('total-carboidratos-kcal').textContent = '0.00';
+                    document.getElementById('total-lipidios-kcal').textContent = '0.00';
+                    document.getElementById('total-proteinas-percent').textContent = '0.00%';
+                    document.getElementById('total-carboidratos-percent').textContent = '0.00%';
+                    document.getElementById('total-lipidios-percent').textContent = '0.00%';
                     document.getElementById('vct').value = (fichaTecnica.perfilNutricional.vct || 0).toFixed(2);
                     document.getElementById('custo-total').value = (fichaTecnica.custoTotal || 0).toFixed(2);
                     document.getElementById('custo-per-capita').value = (fichaTecnica.custoPerCapita || 0).toFixed(2);
@@ -521,6 +559,7 @@
                     fatorCorrecao: parseFloat(row.querySelector('.fc-ingrediente').value) || 0.0,
                     custoCompra: parseFloat(row.querySelector('.custo-compra-ingrediente').value) || 0.0,
                     custoUtilizado: parseFloat(row.querySelector('.custo-utilizado-ingrediente').value) || 0.0,
+                    pesoCompra: parseFloat(row.querySelector('.peso-compra-ingrediente').value) || 0.0,
                 });
             } else {
                 console.warn(`[DEBUG - SUBMIT] Ingrediente ignorado por falta de nome ou ID: ${ingredienteNomeInput.value}, ID: ${ingredienteId}`);
@@ -530,9 +569,15 @@
 
         const perfilNutricional = {
             perCapita: parseFloat(document.getElementById('peso-porcao').value) || 0.0,
-            totalGramas: parseFloat(document.getElementById('total-macros-g').value) || 0.0,
-            totalKcal: parseFloat(document.getElementById('total-macros-kcal').value) || 0.0,
-            totalPorcentagem: parseFloat(document.getElementById('total-macros-percent').value.replace('%', '')) || 0.0,
+            totalGramas: parseFloat(document.getElementById('total-proteinas-g').textContent) + 
+                        parseFloat(document.getElementById('total-carboidratos-g').textContent) + 
+                        parseFloat(document.getElementById('total-lipidios-g').textContent) || 0.0,
+            totalKcal: parseFloat(document.getElementById('total-proteinas-kcal').textContent) + 
+                      parseFloat(document.getElementById('total-carboidratos-kcal').textContent) + 
+                      parseFloat(document.getElementById('total-lipidios-kcal').textContent) || 0.0,
+            totalPorcentagem: parseFloat(document.getElementById('total-proteinas-percent').textContent.replace('%', '')) + 
+                             parseFloat(document.getElementById('total-carboidratos-percent').textContent.replace('%', '')) + 
+                             parseFloat(document.getElementById('total-lipidios-percent').textContent.replace('%', '')) || 0.0,
             vct: parseFloat(document.getElementById('vct').value) || 0.0
         };
 
@@ -588,7 +633,7 @@
         }
     });
 
-    document.querySelectorAll('.pb-ingrediente, .pl-ingrediente, .custo-compra-ingrediente').forEach(input => {
+    document.querySelectorAll('.pb-ingrediente, .pl-ingrediente, .custo-compra-ingrediente, .peso-compra-ingrediente').forEach(input => {
         input.addEventListener('input', atualizarCalculosIngrediente);
     });
 
@@ -598,11 +643,27 @@
         const pb = parseFloat(row.querySelector('.pb-ingrediente').value) || 0;
         const pl = parseFloat(row.querySelector('.pl-ingrediente').value) || 0;
         const custoCompra = parseFloat(row.querySelector('.custo-compra-ingrediente').value) || 0;
+        const pesoCompra = parseFloat(row.querySelector('.peso-compra-ingrediente').value) || 0;
+
+        console.log("[DEBUG - CALC] Valores lidos:", {
+            pb: pb,
+            pl: pl,
+            custoCompra: custoCompra,
+            pesoCompra: pesoCompra
+        });
 
         const fc = (pb > 0 && pl > 0) ? (pb / pl) : 0;
         row.querySelector('.fc-ingrediente').value = fc.toFixed(2);
 
-        const custoUtilizado = (pb > 0) ? (custoCompra * (pl / pb)) : 0;
+        // Cálculo do custo utilizado: (custo da compra / peso da compra) * peso bruto utilizado
+        const custoUtilizado = (pesoCompra > 0 && pb > 0) ? (custoCompra / pesoCompra) * pb : 0;
+        
+        console.log("[DEBUG - CALC] Cálculo do custo utilizado:", {
+            custoPorGrama: custoCompra / pesoCompra,
+            custoUtilizado: custoUtilizado,
+            formula: `(${custoCompra} / ${pesoCompra}) * ${pb} = ${custoUtilizado}`
+        });
+        
         row.querySelector('.custo-utilizado-ingrediente').value = custoUtilizado.toFixed(2);
 
         atualizarCalculosGlobais();
@@ -672,14 +733,24 @@
 
             // Add row to the Perfil Nutricional table
             const newNutriRow = nutricionalTableBody.insertRow();
+            const numeroPorcoes = parseInt(document.getElementById('numero-porcoes').value) || 1;
+            
+            // Valores por porção
+            const plPorPorcao = pl / numeroPorcoes;
+            const proteinaPorPorcao = proteinaProporcional / numeroPorcoes;
+            const carboidratoPorPorcao = carboidratoProporcional / numeroPorcoes;
+            const lipidioPorPorcao = lipidioProporcional / numeroPorcoes;
+            const sodioPorPorcao = sodioProporcional / numeroPorcoes;
+            const gorduraSaturadaPorPorcao = gorduraSaturadaProporcional / numeroPorcoes;
+            
             newNutriRow.innerHTML = `
                 <td>${ingredienteNome}</td>
-                <td>${pl.toFixed(2)}</td>
-                <td>${proteinaProporcional.toFixed(2)}</td>
-                <td>${carboidratoProporcional.toFixed(2)}</td>
-                <td>${lipidioProporcional.toFixed(2)}</td>
-                <td>${sodioProporcional.toFixed(2)}</td>
-                <td>${gorduraSaturadaProporcional.toFixed(2)}</td>
+                <td>${plPorPorcao.toFixed(2)}</td>
+                <td>${proteinaPorPorcao.toFixed(2)}</td>
+                <td>${carboidratoPorPorcao.toFixed(2)}</td>
+                <td>${lipidioPorPorcao.toFixed(2)}</td>
+                <td>${sodioPorPorcao.toFixed(2)}</td>
+                <td>${gorduraSaturadaPorPorcao.toFixed(2)}</td>
                 <td></td> `;
         });
 
@@ -700,7 +771,12 @@
 
         let pesoLiquidoFinalDaPreparacao = totalPesoLiquido * (1 + percentualDeAguaAdicionada);
 
-        const fccGeral = (totalPesoBruto > 0 && pesoLiquidoFinalDaPreparacao > 0) ? (totalPesoBruto / pesoLiquidoFinalDaPreparacao) : 0;
+        // FCC Geral = (rendimento digitado + água adicionada) / peso líquido inicial
+        const rendimentoDigitado = parseFloat(document.getElementById('rendimento').value) || 0;
+        const aguaAdicionada = totalPesoLiquido * percentualDeAguaAdicionada;
+        const pesoFinalComAgua = rendimentoDigitado + aguaAdicionada;
+        
+        const fccGeral = (totalPesoLiquido > 0) ? (pesoFinalComAgua / totalPesoLiquido) : 1.0;
         document.getElementById('fcc').value = fccGeral.toFixed(2);
 
         document.getElementById('custo-total').value = custoTotal.toFixed(2);
@@ -710,21 +786,42 @@
         document.getElementById('custo-per-capita').value = custoPerCapita.toFixed(2);
 
         // Atualizar totais nutricionais
-        document.getElementById('total-macros-g').value = (totalProteina + totalCarboidrato + totalLipidio).toFixed(2);
-        document.getElementById('total-macros-kcal').value = totalKcal.toFixed(2);
-
-        document.getElementById('vct').value = totalKcal.toFixed(2);
-
-        let totalMacrosPercent = "0.00%";
-        if (totalKcal > 0) {
-            const percentCHO = (totalCarboidrato * 4 / totalKcal * 100);
-            const percentPTN = (totalProteina * 4 / totalKcal * 100);
-            const percentLIP = (totalLipidio * 9 / totalKcal * 100);
-            totalMacrosPercent = `${(percentPTN + percentCHO + percentLIP).toFixed(2)}%`;
+        const proteinaPorPorcao = totalProteina / numeroPorcoes;
+        const carboidratoPorPorcao = totalCarboidrato / numeroPorcoes;
+        const lipidioPorPorcao = totalLipidio / numeroPorcoes;
+        const kcalPorPorcao = totalKcal / numeroPorcoes;
+        
+        // Totais dos macros em gramas
+        const totalMacrosGramas = proteinaPorPorcao + carboidratoPorPorcao + lipidioPorPorcao;
+        
+        // Totais dos macros em kcal
+        const proteinaKcal = proteinaPorPorcao * 4;
+        const carboidratoKcal = carboidratoPorPorcao * 4;
+        const lipidioKcal = lipidioPorPorcao * 9;
+        const totalMacrosKcal = proteinaKcal + carboidratoKcal + lipidioKcal;
+        
+        // Totais dos macros em %
+        let proteinaPercent = 0;
+        let carboidratoPercent = 0;
+        let lipidioPercent = 0;
+        
+        if (totalMacrosKcal > 0) {
+            proteinaPercent = (proteinaKcal / totalMacrosKcal) * 100;
+            carboidratoPercent = (carboidratoKcal / totalMacrosKcal) * 100;
+            lipidioPercent = (lipidioKcal / totalMacrosKcal) * 100;
         }
-        document.getElementById('total-macros-percent').value = totalMacrosPercent;
 
-        document.getElementById('rendimento').value = pesoLiquidoFinalDaPreparacao.toFixed(2);
+        // Atualizar os elementos da tabela usando textContent
+        document.getElementById('total-proteinas-g').textContent = proteinaPorPorcao.toFixed(2);
+        document.getElementById('total-carboidratos-g').textContent = carboidratoPorPorcao.toFixed(2);
+        document.getElementById('total-lipidios-g').textContent = lipidioPorPorcao.toFixed(2);
+        document.getElementById('total-proteinas-kcal').textContent = proteinaKcal.toFixed(2);
+        document.getElementById('total-carboidratos-kcal').textContent = carboidratoKcal.toFixed(2);
+        document.getElementById('total-lipidios-kcal').textContent = lipidioKcal.toFixed(2);
+        document.getElementById('total-proteinas-percent').textContent = proteinaPercent.toFixed(2) + '%';
+        document.getElementById('total-carboidratos-percent').textContent = carboidratoPercent.toFixed(2) + '%';
+        document.getElementById('total-lipidios-percent').textContent = lipidioPercent.toFixed(2) + '%';
+        document.getElementById('vct').value = totalMacrosKcal.toFixed(2);
 
         const pesoPorcaoInput = document.getElementById('peso-porcao');
         const numeroPorcoesInput = document.getElementById('numero-porcoes');
@@ -755,13 +852,14 @@
             setupAutocompleteForElement(input);
         });
 
-        document.querySelectorAll('.pb-ingrediente, .pl-ingrediente, .custo-compra-ingrediente').forEach(input => {
+        document.querySelectorAll('.pb-ingrediente, .pl-ingrediente, .custo-compra-ingrediente, .peso-compra-ingrediente').forEach(input => {
             input.addEventListener('input', atualizarCalculosIngrediente);
         });
 
         document.getElementById('numero-porcoes').addEventListener('input', atualizarCalculosGlobais);
         document.getElementById('peso-porcao').addEventListener('input', atualizarCalculosGlobais);
         document.getElementById('agua-fcc').addEventListener('change', atualizarCalculosGlobais);
+        document.getElementById('rendimento').addEventListener('input', atualizarCalculosGlobais);
     });
 </script>
 </body>

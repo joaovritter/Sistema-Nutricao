@@ -84,6 +84,16 @@ public class ReceitaService {
         detalhes.setReceita(convertToDTO(receita));
 
         List<ReceitaIngrediente> ingredientes = receitaIngredienteRepository.findByReceitaId(id);
+        
+        // Converter para o formato que o frontend espera
+        List<ReceitaIngredienteInputDTO> ingredientesDTO = ingredientes.stream()
+                .map(this::convertToReceitaIngredienteInputDTO)
+                .collect(Collectors.toList());
+        
+        // Adicionar os ingredientes ao DTO da receita
+        detalhes.getReceita().setIngredientes(ingredientesDTO);
+        
+        // Também manter o formato original para compatibilidade
         detalhes.setIngredientes(ingredientes.stream()
                 .map(this::convertToIngredienteInfoDTO)
                 .collect(Collectors.toList()));
@@ -131,6 +141,7 @@ public class ReceitaService {
             ri.setPesoLiquido(ingDTO.getPesoLiquido());
             ri.setFatorCorrecao(ingDTO.getFatorCorrecao());
             ri.setCustoCompra(ingDTO.getCustoCompra());
+            ri.setPesoCompra(ingDTO.getPesoCompra());
             ri.setCustoUtilizado(ingDTO.getCustoUtilizado());
 
             // Definir valores padrão ou calculados para custoTotal e custoPercapita,
@@ -199,6 +210,24 @@ public class ReceitaService {
             info.setTipo("DESCONHECIDO");
         }
         return info;
+    }
+
+    private ReceitaIngredienteInputDTO convertToReceitaIngredienteInputDTO(ReceitaIngrediente ri) {
+        ReceitaIngredienteInputDTO dto = new ReceitaIngredienteInputDTO();
+        dto.setIngredienteId(ri.getIngredienteId());
+        dto.setMedidaCaseira(ri.getMedidaCaseira());
+        dto.setPesoBruto(ri.getPesoBruto());
+        dto.setPesoLiquido(ri.getPesoLiquido());
+        dto.setFatorCorrecao(ri.getFatorCorrecao());
+        dto.setCustoCompra(ri.getCustoCompra());
+        dto.setPesoCompra(ri.getPesoCompra());
+        dto.setCustoUtilizado(ri.getCustoUtilizado());
+        
+        if (ri.getIngrediente() != null) {
+            dto.setIngredienteNome(ri.getIngrediente().getNome());
+        }
+        
+        return dto;
     }
 
     private PerfilNutricionalDTO convertToPerfilDTO(PerfilNutricional perfil) {

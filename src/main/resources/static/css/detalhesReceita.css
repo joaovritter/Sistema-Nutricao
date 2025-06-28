@@ -1,4 +1,4 @@
-/* Estilos específicos para a página de detalhes da receita */
+
 
 .detalhes-container {
     padding: 20px;
@@ -33,12 +33,12 @@
 
 .receita-info p strong {
     color: #333;
-    width: 150px; /* Alinha os dois pontos */
+    width: 150px; / Alinha os dois pontos /
     display: inline-block;
 }
 
 .table-container {
-    overflow-x: auto; /* Permite rolagem em telas pequenas */
+    overflow-x: auto; / Permite rolagem em telas pequenas /
 }
 
 .ingredientes-info table {
@@ -77,8 +77,8 @@
 
 .nutrition-details p strong {
     color: #333;
-    width: 200px; /* Alinha os dois pontos */
-    display: inline-block;
+    width: 200px; / Alinha os dois pontos */
+display: inline-block;
 }
 
 .no-data-message {
@@ -89,4 +89,7 @@
     color: #856404;
     text-align: center;
     font-weight: bold;
+}
+.header-actions a{
+    text-decoration: none;
 }

@@ -44,6 +44,9 @@ public class ReceitaIngrediente {
     private Double custoCompra;
 
     @Column(nullable = false)
+    private Double pesoCompra;
+
+    @Column(nullable = false)
     private Double custoUtilizado;
 
     @Column(nullable = false)

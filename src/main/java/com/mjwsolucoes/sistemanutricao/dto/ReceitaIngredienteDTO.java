@@ -28,6 +28,10 @@ public class ReceitaIngredienteDTO {
     @PositiveOrZero(message = "Custo de compra não pode ser negativo")
     private Double custoCompra;
 
+    @NotNull(message = "Peso da compra é obrigatório")
+    @PositiveOrZero(message = "Peso da compra não pode ser negativo")
+    private Double pesoCompra;
+
     @NotNull(message = "Custo utilizado é obrigatório")
     @PositiveOrZero(message = "Custo utilizado não pode ser negativo")
     private Double custoUtilizado;

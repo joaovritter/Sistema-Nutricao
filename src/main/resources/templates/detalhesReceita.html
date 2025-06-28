@@ -5,17 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="${'Detalhes da Receita: ' + receitaDetalhes.receita.nome}"></title>
     <link rel="stylesheet" href="/css/dashboard.css"> <link rel="stylesheet" href="/css/detalhesReceita.css"> </head>
+<link rel="stylesheet" href="/css/navbar.css">
 <body>
 <header class="header">
     <div class="logo-container">
+        <img src="/images/logo.png" alt="Logo Nutrição" class="logo">
         <h1 th:text="${'Detalhes da Receita: ' + receitaDetalhes.receita.nome}"></h1>
     </div>
     <div class="header-actions">
-        <a th:href="@{/dashboard}" class="btn btn-voltar">Voltar para a Lista</a>
+        <a th:href="@{/dashboard}" class="navbar-btn">Voltar para a Lista</a>
     </div>
 </header>
 
+
 <main class="container detalhes-container">
+
     <section class="receita-info">
         <h2>Informações Gerais</h2>
         <p><strong>Nome:</strong> <span th:text="${receitaDetalhes.receita.nome}"></span></p>
