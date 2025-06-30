@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Refeições</title>
+    <link rel="stylesheet" href="/css/dashboard.css">
+    <link rel="stylesheet" href="/css/navbar.css">
+    <link rel="stylesheet" href="/css/refeicoes.css">
+</head>
+<body>
+    <header class="header">
+        <div class="logo-container">
+            <img src="/images/logo.png" alt="Logo Nutrição" class="logo">
+            <h1>Fichas Técnicas de Nutrição</h1>
+        </div>
+        <button type="button" class="navbar-btn" onclick="window.location.href='/dashboard'">Voltar</button>
+    </header>
+    <div class="container">
+        <div class="refeicao-list card">
+            <h2>Refeições Cadastradas</h2>
+            <table id="tabelaRefeicoes">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Fichas Técnicas</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Refeições serão inseridas aqui via JS -->
+                </tbody>
+            </table>
+            <button onclick="mostrarFormulario()" class="btn btn-icon">Criar Nova Refeição</button>
+        </div>
+        <div class="refeicao-form card" id="formRefeicao" style="display:none;">
+            <h2 id="tituloForm">Criar Refeição</h2>
+            <form onsubmit="salvarRefeicao(event)">
+                <input type="hidden" id="refeicaoId">
+                <label>Nome da Refeição:</label><br>
+                <input type="text" id="nomeRefeicao" required><br>
+                <label>Selecione as Fichas Técnicas:</label><br>
+                <div id="checkboxReceitas" style="margin-bottom: 10px;"></div>
+                <button type="submit" class="btn btn-icon">Salvar</button>
+                <button type="button" class="navbar-btn" onclick="cancelarFormulario()">Cancelar</button>
+            </form>
+        </div>
+    </div>
+    <script>
+        let receitas = [];
+        let editando = false;
+
+        function carregarReceitas() {
+            fetch('/api/receitas')
+                .then(r => r.json())
+                .then(data => {
+                    receitas = data;
+                    const div = document.getElementById('checkboxReceitas');
+                    div.innerHTML = '';
+                    receitas.forEach(r => {
+                        div.innerHTML += `<div class='checkbox-card'><label><input type='checkbox' value='${r.id}' name='receitas'> <b>${r.nome}</b><br><span class='descricao-ingredientes'>${r.descricao || ''}</span></label></div>`;
+                    });
+                });
+        }
+
+        function carregarRefeicoes() {
+            fetch('/api/refeicoes')
+                .then(r => r.json())
+                .then(refeicoes => {
+                    const tbody = document.querySelector('#tabelaRefeicoes tbody');
+                    tbody.innerHTML = '';
+                    refeicoes.forEach(refeicao => {
+                        let receitasNomes = refeicao.receitas.map(r => r.nome).join(', ');
+                        tbody.innerHTML += `<tr>
+                            <td>${refeicao.nome}</td>
+                            <td>${receitasNomes}</td>
+                            <td class='actions'>
+                                <button class="btn btn-editar" onclick='editarRefeicao(${JSON.stringify(refeicao)})'>Editar</button>
+                                <button class="btn btn-excluir" onclick='excluirRefeicao(${refeicao.id})'>Excluir</button>
+                            </td>
+                        </tr>`;
+                    });
+                });
+        }
+
+        function mostrarFormulario(refeicao = null) {
+            document.getElementById('formRefeicao').style.display = 'block';
+            document.getElementById('tituloForm').innerText = refeicao ? 'Editar Refeição' : 'Criar Refeição';
+            document.getElementById('refeicaoId').value = refeicao ? refeicao.id : '';
+            document.getElementById('nomeRefeicao').value = refeicao ? refeicao.nome : '';
+            carregarReceitas();
+            setTimeout(() => {
+                if (refeicao) {
+                    refeicao.receitas.forEach(r => {
+                        let checkbox = document.querySelector(`#checkboxReceitas input[value='${r.id}']`);
+                        if (checkbox) checkbox.checked = true;
+                    });
+                }
+            }, 300);
+        }
+
+        function cancelarFormulario() {
+            document.getElementById('formRefeicao').style.display = 'none';
+            document.getElementById('refeicaoId').value = '';
+            document.getElementById('nomeRefeicao').value = '';
+        }
+
+        function salvarRefeicao(event) {
+            event.preventDefault();
+            const id = document.getElementById('refeicaoId').value;
+            const nome = document.getElementById('nomeRefeicao').value;
+            const receitasIds = Array.from(document.querySelectorAll("#checkboxReceitas input[name='receitas']:checked")).map(cb => cb.value);
+            const body = JSON.stringify({ nome, receitasIds });
+            const url = id ? `/api/refeicoes/${id}` : '/api/refeicoes';
+            const method = id ? 'PUT' : 'POST';
+            fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body })
+                .then(r => {
+                    if (!r.ok) throw new Error('Erro ao salvar');
+                    return r.json();
+                })
+                .then(() => {
+                    cancelarFormulario();
+                    carregarRefeicoes();
+                })
+                .catch(() => alert('Erro ao salvar a refeição.'));
+        }
+
+        function editarRefeicao(refeicao) {
+            mostrarFormulario(refeicao);
+        }
+
+        function excluirRefeicao(id) {
+            if (!confirm('Tem certeza que deseja excluir esta refeição?')) return;
+            fetch(`/api/refeicoes/${id}`, { method: 'DELETE' })
+                .then(() => carregarRefeicoes())
+                .catch(() => alert('Erro ao excluir.'));
+        }
+
+        window.onload = () => {
+            carregarRefeicoes();
+        };
+    </script>
+</body>
+</html> 
