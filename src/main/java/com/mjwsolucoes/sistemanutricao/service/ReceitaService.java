@@ -107,14 +107,81 @@ public class ReceitaService {
     }
 
     @Transactional
+    public ReceitaDTO editarReceita(Long id, ReceitaDTO receitaDTO, String usernameNutricionista) {
+        // Buscar a receita existente
+        Receita receita = receitaRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Receita não encontrada"));
+
+        // Verificar se o usuário tem permissão para editar (pode editar suas próprias receitas)
+        User nutricionista = userRepository.findByUsername(usernameNutricionista)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Nutricionista não encontrado"));
+
+        // Verificar se o usuário é o dono da receita ou tem role ADMIN
+        if (!receita.getNutricionista().getId().equals(nutricionista.getId()) && 
+            !nutricionista.getRole().equals(Role.ADMIN)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Você não tem permissão para editar esta receita");
+        }
+
+        // Atualizar os dados da receita
+        receita.setNome(receitaDTO.getNome());
+        try {
+            receita.setCategoria(CategoriaReceita.valueOf(receitaDTO.getCategoria()));
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException("Categoria de receita inválida: " + receitaDTO.getCategoria(), e);
+        }
+
+        receita.setModoPreparo(receitaDTO.getModoPreparo());
+        receita.setTempoPreparo(receitaDTO.getTempoPreparo());
+        receita.setPesoPorcao(receitaDTO.getPesoPorcao());
+        receita.setRendimento(receitaDTO.getRendimento());
+        receita.setNumeroPorcoes(receitaDTO.getNumeroPorcoes());
+        receita.setFcc(receitaDTO.getFcc());
+        receita.setMedidaCaseira(receitaDTO.getMedidaCaseira());
+        receita.setEquipamentos(receitaDTO.getEquipamentos());
+
+        // Salvar a receita atualizada
+        Receita receitaAtualizada = receitaRepository.save(receita);
+
+        // Remover ingredientes existentes
+        receitaIngredienteRepository.deleteByReceitaId(id);
+
+        // Salvar novos ingredientes
+        if (receitaDTO.getIngredientes() != null && !receitaDTO.getIngredientes().isEmpty()) {
+            salvarIngredientesReceita(receitaDTO.getIngredientes(), receitaAtualizada);
+        }
+
+        // Atualizar perfil nutricional (não deletar, apenas atualizar)
+        if (receitaDTO.getPerfilNutricional() != null) {
+            salvarPerfilNutricional(receitaDTO.getPerfilNutricional(), receitaAtualizada);
+        }
+
+        return convertToDTO(receitaAtualizada);
+    }
+
+    @Transactional
     public void salvarPerfilNutricional(PerfilNutricionalDTO perfilDTO, Receita receita) {
-        PerfilNutricional perfil = new PerfilNutricional();
+        // Verificar se já existe um perfil nutricional para esta receita
+        Optional<PerfilNutricional> perfilExistente = perfilNutricionalRepository.findByReceitaId(receita.getId());
+        
+        PerfilNutricional perfil;
+        if (perfilExistente.isPresent()) {
+            // Atualizar perfil existente
+            perfil = perfilExistente.get();
+            System.out.println("Atualizando perfil nutricional existente para receita ID: " + receita.getId());
+        } else {
+            // Criar novo perfil
+            perfil = new PerfilNutricional();
+            perfil.setReceita(receita);
+            System.out.println("Criando novo perfil nutricional para receita ID: " + receita.getId());
+        }
+        
+        // Atualizar os dados do perfil
         perfil.setPerCapita(perfilDTO.getPerCapita());
         perfil.setTotalGramas(perfilDTO.getTotalGramas());
         perfil.setTotalKcal(perfilDTO.getTotalKcal());
         perfil.setTotalPorcentagem(perfilDTO.getTotalPorcentagem());
         perfil.setVct(perfilDTO.getVct());
-        perfil.setReceita(receita);
+        
         perfilNutricionalRepository.save(perfil);
     }
 
@@ -192,6 +259,10 @@ public class ReceitaService {
         Optional<PerfilNutricional> perfilOpt = perfilNutricionalRepository.findByReceitaId(receita.getId());
         perfilOpt.ifPresent(perfil -> dto.setTotalKcal(perfil.getTotalKcal()));
 
+        dto.setDescricao(receita.getIngredientesReceita().stream()
+            .map(ri -> ri.getIngrediente().getNome())
+            .collect(Collectors.joining(", ")));
+
         return dto;
     }
 
@@ -225,6 +296,11 @@ public class ReceitaService {
         
         if (ri.getIngrediente() != null) {
             dto.setIngredienteNome(ri.getIngrediente().getNome());
+            dto.setProteina(ri.getIngrediente().getProteina());
+            dto.setCarboidrato(ri.getIngrediente().getCarboidrato());
+            dto.setLipidio(ri.getIngrediente().getLipidio());
+            dto.setSodio(ri.getIngrediente().getSodio());
+            dto.setGorduraSaturada(ri.getIngrediente().getGorduraSaturada());
         }
         
         return dto;

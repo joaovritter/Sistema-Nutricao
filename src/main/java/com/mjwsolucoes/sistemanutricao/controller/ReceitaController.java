@@ -69,4 +69,29 @@ public class ReceitaController {
         ReceitaDetalhadaDTO detalhes = receitaService.buscarDetalhesReceita(id);
         return ResponseEntity.ok(detalhes);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ReceitaDTO> editarReceita(
+            @PathVariable Long id,
+            @RequestBody ReceitaDTO receitaDTO) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String usernameNutricionista = null;
+
+        if (authentication != null) {
+            Object principal = authentication.getPrincipal();
+            if (principal instanceof UserDetails) {
+                usernameNutricionista = ((UserDetails) principal).getUsername();
+            } else if (principal instanceof String) {
+                usernameNutricionista = (String) principal;
+            }
+        }
+
+        if (usernameNutricionista == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+
+        ReceitaDTO receitaEditada = receitaService.editarReceita(id, receitaDTO, usernameNutricionista);
+        return ResponseEntity.ok(receitaEditada);
+    }
 }

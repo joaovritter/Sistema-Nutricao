@@ -37,9 +37,9 @@
 }
 
 /* Estilos para o botão de Logout */
-.navbar-btn {
-    background-color: #333; /* Cor de fundo do botão */
-    color: white; /* Cor do texto do botão */
+.navbar-btn  {
+    background-color: #333 !important; /* Cor de fundo do botão */
+    color: white !important; /* Cor do texto do botão */
     border: none;
     border-radius: 5px;
     padding: 8px 15px;
@@ -49,7 +49,7 @@
 }
 
 .navbar-btn:hover {
-    background-color: #555; /* Cor de fundo ao passar o mouse */
+    background-color: #555 !important; /* Cor de fundo ao passar o mouse */
 }
 
 /* Estilos para links dentro do botão (se houver) */

@@ -3,7 +3,7 @@ package com.mjwsolucoes.sistemanutricao.model;
 public enum CategoriaReceita {
     ENTRADA("Entrada"),
     PRATO_PRINCIPAL("Prato Principal (Proteína)"),
-    COMPLEMENTO("Complemento (Guarnição)"),
+    GUARNICAO("Complemento (Guarnição)"),
     SALADA("Salada"),
     SOBREMESA("Sobremesa"),
     BEBIDA("Bebida");

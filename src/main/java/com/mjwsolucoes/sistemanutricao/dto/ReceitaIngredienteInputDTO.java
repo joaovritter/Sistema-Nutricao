@@ -42,6 +42,13 @@ public class ReceitaIngredienteInputDTO {
     @PositiveOrZero(message = "Custo utilizado não pode ser negativo")
     private Double custoUtilizado;
 
+    // Dados nutricionais do ingrediente (para cálculos do perfil nutricional)
+    private Double proteina;
+    private Double carboidrato;
+    private Double lipidio;
+    private Double sodio;
+    private Double gorduraSaturada;
+
     // Campos como custoTotal e custoPercapita são calculados no backend para a entidade ReceitaIngrediente
     // ou são totais da Receita/PerfilNutricional, então não são necessários aqui para INPUT.
 }

@@ -3,78 +3,293 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="${'Detalhes da Receita: ' + receitaDetalhes.receita.nome}"></title>
-    <link rel="stylesheet" href="/css/dashboard.css"> <link rel="stylesheet" href="/css/detalhesReceita.css"> </head>
-<link rel="stylesheet" href="/css/navbar.css">
+    <title th:text="${'Detalhes da Receita: ' + receitaDetalhes.receita.nome}">Detalhes da Receita</title>
+    <link rel="stylesheet" href="/css/criarFichaTecnica.css">
+    <link rel="stylesheet" href="/css/navbar.css">
+    <style>
+        /* Estilos específicos para modo somente leitura */
+        .readonly-field {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 8px 12px;
+            color: #495057;
+            font-weight: 500;
+            min-height: 20px;
+            display: inline-block;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .readonly-field:focus {
+            outline: none;
+            box-shadow: none;
+        }
+
+        .readonly-textarea {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 8px 12px;
+            color: #495057;
+            font-weight: 500;
+            min-height: 60px;
+            resize: none;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .readonly-select {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 8px 12px;
+            color: #495057;
+            font-weight: 500;
+            width: 100%;
+            box-sizing: border-box;
+            pointer-events: none;
+        }
+
+        .readonly-table-cell {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 8px;
+            color: #495057;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .btn {
+            display: none !important;
+        }
+
+        .form-actions {
+            display: none !important;
+        }
+
+        .water-calc {
+            display: none !important;
+        }
+
+        .nutrition-extras {
+            margin-top: 20px;
+        }
+
+        .nutrition-extras table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .nutrition-extras th,
+        .nutrition-extras td {
+            border: 1px solid #dee2e6;
+            padding: 8px;
+            text-align: center;
+            background-color: #f8f9fa;
+        }
+
+        .nutrition-extras th {
+            background-color: #e9ecef;
+            font-weight: bold;
+        }
+        .navbar-btn{
+            text-decoration: none;
+        }
+    </style>
+</head>
 <body>
+
 <header class="header">
     <div class="logo-container">
         <img src="/images/logo.png" alt="Logo Nutrição" class="logo">
-        <h1 th:text="${'Detalhes da Receita: ' + receitaDetalhes.receita.nome}"></h1>
+        <h1 th:text="${'Detalhes da Receita: ' + receitaDetalhes.receita.nome}">Detalhes da Receita</h1>
     </div>
     <div class="header-actions">
-        <a th:href="@{/dashboard}" class="navbar-btn">Voltar para a Lista</a>
+        <a th:href="@{/visualizar}" class="navbar-btn">Voltar para a Lista</a>
+        <a th:href="@{/receita/editar/{id}(id=${receitaDetalhes.receita.id})}" class="navbar-btn" sec:authorize="hasAnyAuthority('NUTRICIONISTA', 'ADMIN')">Editar</a>
     </div>
 </header>
 
+<div class="container">
+    <span class="titulo-ficha">Detalhes da Ficha Técnica</span>
 
-<main class="container detalhes-container">
-
-    <section class="receita-info">
-        <h2>Informações Gerais</h2>
-        <p><strong>Nome:</strong> <span th:text="${receitaDetalhes.receita.nome}"></span></p>
-        <p><strong>Categoria:</strong> <span th:text="${receitaDetalhes.receita.categoria}"></span></p>
-        <p><strong>Equipamentos:</strong> <span th:text="${receitaDetalhes.receita.equipamentos}"></span></p>
-        <p><strong>Modo de Preparo:</strong> <span th:text="${receitaDetalhes.receita.modoPreparo}"></span></p>
-        <p><strong>Tempo de Preparo:</strong> <span th:text="${receitaDetalhes.receita.tempoPreparo + ' minutos'}"></span></p>
-        <p><strong>Rendimento:</strong> <span th:text="${receitaDetalhes.receita.rendimento + ' porções'}"></span></p>
-        <p><strong>Número de Porções:</strong> <span th:text="${receitaDetalhes.receita.numeroPorcoes}"></span></p>
-        <p><strong>Peso da Porção:</strong> <span th:text="${receitaDetalhes.receita.pesoPorcao + ' g'}"></span></p>
-        <p><strong>FCC:</strong> <span th:text="${receitaDetalhes.receita.fcc}"></span></p>
-        <p><strong>Medida Caseira:</strong> <span th:text="${receitaDetalhes.receita.medidaCaseira}"></span></p>
-        <p><strong>Nutricionista:</strong> <span th:text="${receitaDetalhes.receita.nutricionistaUsername}"></span></p>
-    </section>
-
-    <section class="ingredientes-info">
-        <h2>Ingredientes</h2>
-        <div th:if="${receitaDetalhes.ingredientes == null or receitaDetalhes.ingredientes.isEmpty()}" class="no-data-message">
-            <p>Nenhum ingrediente associado a esta receita.</p>
-        </div>
-        <div th:unless="${receitaDetalhes.ingredientes == null or receitaDetalhes.ingredientes.isEmpty()}" class="table-container">
-            <table>
-                <thead>
-                <tr>
-                    <th>Ingrediente</th>
-                    <th>Quantidade (g/ml)</th>
-                    <th>Medida Caseira</th>
-                    <th>Custo p/ Porção</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="ingrediente : ${receitaDetalhes.ingredientes}">
-                    <td th:text="${ingrediente.nome}"></td>
-                    <td th:text="${ingrediente.quantidade}"></td>
-                    <td th:text="${ingrediente.medida}"></td>
-                    <td th:text="${'R$ ' + #numbers.formatDecimal(ingrediente.custoPorcao, 1, 2)}"></td>
-                </tr>
-                </tbody>
-            </table>
+    <section class="section">
+        <div class="section-content">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="nome-preparacao">Nome da preparação:</label>
+                    <div class="readonly-field" th:text="${receitaDetalhes.receita.nome}">Nome da preparação</div>
+                </div>
+                <div class="form-group medium">
+                    <label for="categoria">Categoria:</label>
+                    <div class="readonly-field" th:text="${receitaDetalhes.receita.categoria}">Categoria</div>
+                </div>
+                <div class="form-group small">
+                    <label for="numero">Nº:</label>
+                    <div class="readonly-field" th:text="${receitaDetalhes.receita.id}">-</div>
+                </div>
+            </div>
         </div>
     </section>
 
-    <section class="perfil-nutricional-info">
-        <h2>Perfil Nutricional</h2>
-        <div th:if="${receitaDetalhes.perfilNutricional == null}" class="no-data-message">
-            <p>Nenhum perfil nutricional calculado para esta receita.</p>
-        </div>
-        <div th:unless="${receitaDetalhes.perfilNutricional == null}" class="nutrition-details">
-            <p><strong>Porção Per Capita:</strong> <span th:text="${receitaDetalhes.perfilNutricional.perCapita + ' g'}"></span></p>
-            <p><strong>Total de Gramas:</strong> <span th:text="${receitaDetalhes.perfilNutricional.totalGramas + ' g'}"></span></p>
-            <p><strong>Total de Kcal:</strong> <span th:text="${receitaDetalhes.perfilNutricional.totalKcal + ' kcal'}"></span></p>
-            <p><strong>Porcentagem Total:</strong> <span th:text="${receitaDetalhes.perfilNutricional.totalPorcentagem + '%'}"></span></p>
-            <p><strong>VCT:</strong> <span th:text="${receitaDetalhes.perfilNutricional.vct + ' kcal'}"></span></p>
+    <section class="section">
+        <h2 class="section-title">🥬 Ingredientes</h2>
+        <div class="section-content">
+            <div class="table-container">
+                <table id="ingredientes-table">
+                    <thead>
+                    <tr>
+                        <th>Ingredientes</th>
+                        <th>Medida caseira</th>
+                        <th>PB (g)</th>
+                        <th>PL (g)</th>
+                        <th>FC</th>
+                        <th>Custo (forma de compra)</th>
+                        <th>Peso da compra (g)</th>
+                        <th>Custo (quantidade utilizada)</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="ingrediente : ${receitaDetalhes.receita.ingredientes}">
+                        <td class="readonly-table-cell" th:text="${ingrediente.ingredienteNome}">Ingrediente</td>
+                        <td class="readonly-table-cell" th:text="${ingrediente.medidaCaseira}">Medida</td>
+                        <td class="readonly-table-cell" th:text="${#numbers.formatDecimal(ingrediente.pesoBruto, 1, 2)}">0.00</td>
+                        <td class="readonly-table-cell" th:text="${#numbers.formatDecimal(ingrediente.pesoLiquido, 1, 2)}">0.00</td>
+                        <td class="readonly-table-cell" th:text="${#numbers.formatDecimal(ingrediente.fatorCorrecao, 1, 2)}">0.00</td>
+                        <td class="readonly-table-cell" th:text="${'R$ ' + #numbers.formatDecimal(ingrediente.custoCompra, 1, 2)}">R$ 0,00</td>
+                        <td class="readonly-table-cell" th:text="${#numbers.formatDecimal(ingrediente.pesoCompra, 1, 2)}">0.00</td>
+                        <td class="readonly-table-cell" th:text="${'R$ ' + #numbers.formatDecimal(ingrediente.custoUtilizado, 1, 2)}">R$ 0,00</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </section>
-</main>
+
+    <section class="section">
+        <h2 class="section-title">📝 Modo de preparo e Equipamentos</h2>
+        <div class="section-content">
+            <div class="two-column">
+                <div class="form-group">
+                    <label for="modo-preparo">Modo de preparo:</label>
+                    <div class="readonly-textarea" th:text="${receitaDetalhes.receita.modoPreparo}">Modo de preparo</div>
+                </div>
+                <div class="form-group">
+                    <label for="equipamentos">Equipamentos e utensílios utilizados:</label>
+                    <div class="readonly-textarea" th:text="${receitaDetalhes.receita.equipamentos}">Equipamentos</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2 class="section-title">📊 Informações Complementares</h2>
+        <div class="section-content">
+            <div class="grid-4">
+                <div class="form-group">
+                    <label for="tempo-preparo">Tempo de preparo (minutos):</label>
+                    <div class="readonly-field" th:text="${receitaDetalhes.receita.tempoPreparo + ' min'}">0 min</div>
+                </div>
+                <div class="form-group">
+                    <label for="medida-caseira">Medida caseira final:</label>
+                    <div class="readonly-field" th:text="${receitaDetalhes.receita.medidaCaseira}">Medida caseira</div>
+                </div>
+                <div class="form-group">
+                    <label for="rendimento">Rendimento Total (g ou ml):</label>
+                    <div class="readonly-field" th:text="${#numbers.formatDecimal(receitaDetalhes.receita.rendimento, 1, 2) + ' g'}">0.00 g</div>
+                </div>
+                <div class="form-group">
+                    <label for="peso-porcao">Peso da porção (g):</label>
+                    <div class="readonly-field" th:text="${#numbers.formatDecimal(receitaDetalhes.receita.pesoPorcao, 1, 2) + ' g'}">0.00 g</div>
+                </div>
+                <div class="form-group">
+                    <label for="numero-porcoes">Número de porções:</label>
+                    <div class="readonly-field" th:text="${receitaDetalhes.receita.numeroPorcoes}">0</div>
+                </div>
+                <div class="form-group">
+                    <label for="fcc">Fcc Geral:</label>
+                    <div class="readonly-field" th:text="${#numbers.formatDecimal(receitaDetalhes.receita.fcc, 1, 2)}">0.00</div>
+                </div>
+                <div class="form-group">
+                    <label for="nutricionista">Nutricionista:</label>
+                    <div class="readonly-field" th:text="${receitaDetalhes.receita.nutricionistaUsername}">Nutricionista</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2 class="section-title">🍎 Perfil Nutricional</h2>
+        <div class="section-content">
+            <div class="table-container">
+                <table id="nutricional-table">
+                    <thead>
+                    <tr>
+                        <th>Ingredientes</th>
+                        <th>Per capita (PL)</th>
+                        <th>PTN</th>
+                        <th>CHO</th>
+                        <th>LIP</th>
+                        <th>Sódio</th>
+                        <th>Gordura Saturada</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="ingrediente : ${receitaDetalhes.receita.ingredientes}">
+                        <td class="readonly-table-cell" th:text="${ingrediente.ingredienteNome}">Ingrediente</td>
+                        <td class="readonly-table-cell" th:text="${#numbers.formatDecimal(ingrediente.pesoLiquido / (receitaDetalhes.receita.numeroPorcoes ?: 1), 1, 2)}">0.00</td>
+                        <td class="readonly-table-cell" th:text="${#numbers.formatDecimal((ingrediente.proteina ?: 0) * (ingrediente.pesoLiquido / 100) / (receitaDetalhes.receita.numeroPorcoes ?: 1), 1, 2)}">0.00</td>
+                        <td class="readonly-table-cell" th:text="${#numbers.formatDecimal((ingrediente.carboidrato ?: 0) * (ingrediente.pesoLiquido / 100) / (receitaDetalhes.receita.numeroPorcoes ?: 1), 1, 2)}">0.00</td>
+                        <td class="readonly-table-cell" th:text="${#numbers.formatDecimal((ingrediente.lipidio ?: 0) * (ingrediente.pesoLiquido / 100) / (receitaDetalhes.receita.numeroPorcoes ?: 1), 1, 2)}">0.00</td>
+                        <td class="readonly-table-cell" th:text="${#numbers.formatDecimal((ingrediente.sodio ?: 0) * (ingrediente.pesoLiquido / 100) / (receitaDetalhes.receita.numeroPorcoes ?: 1), 1, 2)}">0.00</td>
+                        <td class="readonly-table-cell" th:text="${#numbers.formatDecimal((ingrediente.gorduraSaturada ?: 0) * (ingrediente.pesoLiquido / 100) / (receitaDetalhes.receita.numeroPorcoes ?: 1), 1, 2)}">0.00</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="nutrition-extras">
+                <table id="totais-macros-table">
+                    <thead>
+                        <tr>
+                            <th>Total</th>
+                            <th>Proteínas</th>
+                            <th>Carboidratos</th>
+                            <th>Lipídios</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Gramas</strong></td>
+                            <td th:text="${#numbers.formatDecimal(receitaDetalhes.perfilNutricional?.totalGramas ?: 0, 1, 2)}">0.00</td>
+                            <td th:text="${#numbers.formatDecimal(receitaDetalhes.perfilNutricional?.totalGramas ?: 0, 1, 2)}">0.00</td>
+                            <td th:text="${#numbers.formatDecimal(receitaDetalhes.perfilNutricional?.totalGramas ?: 0, 1, 2)}">0.00</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Kcal</strong></td>
+                            <td th:text="${#numbers.formatDecimal((receitaDetalhes.perfilNutricional?.totalGramas ?: 0) * 4, 1, 2)}">0.00</td>
+                            <td th:text="${#numbers.formatDecimal((receitaDetalhes.perfilNutricional?.totalGramas ?: 0) * 4, 1, 2)}">0.00</td>
+                            <td th:text="${#numbers.formatDecimal((receitaDetalhes.perfilNutricional?.totalGramas ?: 0) * 9, 1, 2)}">0.00</td>
+                        </tr>
+                        <tr>
+                            <td><strong>%</strong></td>
+                            <td th:text="${#numbers.formatDecimal((receitaDetalhes.perfilNutricional?.totalPorcentagem ?: 0) / 3, 1, 2) + '%'}">0.00%</td>
+                            <td th:text="${#numbers.formatDecimal((receitaDetalhes.perfilNutricional?.totalPorcentagem ?: 0) / 3, 1, 2) + '%'}">0.00%</td>
+                            <td th:text="${#numbers.formatDecimal((receitaDetalhes.perfilNutricional?.totalPorcentagem ?: 0) / 3, 1, 2) + '%'}">0.00%</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="form-group">
+                    <label for="vct">VCT (Kcal):</label>
+                    <div class="readonly-field" th:text="${#numbers.formatDecimal(receitaDetalhes.perfilNutricional?.vct ?: 0, 1, 2) + ' kcal'}">0.00 kcal</div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
 </body>
 </html>
