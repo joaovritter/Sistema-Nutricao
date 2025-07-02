@@ -1,4 +1,5 @@
 # Sistema Nutrição
+Feito por João Ritter, Marcelo Moro, Wendel Nunes e Leandro Najar
 
 Sistema web para gestão de fichas técnicas de receitas e montagem de refeições, voltado para nutricionistas e profissionais da área de alimentação.
 
