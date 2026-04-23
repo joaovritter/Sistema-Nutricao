@@ -1,83 +1,149 @@
-/* GERAL: Reset e Estilos Básicos */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+/* ═══════════════════════════════════════════════════════
+   DESIGN TOKENS — Sistema Premium
+═══════════════════════════════════════════════════════ */
+:root {
+    --emerald-500: #10b981;
+    --emerald-600: #059669;
+    --emerald-700: #047857;
+    --emerald-800: #065f46;
+    --emerald-900: #064e3b;
+    --emerald-light: #ecfdf5;
+    --emerald-ring: rgba(16, 185, 129, 0.22);
+    --emerald-glow: rgba(16, 185, 129, 0.5);
+    --text-900: #0a0f1e;
+    --text-700: #111827;
+    --text-500: #374151;
+    --text-400: #6B7280;
+    --text-300: #9CA3AF;
+    --border-soft: rgba(0, 0, 0, 0.06);
+    --bg-page: #F0FDF4;
+    --bg-input: #F3F4F6;
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+    --shadow-card: 0 0 0 1px rgba(0, 0, 0, 0.04), 0 20px 40px -10px rgba(0, 0, 0, 0.08), 0 4px 8px -2px rgba(0, 0, 0, 0.04);
+    --shadow-float: 0 0 0 1px rgba(0, 0, 0, 0.04), 0 32px 64px -12px rgba(0, 0, 0, 0.12), 0 8px 16px -4px rgba(0, 0, 0, 0.06);
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 20px;
+    --ease-premium: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── Reset ──────────────────────────────────────────── */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+/* ═══════════════════════════════════════════════════════
+   BODY
+═══════════════════════════════════════════════════════ */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #ffffff;
-    color: #333;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-page);
+    background-image:
+        radial-gradient(ellipse at 15% 40%, rgba(16, 185, 129, 0.05) 0%, transparent 60%);
+    color: var(--text-500);
+    padding-bottom: 48px;
 }
 
-/* Container principal */
+/* ═══════════════════════════════════════════════════════
+   CONTAINER PRINCIPAL — Floating Card
+═══════════════════════════════════════════════════════ */
 .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    margin-top: 20px;
-    background: white;
-    border-radius: 8px;
-    border: 2px solid #4a7c59;
+    max-width: 1240px;
+    margin: 28px auto;
+    margin-top: 24px;
+    background: #fff;
+    border-radius: var(--radius-xl);
+    border: 1px solid rgba(0, 0, 0, 0.05);
     overflow: hidden;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    box-shadow: var(--shadow-float);
 }
 
-/* Título Ficha Técnica fora do header */
+/* ═══════════════════════════════════════════════════════
+   TÍTULO FICHA TÉCNICA
+═══════════════════════════════════════════════════════ */
 .titulo-ficha {
-    font-size: 2.5em;
-    font-weight: bold;
-    letter-spacing: 2px;
+    font-size: 1.6rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
     text-transform: uppercase;
-    color: white;
-    background-color: #4a7c59;
+    color: #fff;
+    background: linear-gradient(135deg,
+            var(--emerald-900) 0%,
+            var(--emerald-700) 50%,
+            var(--emerald-600) 100%);
     text-align: center;
     display: block;
-    padding: 20px;
-    border-radius: 8px 8px 0 0;
+    padding: 24px 20px;
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
     margin-bottom: 0;
+    box-shadow: 0 4px 24px -4px rgba(6, 78, 59, 0.4);
+    position: relative;
+    overflow: hidden;
 }
 
-/* Cabeçalho */
+/* Shimmer decorativo no título */
+.titulo-ficha::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg,
+            transparent 0%,
+            rgba(255, 255, 255, 0.06) 50%,
+            transparent 100%);
+}
+
+/* ── Cabeçalho interno ──────────────────────────────── */
 .header {
-    background-color: #4a7c59;
-    color: white;
+    background: linear-gradient(135deg,
+            var(--emerald-900) 0%,
+            var(--emerald-700) 100%);
+    color: #fff;
     text-align: center;
     padding: 20px;
 }
 
-/* Seções */
+/* ═══════════════════════════════════════════════════════
+   SEÇÕES — Refinadas
+═══════════════════════════════════════════════════════ */
 .section {
     margin: 20px;
-    border: 2px solid #a8d5a8;
-    border-radius: 8px;
+    border: 1px solid rgba(16, 185, 129, 0.15);
+    border-radius: var(--radius-lg);
     overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
 .section-title {
-    background: #2d5016;
-    color: white;
-    padding: 12px 20px;
-    font-weight: bold;
+    background: linear-gradient(135deg, var(--emerald-800), var(--emerald-700));
+    color: #d1fae5;
+    padding: 10px 20px;
+    font-weight: 700;
     text-transform: uppercase;
-    font-size: 1.1em;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
     margin: 0;
 }
 
 .section-content {
-    padding: 20px;
-    background: #f9fff9;
+    padding: 22px;
+    background: linear-gradient(180deg, #f0fdf4 0%, #fafffe 100%);
 }
 
-/* Formulários */
+/* ═══════════════════════════════════════════════════════
+   FORMULÁRIOS / ROWS
+═══════════════════════════════════════════════════════ */
 .form-row {
     display: flex;
-    gap: 15px;
-    margin-bottom: 15px;
-    align-items: end; /* Mantém o alinhamento de base dos inputs nas linhas comuns */
+    gap: 14px;
+    margin-bottom: 14px;
+    align-items: end;
 }
 
-/* O form-group GLOBAL não deve ter display:flex para não quebrar outros layouts */
 .form-group {
     flex: 1;
 }
@@ -90,29 +156,50 @@ body {
     flex: 0 0 200px;
 }
 
-/* Labels GLOBAL */
+/* ── Labels Premium ──────────────────────────────────── */
 label {
     display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-    color: #2d5016;
+    margin-bottom: 6px;
+    font-weight: 700;
+    font-size: 0.72rem;
+    color: var(--emerald-800);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
 }
 
-/* Inputs, selects e textareas GLOBAL */
-input, select, textarea {
+/* ═══════════════════════════════════════════════════════
+   INPUTS — Filled-to-Focused
+═══════════════════════════════════════════════════════ */
+input,
+select,
+textarea {
     width: 100%;
-    padding: 10px;
-    border: 2px solid #a8d5a8;
-    border-radius: 6px;
-    font-size: 14px;
-    background: white;
-    transition: border-color 0.3s ease;
+    padding: 10px 13px;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 0.875rem;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 500;
+    background: var(--bg-input);
+    color: var(--text-700);
+    outline: none;
+    transition: all 0.3s var(--ease-premium);
 }
 
-input:focus, select:focus, textarea:focus {
-    outline: none;
-    border-color: #2d5016;
-    box-shadow: 0 0 5px rgba(45, 80, 22, 0.3);
+input::placeholder,
+textarea::placeholder {
+    color: var(--text-300);
+    font-weight: 400;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    background: #fff;
+    box-shadow:
+        0 0 0 3px var(--emerald-ring),
+        0 4px 16px rgba(16, 185, 129, 0.08);
+    transform: translateY(-1px);
 }
 
 textarea {
@@ -120,74 +207,128 @@ textarea {
     min-height: 120px;
 }
 
-/* Tabelas */
+/* ═══════════════════════════════════════════════════════
+   TABELAS — Data Grid Premium
+═══════════════════════════════════════════════════════ */
 .table-container {
     overflow-x: auto;
-    margin: 15px 0;
+    margin: 14px 0;
+    border-radius: var(--radius-md);
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.06);
+
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
-    background: white;
-    border-radius: 6px;
-    overflow: hidden;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    background: #fff;
 }
 
+/* IMPORTANTE: NÃO adicionar position:relative no td —
+   isso transformaria o td em containing block do dropdown de autocomplete,
+   prendendo-o dentro da célula. Sem position, o dropdown position:absolute
+   flutua livremente sobre a página, como no comportamento original. */
+
 th {
-    background: #4a7c59;
-    color: white;
-    padding: 12px 8px;
+    background: #F8FAFC;
+    color: #64748B;
+    padding: 11px 12px;
     text-align: center;
-    font-weight: bold;
-    font-size: 13px;
+    font-weight: 700;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    border-bottom: 2px solid rgba(16, 185, 129, 0.15);
 }
 
 td {
-    padding: 10px 8px;
-    border-bottom: 1px solid #e0e0e0;
+    padding: 10px 12px;
+    border-bottom: 1px solid #F1F5F9;
     text-align: center;
+    color: var(--text-500);
+    font-size: 0.855rem;
+    font-weight: 500;
+    transition: background 0.15s ease;
 }
 
 td input {
-    border: 1px solid #ddd;
-    padding: 6px;
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 6px 9px;
     margin: 0;
+    font-size: 0.845rem;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 500;
+    background: var(--bg-input);
+    color: var(--text-700);
+    transition: all 0.3s var(--ease-premium);
+    outline: none;
 }
 
-/* Botões */
+td input:focus {
+    background: #fff;
+    box-shadow: 0 0 0 2.5px var(--emerald-ring);
+    transform: translateY(-1px);
+}
+
+tbody tr:hover {
+    background: linear-gradient(90deg, #f0fdf4, #f7fef9);
+}
+
+tbody tr:hover td {
+    color: var(--text-700);
+}
+
+/* ═══════════════════════════════════════════════════════
+   BOTÕES — Premium Actions
+═══════════════════════════════════════════════════════ */
 .btn {
-    background: #4a7c59;
-    color: white;
+    background: linear-gradient(135deg, var(--emerald-600) 0%, var(--emerald-500) 100%);
+    color: #fff;
     border: none;
-    padding: 10px 20px;
-    border-radius: 6px;
+    padding: 10px 22px;
+    border-radius: 100px;
     cursor: pointer;
-    font-size: 14px;
-    font-weight: bold;
+    font-size: 0.84rem;
+    font-weight: 700;
+    font-family: 'Plus Jakarta Sans', sans-serif;
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    transition: background-color 0.3s ease;
+    gap: 7px;
+    letter-spacing: 0.01em;
+    transition: all 0.3s var(--ease-premium);
+    box-shadow:
+        0 6px 20px -6px var(--emerald-glow),
+        0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .btn:hover {
-    background: #2d5016;
+    background: linear-gradient(135deg, var(--emerald-700) 0%, var(--emerald-600) 100%);
+    transform: translateY(-2px) scale(1.02);
+    box-shadow:
+        0 12px 28px -6px var(--emerald-glow),
+        0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btn:active {
+    transform: scale(0.96);
+    box-shadow: 0 3px 8px -4px var(--emerald-glow);
 }
 
 .btn-icon::before {
     content: "+";
-    font-size: 16px;
-    font-weight: bold;
+    font-size: 1.05rem;
+    font-weight: 800;
 }
 
-/* Layouts de grid GLOBAL (este não é o que está causando o problema, mas é a base) */
+/* ═══════════════════════════════════════════════════════
+   LAYOUTS DE GRID
+═══════════════════════════════════════════════════════ */
 .grid-4 {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 15px;
-    margin-top: 15px;
+    gap: 14px;
+    margin-top: 14px;
 }
 
 .two-column {
@@ -196,122 +337,113 @@ td input {
     gap: 20px;
 }
 
-/* Seção de cálculo de água */
+/* ── Cálculo de Água ─────────────────────────────────── */
 .water-calc {
     margin-top: 20px;
-    padding: 15px;
-    background: #f0f8f0;
-    border-radius: 6px;
-    border: 1px solid #a8d5a8;
+    padding: 16px;
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.06), rgba(52, 211, 153, 0.04));
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(16, 185, 129, 0.14);
 }
 
-/* Extras nutricionais */
+/* ── Extras Nutricionais ─────────────────────────────── */
 .nutrition-extras {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 14px;
     margin-top: 20px;
     max-width: 300px;
 }
 
-/* Estilos para a tabela de totais dos macros */
+/* ═══════════════════════════════════════════════════════
+   TABELA TOTAIS MACROS — Premium
+═══════════════════════════════════════════════════════ */
 #totais-macros-table {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 20px;
-    background-color: #f8f9fa;
-    border-radius: 8px;
+    background-color: #fff;
+    border-radius: var(--radius-md);
     overflow: hidden;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.06), var(--shadow-sm);
 }
 
 #totais-macros-table th {
-    background-color: #2d5016;
-    color: white;
-    padding: 12px;
+    background: linear-gradient(135deg, var(--emerald-800), var(--emerald-700));
+    color: #d1fae5;
+    padding: 11px 14px;
     text-align: center;
-    font-weight: bold;
+    font-weight: 700;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
     border: none;
 }
 
 #totais-macros-table td {
-    padding: 10px;
+    padding: 10px 14px;
     text-align: center;
-    border: 1px solid #dee2e6;
+    border: none;
+    border-bottom: 1px solid #F1F5F9;
+    font-size: 0.875rem;
+    font-weight: 500;
 }
 
 #totais-macros-table tbody tr:nth-child(even) {
-    background-color: #e9ecef;
+    background-color: #F8FAFC;
 }
 
 #totais-macros-table tbody tr:hover {
-    background-color: #d1ecf1;
+    background-color: var(--emerald-light);
+    transition: background 0.15s ease;
 }
 
 #totais-macros-table td:first-child {
-    font-weight: bold;
-    background-color: #f8f9fa;
+    font-weight: 700;
+    background-color: #F8FAFC;
     text-align: left;
+    color: var(--text-700);
 }
 
-/* === SOLUÇÃO FINAL PARA ALINHAMENTO DA SEÇÃO "INFORMAÇÕES COMPLEMENTARES" === */
-
-/* Ajusta o comportamento da grid para garantir melhor alinhamento das colunas */
+/* ═══════════════════════════════════════════════════════
+   GRID INFORMAÇÕES COMPLEMENTARES — Preservado
+═══════════════════════════════════════════════════════ */
 .section .section-content .grid-4 {
     display: grid;
-    /* Define colunas com largura flexível e uma largura mínima.
-       Ajuste o minmax(200px, 1fr) se precisar de mais ou menos colunas ou espaço. */
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-
-    /* grid-auto-rows é CRUCIAL para alinhar as linhas */
-    /* Este valor é a altura MINIMA da LINHA INTEIRA da grid.
-       Vamos garantir que seja alto o suficiente para acomodar o label de DUAS LINHAS + o input + margens. */
-    grid-auto-rows: minmax(95px, auto); /* Ajustado para acomodar 2 linhas de label + input.
-                                            Pode ser necessário um pequeno ajuste fino (90px, 95px, 100px)
-                                            dependendo da altura exata da fonte do seu label. */
-    align-items: start; /* Alinha os itens (form-groups) na parte superior de suas células da grid */
-    gap: 15px; /* Espaço entre os itens da grid */
-    margin-top: 15px;
+    grid-auto-rows: minmax(95px, auto);
+    align-items: start;
+    gap: 14px;
+    margin-top: 14px;
 }
 
-/* Aplica flexbox ao form-group DENTRO da .grid-4 da seção específica de informações complementares */
 .section .section-content .grid-4 .form-group {
     display: flex;
-    flex-direction: column; /* Coloca label acima do input */
-    justify-content: flex-start; /* Alinha o conteúdo (label e input) no topo do seu container */
-    height: 100%; /* Garante que o form-group ocupe a altura total da célula da grid */
-    box-sizing: border-box; /* Inclui padding e borda na altura */
+    flex-direction: column;
+    justify-content: flex-start;
+    height: 100%;
+    box-sizing: border-box;
 }
 
-/* Garante que o label tenha uma altura fixa ou mínima para que os inputs se alinhem DENTRO DESTA SEÇÃO */
 .section .section-content .grid-4 .form-group label {
-    margin-bottom: 5px; /* Espaço entre label e input */
-    line-height: 1.2; /* Altura de linha consistente para o texto */
-    display: block; /* Garante que o label ocupe sua própria linha */
-
-    /* === AQUI ESTÁ A MUDANÇA MAIS IMPORTANTE PARA OS LABELS LONGOS === */
-    min-height: 40px; /* Força uma altura mínima para o label, suficiente para 2 linhas de texto com line-height 1.2.
-                         Isso cria um espaço consistente para o label, mesmo que o texto seja curto.
-                         Ajuste este valor (ex: 35px, 45px) com base no tamanho da sua fonte. */
-    height: auto; /* Permite que o label ocupe mais de 40px se o texto for ainda maior (raro com este line-height) */
-    /* Caso extremo para evitar overflow, mas pode cortar texto: */
-    /* overflow: hidden; */
-    /* text-overflow: ellipsis; */
+    margin-bottom: 5px;
+    line-height: 1.2;
+    display: block;
+    min-height: 40px;
+    height: auto;
 }
 
-/* Garante que os inputs dentro desta seção específica tenham altura e preenchimento consistentes */
 .section .section-content .grid-4 .form-group input {
-    height: 40px; /* Define uma altura fixa para todos os inputs */
-    min-height: 40px; /* Garante que não fiquem menores */
-    padding: 8px 10px; /* Ajusta o padding para centralizar o texto verticalmente */
-    box-sizing: border-box; /* Inclui padding e borda na altura total */
-    flex-shrink: 0; /* Impede que o input encolha se o label for muito alto */
+    height: 40px;
+    min-height: 40px;
+    padding: 8px 12px;
+    box-sizing: border-box;
+    flex-shrink: 0;
 }
 
-/* --- FIM DOS AJUSTES PARA "INFORMAÇÕES COMPLEMENTARES" --- */
-
-
-/* Responsividade */
+/* ═══════════════════════════════════════════════════════
+   RESPONSIVIDADE
+═══════════════════════════════════════════════════════ */
 @media (max-width: 768px) {
     .form-row {
         flex-direction: column;
@@ -321,21 +453,18 @@ td input {
         grid-template-columns: 1fr;
     }
 
-    /* Ajuste para o grid-4 em telas menores */
-    /* Aplica-se a TODOS os .grid-4, incluindo o de informações complementares */
     .grid-4 {
         grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-        /* Manter ou ajustar grid-auto-rows aqui para a responsividade, se necessário */
-        /* Ex: grid-auto-rows: minmax(80px, auto); */
     }
 
-    th, td {
-        padding: 8px 4px;
-        font-size: 12px;
+    th,
+    td {
+        padding: 8px 6px;
+        font-size: 0.76rem;
     }
 
     .header h1 {
-        font-size: 2em;
+        font-size: 1.8em;
     }
 
     .container {
@@ -347,14 +476,14 @@ td input {
     }
 
     .titulo-ficha {
-        font-size: 2em;
-        padding: 15px;
+        font-size: 1.35rem;
+        padding: 18px;
     }
 }
 
 @media (max-width: 480px) {
     .header h1 {
-        font-size: 1.5em;
+        font-size: 1.3em;
         letter-spacing: 1px;
     }
 
@@ -363,15 +492,11 @@ td input {
     }
 
     .section-content {
-        padding: 15px;
+        padding: 14px;
     }
 
-    /* Ajuste para o grid-4 em telas muito pequenas */
-    /* Aplica-se a TODOS os .grid-4, incluindo o de informações complementares */
     .grid-4 {
         grid-template-columns: 1fr;
-        /* Manter ou ajustar grid-auto-rows aqui para a responsividade, se necessário */
-        /* Ex: grid-auto-rows: minmax(70px, auto); */
     }
 
     .nutrition-extras {
@@ -379,10 +504,8 @@ td input {
     }
 
     .titulo-ficha {
-        font-size: 1.5em;
-        letter-spacing: 1px;
-        padding: 10px;
+        font-size: 1.15rem;
+        letter-spacing: 0.5px;
+        padding: 14px;
     }
 }
-
-

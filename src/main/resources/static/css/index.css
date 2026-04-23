@@ -1,69 +1,82 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+/* ── Reset ──────────────────────────────────────────── */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
+/* ═══════════════════════════════════════════════════════
+   BODY — Fundo gradiente vivo com textura sutil
+═══════════════════════════════════════════════════════ */
 body {
     width: 100%;
     height: 100vh;
     overflow: hidden;
     background-image: url('../images/backgroundNutricao.png');
+    background-size: cover;
+    background-position: center;
 }
 
+/* ── Overlay com gradiente rico ─────────────────────── */
 .container {
     width: 100%;
     height: 100%;
     display: flex;
-    background: linear-gradient(to right, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.5) 30%, rgba(255, 255, 255, 0)),
-    linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3));
+    background: linear-gradient(
+        110deg,
+        rgba(255, 255, 255, 0.96) 0%,
+        rgba(240, 253, 244, 0.88) 30%,
+        rgba(255, 255, 255, 0.1) 65%,
+        rgba(0, 0, 0, 0.18) 100%
+    );
 }
 
+/* ═══════════════════════════════════════════════════════
+   LADO ESQUERDO — Hero Section
+═══════════════════════════════════════════════════════ */
 .content-left {
     width: 60%;
-    padding: 50px;
-    padding-left: 150px;
-    color: #333;
+    padding: 50px 60px 50px 100px;
+    color: #111827;
     display: flex;
     flex-direction: column;
     justify-content: center;
 }
 
-.description h2 {
-    font-size: 2rem;
-    font-weight: 600;
-    margin-bottom: 30px;
-    line-height: 1.2;
-    color: #333;
-    text-shadow: none;
-}
-
-
 .main-title {
-    font-size: 3.5rem;
-    font-weight: 700;
-    margin-bottom: 50px;
-    color: #a4e878;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    font-size: clamp(2.4rem, 4vw, 3.6rem);
+    font-weight: 800;
+    margin-bottom: 36px;
+    color: #064e3b;
+    text-shadow: 0 2px 12px rgba(6, 78, 59, 0.18);
+    line-height: 1.08;
+    letter-spacing: -0.04em;
 }
 
 .description h2 {
-    font-size: 2rem;
-    font-weight: 600;
-    margin-bottom: 30px;
-    line-height: 1.2;
-    color: #333;
-    text-shadow: none;
+    font-size: clamp(1.4rem, 2.2vw, 1.9rem);
+    font-weight: 700;
+    margin-bottom: 20px;
+    line-height: 1.28;
+    color: #111827;
+    letter-spacing: -0.025em;
 }
 
 .description p {
     font-size: 1rem;
-    margin-bottom: 15px;
-    max-width: 600px;
-    line-height: 1.5;
+    margin-bottom: 14px;
+    max-width: 520px;
+    line-height: 1.75;
+    color: #4B5563;
+    font-weight: 400;
 }
 
+/* ═══════════════════════════════════════════════════════
+   LADO DIREITO — Card de Login Flutuante
+═══════════════════════════════════════════════════════ */
 .content-right {
     width: 40%;
     display: flex;
@@ -73,13 +86,18 @@ body {
 }
 
 .login-box {
-    background-color: rgba(255, 255, 255, 0.9);
-    border-radius: 10px;
-    padding: 30px;
-    width: 400px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    background: #FFFFFF;
+    border-radius: 24px;
+    padding: 40px 36px;
+    width: 420px;
+    box-shadow:
+        0 0 0 1px rgba(0, 0, 0, 0.04),
+        0 20px 48px -8px rgba(0, 0, 0, 0.14),
+        0 8px 16px -4px rgba(0, 0, 0, 0.06);
+    border: 1px solid rgba(255,255,255,0.9);
 }
 
+/* ── Formulário ─────────────────────────────────────── */
 .form-group {
     margin-bottom: 20px;
 }
@@ -87,88 +105,115 @@ body {
 .form-group label {
     display: block;
     margin-bottom: 8px;
-    font-weight: 500;
-    color: #333;
+    font-weight: 600;
+    font-size: 0.82rem;
+    color: #374151;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
 }
 
 .form-group input {
     width: 100%;
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 1rem;
+    padding: 13px 16px;
+    border: none;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 500;
+    background: #F3F4F6;
+    color: #111827;
+    outline: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+.form-group input::placeholder {
+    color: #9CA3AF;
+    font-weight: 400;
+}
+
+.form-group input:focus {
+    background: #FFFFFF;
+    box-shadow:
+        0 0 0 3px rgba(16, 185, 129, 0.22),
+        0 4px 12px rgba(16, 185, 129, 0.1);
+    transform: translateY(-1px);
+}
+
+/* ── Botão Login — Glow Premium ──────────────────────── */
 .login-btn {
     width: 100%;
-    padding: 12px;
-    background-color: #7ab95c;
-    color: white;
+    padding: 14px;
+    background: linear-gradient(135deg, #059669 0%, #10b981 60%, #34d399 100%);
+    color: #fff;
     border: none;
-    border-radius: 5px;
-    font-size: 1rem;
-    font-weight: 600;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    font-family: 'Plus Jakarta Sans', sans-serif;
     cursor: pointer;
-    transition: background-color 0.3s;
+    letter-spacing: 0.02em;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow:
+        0 8px 24px -6px rgba(16, 185, 129, 0.5),
+        0 2px 4px rgba(16, 185, 129, 0.15);
 }
 
 .login-btn:hover {
-    background-color: #689f4c;
+    background: linear-gradient(135deg, #047857 0%, #059669 60%, #10b981 100%);
+    transform: translateY(-2px) scale(1.01);
+    box-shadow:
+        0 14px 32px -6px rgba(16, 185, 129, 0.6),
+        0 4px 8px rgba(16, 185, 129, 0.2);
 }
 
+.login-btn:active {
+    transform: scale(0.97);
+    box-shadow: 0 4px 12px -4px rgba(16, 185, 129, 0.4);
+}
+
+/* ── Link de Registro ────────────────────────────────── */
 .register {
     text-align: center;
-    margin-top: 15px;
+    margin-top: 20px;
 }
 
-.register button {
-    color: #666;
+.register button,
+.register a {
+    color: #6B7280;
     text-decoration: none;
-    font-size: 0.9rem;
+    font-size: 0.875rem;
     background: none;
     border: none;
+    cursor: pointer;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 500;
+    transition: color 0.2s ease;
 }
 
-.register button:hover {
-    text-decoration: underline;
+.register button:hover,
+.register a:hover {
+    color: #059669;
 }
 
+/* ── Alerta de Erro ──────────────────────────────────── */
 .error-message {
-    color: #fff;
-    background: #e74c3c;
-    padding: 10px;
-    border-radius: 4px;
-    margin-top: 10px;
+    color: #991b1b;
+    background: #FEF2F2;
+    border: 1px solid #FECACA;
+    padding: 12px 16px;
+    border-radius: 10px;
+    margin-bottom: 16px;
     text-align: center;
+    font-size: 0.875rem;
+    font-weight: 600;
 }
 
-/* Responsividade */
+/* ── Responsividade ─────────────────────────────────── */
 @media (max-width: 992px) {
-    .container {
-        flex-direction: column;
-        overflow-y: auto;
-    }
-
-    .content-left, .content-right {
-        width: 100%;
-    }
-
-    .content-left {
-        padding: 30px;
-    }
-
-    .main-title {
-        font-size: 2.5rem;
-        margin-bottom: 30px;
-    }
-
-    .description h2 {
-        font-size: 1.5rem;
-    }
-
-    .login-box {
-        width: 90%;
-        max-width: 400px;
-        margin: 20px 0;
-    }
+    .container { flex-direction: column; overflow-y: auto; }
+    .content-left, .content-right { width: 100%; }
+    .content-left { padding: 32px 24px; }
+    .main-title { font-size: 2.2rem; margin-bottom: 24px; }
+    .description h2 { font-size: 1.35rem; }
+    .login-box { width: 90%; max-width: 420px; margin: 24px auto; }
 }

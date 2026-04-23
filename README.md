@@ -40,7 +40,7 @@ Permitir o cadastro, visualização, edição e agrupamento de fichas técnicas 
    ```
 2. Entre na pasta do projeto:
    ```bash
-   cd Sistema Nutricao
+   cd SistemaNutricao
    ```
 3. Execute o projeto com Maven:
    ```bash

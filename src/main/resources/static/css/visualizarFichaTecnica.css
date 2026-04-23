@@ -1,158 +1,236 @@
-/* src/main/resources/static/css/visualizarReceitas.css */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
-/* Estilos para o cabeçalho da página de visualização */
+:root {
+    --emerald-500:  #10b981;
+    --emerald-600:  #059669;
+    --emerald-700:  #047857;
+    --emerald-800:  #065f46;
+    --emerald-light: #ecfdf5;
+    --emerald-ring: rgba(16, 185, 129, 0.22);
+    --emerald-glow: rgba(16, 185, 129, 0.5);
+    --bg-page:      #F0FDF4;
+    --border-soft:  #F1F5F9;
+    --shadow-card:  0 0 0 1px rgba(0,0,0,0.04), 0 20px 40px -10px rgba(0,0,0,0.08), 0 4px 8px -2px rgba(0,0,0,0.04);
+    --shadow-float: 0 0 0 1px rgba(0,0,0,0.04), 0 28px 56px -10px rgba(0,0,0,0.1), 0 6px 16px -4px rgba(0,0,0,0.05);
+    --ease-premium: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+/* ── Ações do Header ─────────────────────────────────── */
 .header .header-actions {
-    display: flex; /* Para alinhar os botões lado a lado */
-    gap: 15px; /* Espaço entre os botões */
+    display: flex;
+    gap: 12px;
     align-items: center;
 }
 
-/* Estilos gerais para botões (se não estiverem bem definidos em dashboard.css) */
+/* ── Botão Base ──────────────────────────────────────── */
 .btn {
-    padding: 10px 20px;
-    border-radius: 8px;
+    padding: 9px 20px;
+    border-radius: 100px;
     text-decoration: none;
-    font-weight: bold;
+    font-weight: 700;
+    font-size: 0.84rem;
     cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: all 0.3s var(--ease-premium);
     text-align: center;
-    display: inline-block; /* Para que padding e margin funcionem corretamente */
-    border: none; /* Remover borda padrão de botões */
-    font-size: 1rem;
+    display: inline-block;
+    border: none;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    letter-spacing: 0.01em;
 }
 
+/* ── Botão Voltar — Ghost ────────────────────────────── */
 .btn-voltar {
-    background-color: #6c757d; /* Cinza */
-    color: white;
+    background: rgba(71, 85, 105, 0.08);
+    color: #475569;
+    border: 1px solid rgba(71, 85, 105, 0.18);
 }
 
 .btn-voltar:hover {
-    background-color: #5a6268;
+    background: rgba(71, 85, 105, 0.14);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
+.btn-voltar:active { transform: scale(0.97); }
+
+/* ── Botão Criar — Gradient + Glow ──────────────────── */
 .btn-criar {
-    background-color: #28a745; /* Verde */
-    color: white;
+    background: linear-gradient(135deg, var(--emerald-600) 0%, var(--emerald-500) 100%);
+    color: #fff;
+    box-shadow: 0 6px 20px -6px var(--emerald-glow);
 }
 
 .btn-criar:hover {
-    background-color: #218838;
+    background: linear-gradient(135deg, var(--emerald-700) 0%, var(--emerald-600) 100%);
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 12px 28px -6px var(--emerald-glow);
 }
 
-/* Seção de lista de receitas */
+.btn-criar:active { transform: scale(0.96); }
+
+/* ═══════════════════════════════════════════════════════
+   SEÇÃO DE LISTA — Floating Card
+═══════════════════════════════════════════════════════ */
 .receita-list-section {
-    background-color: #ffffff;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    margin-top: 20px; /* Espaçamento do cabeçalho */
-    text-align: center; /* Centralizar o h2 e mensagem inicial */
-}
-
-.receita-list-section h2 {
-    color: #333;
-    margin-bottom: 25px;
-    font-size: 2em;
+    background: #fff;
+    padding: 32px;
+    border-radius: 20px;
+    box-shadow: var(--shadow-float);
+    border: 1px solid rgba(0,0,0,0.04);
+    margin-top: 20px;
     text-align: center;
 }
 
-/* Mensagem de "nenhuma receita" */
+.receita-list-section h2 {
+    color: #0a0f1e;
+    margin-bottom: 24px;
+    font-size: 1.6rem;
+    font-weight: 800;
+    text-align: center;
+    letter-spacing: -0.03em;
+}
+
+/* ── Mensagem "Nenhuma receita" — Destaque Visual ─────── */
 .no-receitas-message {
-    padding: 20px;
-    background-color: #f8d7da; /* Fundo vermelho claro */
-    color: #721c24; /* Texto vermelho escuro */
-    border: 1px solid #f5c6cb;
-    border-radius: 8px;
+    padding: 18px 22px;
+    background: linear-gradient(135deg, #FFF1F2, #FEE2E2);
+    color: #991b1b;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    border-radius: 12px;
     margin-bottom: 20px;
-    font-size: 1.1em;
+    font-size: 0.925rem;
+    font-weight: 600;
+    box-shadow: 0 0 0 1px rgba(239,68,68,0.1), 0 4px 12px rgba(239,68,68,0.06);
 }
 
 .no-receitas-message a {
-    color: #007bff; /* Cor de link padrão */
+    color: var(--emerald-600);
     text-decoration: none;
-    font-weight: bold;
+    font-weight: 700;
 }
 
 .no-receitas-message a:hover {
     text-decoration: underline;
 }
 
-/* Estilos para a tabela de receitas */
+/* ═══════════════════════════════════════════════════════
+   TABELA DE RECEITAS — Data Grid Premium
+═══════════════════════════════════════════════════════ */
 .receitas-table-container {
-    overflow-x: auto; /* Para tabelas que excedem a largura da tela em dispositivos menores */
+    overflow-x: auto;
     margin-top: 20px;
+    border-radius: 14px;
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.05);
+    overflow: hidden;
 }
 
 .receitas-table-container table {
     width: 100%;
-    border-collapse: collapse; /* Remove espaços entre as células da tabela */
-    margin: 0 auto; /* Centraliza a tabela */
+    border-collapse: collapse;
+    margin: 0 auto;
+    background: #fff;
 }
 
 .receitas-table-container th,
 .receitas-table-container td {
-    padding: 15px;
+    padding: 14px 18px;
     text-align: left;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid var(--border-soft);
+    font-size: 0.875rem;
+    font-weight: 500;
 }
 
 .receitas-table-container th {
-    background-color: #f2f2f2;
-    color: #555;
-    font-weight: bold;
+    background: #F8FAFC;
+    color: #64748B;
+    font-weight: 700;
     text-transform: uppercase;
-    font-size: 0.9em;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
 }
 
 .receitas-table-container tr:hover {
-    background-color: #f5f5f5; /* Cor de fundo ao passar o mouse */
+    background: var(--emerald-light);
+    transition: background 0.15s ease;
 }
 
-/* Estilos para os botões dentro da tabela */
+/* ═══════════════════════════════════════════════════════
+   BOTÕES NA TABELA — Tonal/Glass Style
+═══════════════════════════════════════════════════════ */
 .receitas-table-container .btn {
-    font-size: 0.85rem;
-    padding: 8px 12px;
-    border-radius: 5px;
-    margin-right: 5px; /* Espaço entre os botões de ação */
+    font-size: 0.76rem;
+    padding: 5px 13px;
+    border-radius: 100px;
+    margin-right: 4px;
+    font-weight: 700;
 }
 
+/* Detalhes — azul tonal */
 .btn-detalhes {
-    background-color: #007bff; /* Azul */
-    color: white;
+    background: rgba(37, 99, 235, 0.1);
+    color: #2563EB;
+    border: 1px solid rgba(37, 99, 235, 0.2);
+    box-shadow: none;
 }
 
 .btn-detalhes:hover {
-    background-color: #0056b3;
+    background: #2563EB;
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);
 }
 
+.btn-detalhes:active { transform: scale(0.97); }
+
+/* Editar — âmbar tonal */
 .btn-editar {
-    background-color: #ffc107; /* Amarelo */
-    color: #333; /* Texto escuro para contraste */
+    background: rgba(217, 119, 6, 0.1);
+    color: #D97706;
+    border: 1px solid rgba(217, 119, 6, 0.2);
+    box-shadow: none;
 }
 
 .btn-editar:hover {
-    background-color: #e0a800;
+    background: #D97706;
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(217, 119, 6, 0.3);
 }
 
+.btn-editar:active { transform: scale(0.97); }
+
+/* Excluir — vermelho tonal */
 .btn-excluir {
-    background-color: #dc3545; /* Vermelho */
-    color: white;
+    background: rgba(220, 38, 38, 0.08);
+    color: #DC2626;
+    border: 1px solid rgba(220, 38, 38, 0.18);
+    box-shadow: none;
 }
 
 .btn-excluir:hover {
-    background-color: #c82333;
+    background: #DC2626;
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(220, 38, 38, 0.32);
 }
 
-/* Responsividade básica para tabelas */
+.btn-excluir:active { transform: scale(0.97); }
+
+/* ── Responsividade Mobile ───────────────────────────── */
 @media screen and (max-width: 768px) {
     .receitas-table-container table,
     .receitas-table-container thead,
     .receitas-table-container tbody,
     .receitas-table-container th,
     .receitas-table-container td,
-    .receitas-table-container tr {
-        display: block;
-    }
+    .receitas-table-container tr { display: block; }
 
     .receitas-table-container thead tr {
         position: absolute;
@@ -161,15 +239,17 @@
     }
 
     .receitas-table-container tr {
-        border: 1px solid #ccc;
-        margin-bottom: 15px;
-        border-radius: 8px;
-        overflow: hidden; /* Para garantir que o border-radius funcione */
+        border: 1px solid rgba(0,0,0,0.06);
+        margin-bottom: 14px;
+        border-radius: 14px;
+        overflow: hidden;
+        background: #fff;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
 
     .receitas-table-container td {
         border: none;
-        border-bottom: 1px solid #eee;
+        border-bottom: 1px solid var(--border-soft);
         position: relative;
         padding-left: 50%;
         text-align: right;
@@ -178,15 +258,16 @@
     .receitas-table-container td:before {
         position: absolute;
         top: 0;
-        left: 6px;
+        left: 10px;
         width: 45%;
         padding-right: 10px;
         white-space: nowrap;
         text-align: left;
-        font-weight: bold;
-        content: attr(data-label); /* Usa um atributo data-label para os cabeçalhos */
+        font-weight: 700;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        content: attr(data-label);
+        color: var(--emerald-700);
     }
-
-    /* Adicione data-label a cada <td> no HTML para esta funcionalidade */
-    /* Exemplo: <td data-label="Nome da Receita" th:text="${receita.nome}"></td> */
 }

@@ -1,5 +1,46 @@
-/* Estilos específicos para a página de Refeições */
-.refeicao-form, .refeicao-list {
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+:root {
+    --emerald-500:  #10b981;
+    --emerald-600:  #059669;
+    --emerald-700:  #047857;
+    --emerald-800:  #065f46;
+    --emerald-light: #ecfdf5;
+    --emerald-ring: rgba(16, 185, 129, 0.22);
+    --emerald-glow: rgba(16, 185, 129, 0.5);
+    --bg-page:      #F0FDF4;
+    --border-soft:  #F1F5F9;
+    --bg-input:     #F3F4F6;
+    --shadow-card:  0 0 0 1px rgba(0,0,0,0.04), 0 20px 40px -10px rgba(0,0,0,0.08), 0 4px 8px -2px rgba(0,0,0,0.04);
+    --ease-premium: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+body {
+    background-color: var(--bg-page);
+    background-image: radial-gradient(ellipse at 80% 20%, rgba(16,185,129,0.05) 0%, transparent 55%);
+    min-height: 100vh;
+    color: #374151;
+    padding-bottom: 48px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 32px auto;
+    padding: 0 24px;
+}
+
+/* ═══════════════════════════════════════════════════════
+   FORMULÁRIO DE REFEIÇÃO — Floating Card
+═══════════════════════════════════════════════════════ */
+.refeicao-form,
+.refeicao-list {
     margin: 0 auto;
     max-width: 800px;
     width: 100%;
@@ -7,161 +48,245 @@
 
 .refeicao-form {
     background: #fff;
-    padding: 24px;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-    margin-bottom: 30px;
+    padding: 28px;
+    border-radius: 20px;
+    box-shadow: var(--shadow-card);
+    border: 1px solid rgba(0,0,0,0.04);
+    margin-bottom: 28px;
 }
 
+/* ═══════════════════════════════════════════════════════
+   TABELA DE REFEIÇÕES — Data Grid
+═══════════════════════════════════════════════════════ */
 .refeicao-list table {
     width: 100%;
     border-collapse: collapse;
     background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    border-radius: 16px;
+    box-shadow: var(--shadow-card);
     overflow: hidden;
 }
 
-.refeicao-list th, .refeicao-list td {
-    padding: 12px;
-    border-bottom: 1px solid #eee;
+.refeicao-list th,
+.refeicao-list td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border-soft);
+    font-size: 0.875rem;
 }
 
 .refeicao-list th {
-    background: #f5f5f5;
-    color: #333;
+    background: #F8FAFC;
+    color: #64748B;
+    font-weight: 700;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
 }
 
+.refeicao-list tr:hover {
+    background: var(--emerald-light);
+    transition: background 0.15s ease;
+}
 
 .refeicao-list {
-    margin-bottom: 30px;
+    margin-bottom: 28px;
     padding: 20px;
 }
 
-.container {
-    max-width: 1200px;
-    margin: 30px auto;
-    padding: 0 20px;
-}
-
+/* ── Títulos ─────────────────────────────────────────── */
 h2 {
-    color: #256029;
-    margin-top: 10px;
-    margin-left: 10px;
-    margin-bottom: 18px;
+    color: var(--emerald-800);
+    margin: 10px 10px 18px;
+    font-size: 1.2rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
 }
 
 label {
-    color: #333;
+    color: #374151;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    display: block;
+    margin-bottom: 6px;
 }
 
+/* ── Input principal de texto ────────────────────────── */
 input[type="text"] {
     width: 100%;
-    padding: 8px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-    margin-bottom: 10px;
+    padding: 10px 13px;
+    border: none;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    font-size: 0.875rem;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 500;
+    background: var(--bg-input);
+    color: #111827;
+    outline: none;
+    transition: all 0.3s var(--ease-premium);
 }
 
+input[type="text"]:focus {
+    background: #fff;
+    box-shadow: 0 0 0 3px var(--emerald-ring), 0 4px 14px rgba(16,185,129,0.08);
+    transform: translateY(-1px);
+}
+
+/* ── Botão Submit ────────────────────────────────────── */
 button[type="submit"] {
-    background: #388e3c;
+    background: linear-gradient(135deg, var(--emerald-600) 0%, var(--emerald-500) 100%);
+    color: #fff;
+    border: none;
+    padding: 11px 26px;
+    border-radius: 100px;
+    font-size: 0.84rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    transition: all 0.3s var(--ease-premium);
+    box-shadow: 0 6px 20px -6px var(--emerald-glow);
 }
 
 button[type="submit"]:hover {
-    background: #256029;
+    background: linear-gradient(135deg, var(--emerald-700) 0%, var(--emerald-600) 100%);
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 12px 28px -6px var(--emerald-glow);
 }
 
+button[type="submit"]:active { transform: scale(0.96); }
+
+/* ── Botão Secundário — Ghost/Tonal ──────────────────── */
 button[type="button"] {
-    background: #bdbdbd;
-    color: #333;
+    background: rgba(71, 85, 105, 0.08);
+    color: #475569;
+    border: 1px solid rgba(71, 85, 105, 0.18);
+    padding: 11px 24px;
+    border-radius: 100px;
+    font-size: 0.84rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    transition: all 0.3s var(--ease-premium);
 }
 
 button[type="button"]:hover {
-    background: #888;
-    color: #fff;
+    background: rgba(71, 85, 105, 0.14);
+    color: #111827;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 
-/* Botões */
+button[type="button"]:active { transform: scale(0.97); }
+
+/* ── .btn classe ─────────────────────────────────────── */
 .btn {
-    background: #4a7c59;
-    color: white;
+    background: linear-gradient(135deg, var(--emerald-600) 0%, var(--emerald-500) 100%);
+    color: #fff;
     border: none;
-    padding: 10px 20px;
-    border-radius: 6px;
+    padding: 9px 20px;
+    border-radius: 100px;
     cursor: pointer;
-    font-size: 14px;
-    font-weight: bold;
+    font-size: 0.84rem;
+    font-weight: 700;
+    font-family: 'Plus Jakarta Sans', sans-serif;
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    transition: background-color 0.3s ease;
+    gap: 7px;
+    letter-spacing: 0.01em;
+    transition: all 0.3s var(--ease-premium);
+    box-shadow: 0 6px 20px -6px var(--emerald-glow);
 }
 
 .btn:hover {
-    background: #2d5016;
+    background: linear-gradient(135deg, var(--emerald-700) 0%, var(--emerald-600) 100%);
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 12px 28px -6px var(--emerald-glow);
 }
 
-.btn-icon::before {
-    content: "+";
-    font-size: 16px;
-    font-weight: bold;
-}
+.btn:active { transform: scale(0.96); }
 
+.btn-icon::before { content: "+"; font-size: 1rem; font-weight: 800; }
+
+/* ── Botões de ação na tabela ────────────────────────── */
 .btn-editar {
-    background-color: #ffc107; /* Amarelo */
-    color: #333; /* Texto escuro para contraste */
+    background: rgba(217, 119, 6, 0.1);
+    color: #D97706;
+    padding: 6px 14px;
+    border-radius: 100px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    border: 1px solid rgba(217, 119, 6, 0.2);
+    box-shadow: none;
 }
 
 .btn-editar:hover {
-    background-color: #e0a800;
+    background: #D97706;
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(217, 119, 6, 0.3);
 }
 
 .btn-excluir {
-    background-color: #dc3545; /* Vermelho */
-    color: white;
+    background: rgba(220, 38, 38, 0.08);
+    color: #DC2626;
+    padding: 6px 14px;
+    border-radius: 100px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    border: 1px solid rgba(220, 38, 38, 0.18);
+    box-shadow: none;
 }
 
 .btn-excluir:hover {
-    background-color: #c82333;
+    background: #DC2626;
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(220, 38, 38, 0.32);
 }
 
-/* Lista de fichas técnicas (checkboxes) estilizada */
+/* ═══════════════════════════════════════════════════════
+   CHECKBOX CARDS — Premium Seleção
+═══════════════════════════════════════════════════════ */
 #checkboxReceitas {
     display: flex;
     flex-wrap: wrap;
-    gap: 12px;
-    margin-bottom: 10px;
+    gap: 10px;
+    margin-bottom: 12px;
 }
 
 .checkbox-card {
-    background: #f5f5f5;
-    border-radius: 8px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-    padding: 10px 18px;
+    background: #F8FAFC;
+    border-radius: 10px;
+    border: 1.5px solid #E5E7EB;
+    padding: 10px 16px;
     display: flex;
     align-items: center;
-    transition: box-shadow 0.2s, background 0.2s;
+    transition: all 0.3s var(--ease-premium);
     cursor: pointer;
     min-width: 180px;
 }
 
 .checkbox-card:hover {
-    background: #e0e0e0;
-    box-shadow: 0 2px 8px rgba(25,118,210,0.10);
+    background: var(--emerald-light);
+    border-color: var(--emerald-500);
+    box-shadow: 0 0 0 3px var(--emerald-ring);
+    transform: translateY(-1px);
 }
 
 .checkbox-card input[type="checkbox"] {
-    accent-color: #1976d2;
+    accent-color: var(--emerald-600);
     margin-right: 8px;
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
 }
 
 .descricao-ingredientes {
     display: block;
-    color: #666;
-    font-size: 13px;
+    color: #9CA3AF;
+    font-size: 0.78rem;
     margin-top: 2px;
-    margin-left: 26px;
+    margin-left: 24px;
     white-space: pre-line;
 }

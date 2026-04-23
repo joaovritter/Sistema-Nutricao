@@ -1,96 +1,201 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
+:root {
+    --emerald-500:  #10b981;
+    --emerald-600:  #059669;
+    --emerald-700:  #047857;
+    --emerald-800:  #065f46;
+    --emerald-light: #ecfdf5;
+    --emerald-ring: rgba(16, 185, 129, 0.22);
+    --emerald-glow: rgba(16, 185, 129, 0.5);
+    --bg-page:      #F0FDF4;
+    --border-soft:  #F1F5F9;
+    --shadow-card:  0 0 0 1px rgba(0,0,0,0.04), 0 20px 40px -10px rgba(0,0,0,0.08), 0 4px 8px -2px rgba(0,0,0,0.04);
+    --ease-premium: cubic-bezier(0.4, 0, 0.2, 1);
+}
 
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+body {
+    background-color: var(--bg-page);
+    min-height: 100vh;
+    color: #374151;
+    padding-bottom: 48px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 32px auto;
+    padding: 0 24px;
+}
+
+/* ═══════════════════════════════════════════════════════
+   DETALHES DA RECEITA — Card Flutuante
+═══════════════════════════════════════════════════════ */
 .detalhes-container {
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 28px;
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: var(--shadow-card);
+    border: 1px solid rgba(0,0,0,0.04);
     max-width: 900px;
-    margin: 20px auto;
+    margin: 24px auto;
 }
 
 .detalhes-container section {
-    background-color: #ffffff;
-    border: 1px solid #e0e0e0;
-    border-radius: 6px;
-    padding: 20px;
+    background: #fff;
+    border: 1px solid var(--border-soft);
+    border-radius: 14px;
+    padding: 22px;
     margin-bottom: 20px;
+    transition: box-shadow 0.3s var(--ease-premium);
+}
+
+.detalhes-container section:hover {
+    box-shadow: 0 6px 20px rgba(0,0,0,0.06);
 }
 
 .detalhes-container h2 {
-    color: #333;
-    font-size: 1.8em;
-    margin-bottom: 15px;
-    border-bottom: 2px solid #007bff;
-    padding-bottom: 5px;
+    color: #0a0f1e;
+    font-size: 1.4rem;
+    font-weight: 800;
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    letter-spacing: -0.025em;
+    border-bottom: 2px solid;
+    border-image: linear-gradient(90deg, var(--emerald-500), transparent) 1;
 }
 
+/* ── Informações da receita ──────────────────────────── */
 .receita-info p {
     margin-bottom: 8px;
-    font-size: 1.1em;
-    color: #555;
+    font-size: 0.925rem;
+    color: #4B5563;
+    line-height: 1.7;
+    font-weight: 500;
 }
 
 .receita-info p strong {
-    color: #333;
-    width: 150px; / Alinha os dois pontos /
+    color: #0a0f1e;
+    font-weight: 700;
+    width: 150px;
     display: inline-block;
 }
 
+/* ── Tabela — Data Grid ──────────────────────────────── */
 .table-container {
-    overflow-x: auto; / Permite rolagem em telas pequenas /
+    overflow-x: auto;
+    border-radius: 12px;
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.06);
+    overflow: hidden;
 }
 
 .ingredientes-info table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 15px;
+    margin-top: 14px;
 }
 
 .ingredientes-info th,
 .ingredientes-info td {
-    border: 1px solid #ddd;
-    padding: 10px;
+    border: none;
+    border-bottom: 1px solid var(--border-soft);
+    padding: 11px 14px;
     text-align: left;
     vertical-align: top;
+    font-size: 0.875rem;
 }
 
 .ingredientes-info th {
-    background-color: #f2f2f2;
-    font-weight: bold;
-    color: #333;
+    background: #F8FAFC;
+    color: #64748B;
+    font-weight: 700;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
 }
 
-.ingredientes-info tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
-
+.ingredientes-info tr:nth-child(even) { background: #FAFAFA; }
 .ingredientes-info tr:hover {
-    background-color: #f1f1f1;
+    background: var(--emerald-light);
+    transition: background 0.15s ease;
 }
 
+/* ── Detalhes nutricionais ───────────────────────────── */
 .nutrition-details p {
     margin-bottom: 8px;
-    font-size: 1.1em;
-    color: #555;
+    font-size: 0.925rem;
+    color: #4B5563;
+    font-weight: 500;
 }
 
 .nutrition-details p strong {
-    color: #333;
-    width: 200px; / Alinha os dois pontos */
-display: inline-block;
+    color: #0a0f1e;
+    font-weight: 700;
+    width: 200px;
+    display: inline-block;
 }
 
+/* ── Alert "sem dados" ───────────────────────────────── */
 .no-data-message {
-    padding: 15px;
-    background-color: #ffeeba;
-    border: 1px solid #ffda6a;
-    border-radius: 5px;
-    color: #856404;
+    padding: 14px 18px;
+    background: #FEF3C7;
+    border: 1px solid rgba(245, 158, 11, 0.25);
+    border-radius: 10px;
+    color: #92400E;
     text-align: center;
-    font-weight: bold;
-}
-.header-actions a{
-    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
 }
 
+.header-actions a { text-decoration: none; }
+
+/* ── Botões ──────────────────────────────────────────── */
+.btn {
+    padding: 9px 20px;
+    border-radius: 100px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.84rem;
+    cursor: pointer;
+    transition: all 0.3s var(--ease-premium);
+    text-align: center;
+    display: inline-block;
+    border: none;
+    letter-spacing: 0.01em;
+}
+
+/* Ghost — Voltar */
+.btn-voltar {
+    background: rgba(71, 85, 105, 0.08);
+    color: #475569;
+    border: 1px solid rgba(71, 85, 105, 0.18);
+}
+
+.btn-voltar:hover {
+    background: rgba(71, 85, 105, 0.14);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.btn-voltar:active { transform: scale(0.97); }
+
+/* Primary — Criar */
+.btn-criar {
+    background: linear-gradient(135deg, var(--emerald-600) 0%, var(--emerald-500) 100%);
+    color: #fff;
+    box-shadow: 0 6px 20px -6px var(--emerald-glow);
+}
+
+.btn-criar:hover {
+    background: linear-gradient(135deg, var(--emerald-700) 0%, var(--emerald-600) 100%);
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 12px 28px -6px var(--emerald-glow);
+}
+
+.btn-criar:active { transform: scale(0.96); }

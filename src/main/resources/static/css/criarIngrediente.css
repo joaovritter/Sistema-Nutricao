@@ -1,3 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+:root {
+    --emerald-500:  #10b981;
+    --emerald-600:  #059669;
+    --emerald-700:  #047857;
+    --emerald-800:  #065f46;
+    --emerald-ring: rgba(16, 185, 129, 0.22);
+    --emerald-glow: rgba(16, 185, 129, 0.5);
+    --bg-input:     #F3F4F6;
+    --bg-page:      #F0FDF4;
+    --shadow-float: 0 0 0 1px rgba(0,0,0,0.04), 0 24px 48px -10px rgba(0,0,0,0.1), 0 6px 12px -4px rgba(0,0,0,0.04);
+    --ease-premium: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── Reset ──────────────────────────────────────────── */
 * {
     margin: 0;
     padding: 0;
@@ -5,104 +21,113 @@
 }
 
 body {
-    font-family: Arial, sans-serif;
-    background-color: #ffffff;
-    color: #333;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-page);
+    background-image: radial-gradient(ellipse at 20% 40%, rgba(16,185,129,0.05) 0%, transparent 60%);
+    color: #374151;
+    padding-bottom: 48px;
 }
 
-/* Container principal */
+/* ── Container Floating ──────────────────────────────── */
 .container {
     max-width: 1000px;
     margin: 0 auto;
-    margin-top: 20px;
-    background: white;
-    border-radius: 8px;
-    border: 2px solid #4a7c59;
+    margin-top: 24px;
+    background: #fff;
+    border-radius: 20px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
     overflow: hidden;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    box-shadow: var(--shadow-float);
 }
 
-/* Título do formulário */
+/* ── Título ──────────────────────────────────────────── */
 .titulo-formulario {
-    font-size: 2.5em;
-    font-weight: bold;
-    letter-spacing: 2px;
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
     text-transform: uppercase;
-    color: white;
-    background-color: #4a7c59;
+    color: #fff;
+    background: linear-gradient(135deg, var(--emerald-800) 0%, var(--emerald-600) 100%);
     text-align: center;
     display: block;
-    padding: 20px;
-    border-radius: 8px 8px 0 0;
+    padding: 24px 20px;
+    border-radius: 20px 20px 0 0;
     margin-bottom: 0;
+    box-shadow: 0 4px 24px -4px rgba(6,78,59,0.4);
 }
 
-/* Seções */
+/* ── Seções ──────────────────────────────────────────── */
 .section {
     margin: 20px;
-    border: 2px solid #a8d5a8;
-    border-radius: 8px;
+    border: 1px solid rgba(16, 185, 129, 0.14);
+    border-radius: 14px;
     overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
 }
 
 .section-title {
-    background: #2d5016;
-    color: white;
-    padding: 12px 20px;
-    font-weight: bold;
+    background: linear-gradient(135deg, var(--emerald-800), var(--emerald-700));
+    color: #d1fae5;
+    padding: 10px 20px;
+    font-weight: 700;
     text-transform: uppercase;
-    font-size: 1.1em;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
     margin: 0;
 }
 
 .section-content {
-    padding: 20px;
-    background: #f9fff9;
+    padding: 22px;
+    background: linear-gradient(180deg, #f0fdf4 0%, #fafffe 100%);
 }
 
-/* Formulários */
+/* ── Rows ────────────────────────────────────────────── */
 .form-row {
     display: flex;
-    gap: 15px;
-    margin-bottom: 15px;
+    gap: 14px;
+    margin-bottom: 14px;
     align-items: end;
 }
 
-.form-group {
-    flex: 1;
-}
+.form-group        { flex: 1; }
+.form-group.small  { flex: 0 0 100px; }
+.form-group.medium { flex: 0 0 200px; }
 
-.form-group.small {
-    flex: 0 0 100px;
-}
-
-.form-group.medium {
-    flex: 0 0 200px;
-}
-
-/* Labels */
+/* ── Labels ──────────────────────────────────────────── */
 label {
     display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-    color: #2d5016;
+    margin-bottom: 6px;
+    font-weight: 700;
+    font-size: 0.72rem;
+    color: var(--emerald-800);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
 }
 
-/* Inputs, selects e textareas */
+/* ── Inputs — Filled-to-Focused ──────────────────────── */
 input, select, textarea {
     width: 100%;
-    padding: 10px;
-    border: 2px solid #a8d5a8;
-    border-radius: 6px;
-    font-size: 14px;
-    background: white;
-    transition: border-color 0.3s ease;
+    padding: 10px 13px;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 500;
+    background: var(--bg-input);
+    color: #111827;
+    outline: none;
+    transition: all 0.3s var(--ease-premium);
+}
+
+input::placeholder, textarea::placeholder {
+    color: #9CA3AF;
+    font-weight: 400;
 }
 
 input:focus, select:focus, textarea:focus {
-    outline: none;
-    border-color: #2d5016;
-    box-shadow: 0 0 5px rgba(45, 80, 22, 0.3);
+    background: #fff;
+    box-shadow: 0 0 0 3px var(--emerald-ring), 0 4px 14px rgba(16,185,129,0.08);
+    transform: translateY(-1px);
 }
 
 textarea {
@@ -110,122 +135,77 @@ textarea {
     min-height: 120px;
 }
 
-/* Layout de grid para informações nutricionais */
+/* ── Grid ────────────────────────────────────────────── */
 .grid-4 {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 15px;
-    margin-top: 15px;
+    gap: 14px;
+    margin-top: 14px;
 }
 
-/* Botões */
+/* ── Botões ──────────────────────────────────────────── */
 .btn {
-    background: #4a7c59;
-    color: white;
+    background: linear-gradient(135deg, var(--emerald-600) 0%, var(--emerald-500) 100%);
+    color: #fff;
     border: none;
-    padding: 12px 24px;
-    border-radius: 6px;
+    padding: 11px 26px;
+    border-radius: 100px;
     cursor: pointer;
-    font-size: 14px;
-    font-weight: bold;
-    transition: background-color 0.3s ease;
+    font-size: 0.84rem;
+    font-weight: 700;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    transition: all 0.3s var(--ease-premium);
     margin-right: 10px;
+    letter-spacing: 0.01em;
+    box-shadow: 0 6px 20px -6px var(--emerald-glow);
 }
 
 .btn:hover {
-    background: #2d5016;
+    background: linear-gradient(135deg, var(--emerald-700) 0%, var(--emerald-600) 100%);
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 12px 28px -6px var(--emerald-glow);
 }
 
-.btn-primary {
-    background: #4a7c59;
-}
+.btn:active { transform: scale(0.96); }
 
-.btn-primary:hover {
-    background: #2d5016;
-}
+.btn-primary       { background: linear-gradient(135deg, var(--emerald-600) 0%, var(--emerald-500) 100%); }
+.btn-primary:hover { background: linear-gradient(135deg, var(--emerald-700) 0%, var(--emerald-600) 100%); }
 
+/* Botão Secundário — Ghost/Tonal */
 .btn-secondary {
-    background: #6c757d;
+    background: rgba(71, 85, 105, 0.08);
+    color: #475569;
+    box-shadow: none;
+    border: 1px solid rgba(71, 85, 105, 0.15);
 }
 
 .btn-secondary:hover {
-    background: #545b62;
+    background: rgba(71, 85, 105, 0.14);
+    transform: translateY(-1px) scale(1.01);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 
-/* Ações do formulário */
+/* ── Ações ───────────────────────────────────────────── */
 .form-actions {
     display: flex;
     justify-content: center;
-    gap: 15px;
-    margin-top: 20px;
+    gap: 14px;
+    margin-top: 24px;
 }
 
-/* Responsividade */
+/* ── Responsividade ─────────────────────────────────── */
 @media (max-width: 768px) {
-    .form-row {
-        flex-direction: column;
-        gap: 10px;
-    }
-
-    .grid-4 {
-        grid-template-columns: 1fr;
-        gap: 10px;
-    }
-
-    .form-actions {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .btn {
-        width: 100%;
-        max-width: 300px;
-        margin-right: 0;
-        margin-bottom: 10px;
-    }
-
-    .header h1 {
-        font-size: 20px;
-    }
-
-    .container {
-        margin: 10px;
-        border-radius: 6px;
-    }
-
-    body {
-        background-color: #f9fff9;
-    }
-
-    .titulo-formulario {
-        font-size: 1.8em;
-        padding: 15px;
-    }
+    .form-row   { flex-direction: column; gap: 10px; }
+    .grid-4     { grid-template-columns: 1fr; gap: 10px; }
+    .form-actions { flex-direction: column; align-items: center; }
+    .btn { width: 100%; max-width: 300px; margin-right: 0; margin-bottom: 10px; }
+    .container  { margin: 10px; border-radius: 14px; }
+    .titulo-formulario { font-size: 1.25rem; padding: 18px; }
 }
 
 @media (max-width: 480px) {
-    .header h1 {
-        font-size: 18px;
-    }
-
-    .section {
-        margin: 10px;
-    }
-
-    .section-content {
-        padding: 15px;
-    }
-
-    .grid-4 {
-        gap: 8px;
-    }
-
-    .form-actions {
-        gap: 10px;
-    }
-
-    .titulo-formulario {
-        font-size: 1.5em;
-        padding: 12px;
-    }
+    .section            { margin: 10px; }
+    .section-content    { padding: 14px; }
+    .grid-4             { gap: 8px; }
+    .titulo-formulario  { font-size: 1.1rem; padding: 14px; }
 }
