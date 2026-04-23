@@ -1,4 +1,8 @@
 # Sistema Nutrição
+<<<<<<< HEAD
+=======
+Feito por João Ritter, Marcelo Moro, Wendel Nunes e Leandro Najar
+>>>>>>> fc076e4d9167fb33197732aedd08aea76152802e
 
 Sistema web para gestão de fichas técnicas de receitas e montagem de refeições, voltado para nutricionistas e profissionais da área de alimentação.
 
@@ -40,7 +44,11 @@ Permitir o cadastro, visualização, edição e agrupamento de fichas técnicas 
    ```
 2. Entre na pasta do projeto:
    ```bash
+<<<<<<< HEAD
    cd SistemaNutricao
+=======
+   cd Sistema Nutricao
+>>>>>>> fc076e4d9167fb33197732aedd08aea76152802e
    ```
 3. Execute o projeto com Maven:
    ```bash
@@ -73,4 +81,8 @@ Permitir o cadastro, visualização, edição e agrupamento de fichas técnicas 
 - O layout é responsivo e pode ser customizado via CSS.
 
 ## Licença
+<<<<<<< HEAD
 Projeto acadêmico - livre para uso e adaptação. 
+=======
+Projeto acadêmico - livre para uso e adaptação. 
+>>>>>>> fc076e4d9167fb33197732aedd08aea76152802e
