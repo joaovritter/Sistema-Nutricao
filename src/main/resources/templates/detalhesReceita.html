@@ -208,6 +208,14 @@
                     <label for="numero-porcoes">Número de porções:</label>
                     <div class="readonly-field" th:text="${receitaDetalhes.receita.numeroPorcoes}">0</div>
                 </div>
+                <div class="form-group" th:if="${receitaDetalhes.receita.aguaQuantidade != null}">
+                    <label>Água Adicionada:</label>
+                    <div class="readonly-field" th:text="${#numbers.formatDecimal(receitaDetalhes.receita.aguaQuantidade, 1, 2) + ' g'}">0.00 g</div>
+                </div>
+                <div class="form-group" th:if="${receitaDetalhes.receita.aguaFcc != null}">
+                    <label>Aproveitamento de Água:</label>
+                    <div class="readonly-field" th:text="${#numbers.formatDecimal(receitaDetalhes.receita.aguaFcc * 100, 1, 0) + '%'}">0%</div>
+                </div>
                 <div class="form-group">
                     <label for="fcc">Fcc Geral:</label>
                     <div class="readonly-field" th:text="${#numbers.formatDecimal(receitaDetalhes.receita.fcc, 1, 2)}">0.00</div>

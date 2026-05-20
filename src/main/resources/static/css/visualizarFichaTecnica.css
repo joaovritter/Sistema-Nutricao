@@ -125,10 +125,10 @@
 ═══════════════════════════════════════════════════════ */
 .receitas-table-container {
     overflow-x: auto;
+    overflow-y: visible;
     margin-top: 20px;
     border-radius: 14px;
     box-shadow: 0 0 0 1px rgba(0,0,0,0.05);
-    overflow: hidden;
 }
 
 .receitas-table-container table {
@@ -172,36 +172,36 @@
     font-weight: 700;
 }
 
-/* Detalhes — azul tonal */
+/* Visualizar — verde esmeralda tonal */
 .btn-detalhes {
-    background: rgba(37, 99, 235, 0.1);
-    color: #2563EB;
-    border: 1px solid rgba(37, 99, 235, 0.2);
+    background: rgba(5, 150, 105, 0.12);
+    color: var(--emerald-700);
+    border: 1px solid rgba(5, 150, 105, 0.25);
     box-shadow: none;
 }
 
 .btn-detalhes:hover {
-    background: #2563EB;
+    background: var(--emerald-600);
     color: #fff;
     transform: translateY(-1px);
-    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);
+    box-shadow: 0 4px 14px var(--emerald-ring);
 }
 
 .btn-detalhes:active { transform: scale(0.97); }
 
-/* Editar — âmbar tonal */
+/* Editar — verde claro tonal */
 .btn-editar {
-    background: rgba(217, 119, 6, 0.1);
-    color: #D97706;
-    border: 1px solid rgba(217, 119, 6, 0.2);
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--emerald-600);
+    border: 1px solid rgba(16, 185, 129, 0.22);
     box-shadow: none;
 }
 
 .btn-editar:hover {
-    background: #D97706;
+    background: var(--emerald-500);
     color: #fff;
     transform: translateY(-1px);
-    box-shadow: 0 4px 14px rgba(217, 119, 6, 0.3);
+    box-shadow: 0 4px 14px var(--emerald-ring);
 }
 
 .btn-editar:active { transform: scale(0.97); }

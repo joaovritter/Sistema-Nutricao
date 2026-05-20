@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,262 +8,283 @@
     <link rel="stylesheet" href="/css/criarFichaTecnica.css">
     <link rel="stylesheet" href="/css/navbar.css">
 </head>
+
 <body>
 
-<header class="header">
-    <div class="logo-container">
-        <img src="/images/logo.png" alt="Logo Nutrição" class="logo">
-        <h1>Fichas Técnicas de Nutrição</h1>
-    </div>
-    <button type="button" class="navbar-btn" onclick="window.location.href='/dashboard'">Voltar</button>
+    <header class="header">
+        <div class="logo-container">
+            <img src="/images/logo.png" alt="Logo Nutrição" class="logo">
+            <h1>Fichas Técnicas de Nutrição</h1>
+        </div>
+        <button type="button" class="navbar-btn" onclick="window.location.href='/dashboard'">Voltar</button>
 
-</header>
+    </header>
 
-<div class="container">
-    <span class="titulo-ficha" th:text="${receitaId != null ? 'Editar Ficha Técnica' : 'Ficha Técnica'}">Ficha Técnica</span>
-    
-    <!-- Elemento hidden para passar o ID da receita para o JavaScript -->
-    <input type="hidden" id="receita-id-hidden" th:value="${receitaId}" data-receita-id="" th:attr="data-receita-id=${receitaId}">
-    
-    <form id="fichaTecnicaForm">
-        <section class="section">
-            <div class="section-content">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="nome-preparacao">Nome da preparação:</label>
-                        <input type="text" id="nome-preparacao" name="nome-preparacao" required>
-                    </div>
-                    <div class="form-group medium">
-                        <label for="categoria">Categoria:</label>
-                        <select id="categoria" name="categoria" required>
-                            <option value="" disabled selected>Selecione uma categoria</option>
-                            <option value="ENTRADA">Entrada</option>
-                            <option value="PRATO_PRINCIPAL">Prato Principal</option>
-                            <option value="GUARNICAO">Guarnição</option>
-                            <option value="SALADA">Salada</option>
-                            <option value="SOBREMESA">Sobremesa</option>
-                            <option value="BEBIDA">Bebida</option>
-                        </select>
-                    </div>
-                    <div class="form-group small">
-                        <label for="numero">Nº:</label>
-                        <input type="number" id="numero" name="numero">
-                    </div>
-                </div>
-            </div>
-        </section>
+    <div class="container">
+        <span class="titulo-ficha" th:text="${receitaId != null ? 'Editar Ficha Técnica' : 'Ficha Técnica'}">Ficha
+            Técnica</span>
 
-        <section class="section">
-            <h2 class="section-title">🥬 Ingredientes</h2>
-            <div class="section-content">
-                <div class="table-container">
-                    <table id="ingredientes-table">
-                        <thead>
-                        <tr>
-                            <th>Ingredientes</th>
-                            <th>Medida caseira</th>
-                            <th>PB (g)</th>
-                            <th>PL (g)</th>
-                            <th>FC</th>
-                            <th>Custo (forma de compra)</th>
-                            <th>Peso da compra (g)</th>
-                            <th>Custo (quantidade utilizada)</th>
-                            <th>Ações</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
-                </div>
+        <!-- Elemento hidden para passar o ID da receita para o JavaScript -->
+        <input type="hidden" id="receita-id-hidden" th:value="${receitaId}" data-receita-id=""
+            th:attr="data-receita-id=${receitaId}">
 
-                <button type="button" class="btn btn-icon" onclick="adicionarIngrediente()">
-                    Adicionar Ingrediente
-                </button>
-                <button type="button" class="btn btn-icon" onclick="window.location.href='/criarIngrediente'">
-                    Criar Ingrediente
-                </button>
-
-                <div class="water-calc">
+        <form id="fichaTecnicaForm">
+            <section class="section">
+                <div class="section-content">
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="agua-fcc">Quantidade de água (Cálculo de FCC):</label>
-                            <select id="agua-fcc" name="agua-fcc">
-                                <option value="0.00" selected>Nenhuma (ou padrão)</option>
-                                <option value="0.25">25%</option>
-                                <option value="0.50">50%</option>
-                                <option value="0.75">75%</option>
-                                <option value="1.00">100%</option>
-                                <option value="1.50">150%</option>
-                                <option value="2.00">200%</option>
+                            <label for="nome-preparacao">Nome da preparação:</label>
+                            <input type="text" id="nome-preparacao" name="nome-preparacao" required>
+                        </div>
+                        <div class="form-group medium">
+                            <label for="categoria">Categoria:</label>
+                            <select id="categoria" name="categoria" required>
+                                <option value="" disabled selected>Selecione uma categoria</option>
+                                <option value="ENTRADA">Entrada</option>
+                                <option value="PRATO_PRINCIPAL">Prato Principal</option>
+                                <option value="GUARNICAO">Guarnição</option>
+                                <option value="SALADA">Salada</option>
+                                <option value="SOBREMESA">Sobremesa</option>
+                                <option value="BEBIDA">Bebida</option>
                             </select>
+                        </div>
+                        <div class="form-group small">
+                            <label for="numero">Nº:</label>
+                            <input type="number" id="numero" name="numero">
                         </div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <section class="section">
-            <h2 class="section-title">📝 Modo de preparo e Equipamentos</h2>
-            <div class="section-content">
-                <div class="two-column">
-                    <div class="form-group">
-                        <label for="modo-preparo">Modo de preparo:</label>
-                        <textarea id="modo-preparo" name="modo-preparo" placeholder="Descreva o modo de preparo..."></textarea>
+            <section class="section">
+                <h2 class="section-title">🥬 Ingredientes</h2>
+                <div class="section-content">
+                    <div class="table-container">
+                        <table id="ingredientes-table">
+                            <thead>
+                                <tr>
+                                    <th>Ingredientes</th>
+                                    <th>Medida caseira</th>
+                                    <th>PB (g)</th>
+                                    <th>PL (g)</th>
+                                    <th>FC</th>
+                                    <th>Custo (forma de compra)</th>
+                                    <th>Peso da compra (g)</th>
+                                    <th>Custo (quantidade utilizada)</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
                     </div>
-                    <div class="form-group">
-                        <label for="equipamentos">Equipamentos e utensílios utilizados:</label>
-                        <textarea id="equipamentos" name="equipamentos" placeholder="Liste os equipamentos e utensílios..."></textarea>
+
+                    <button type="button" class="btn btn-icon" onclick="adicionarIngrediente()">
+                        Adicionar Ingrediente
+                    </button>
+                    <button type="button" class="btn btn-icon" onclick="window.location.href='/criarIngrediente'">
+                        Criar Ingrediente
+                    </button>
+
+                    <div class="water-calc">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="agua-quantidade">Água Adicionada (g ou ml):</label>
+                                <input type="number" step="0.01" id="agua-quantidade" name="agua-quantidade"
+                                    placeholder="0.00" value="0.00">
+                            </div>
+                            <div class="form-group">
+                                <label for="agua-fcc">Aproveitamento de Água no Fcc (%):</label>
+                                <select id="agua-fcc" name="agua-fcc">
+                                    <option value="0.00" selected>0% (Evaporou tudo / Desidratou)</option>
+                                    <option value="0.25">25%</option>
+                                    <option value="0.50">50%</option>
+                                    <option value="0.75">75%</option>
+                                    <option value="1.00">100% (Reteve tudo / Hidratou)</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <section class="section">
-            <h2 class="section-title">📊 Informações Complementares</h2>
-            <div class="section-content">
-                <div class="grid-4">
-                    <div class="form-group">
-                        <label for="custo-total">Custo total:</label>
-                        <input type="number" step="0.01" id="custo-total" name="custo-total" placeholder="R$ 0,00" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label for="custo-per-capita">Custo per capita:</label>
-                        <input type="number" step="0.01" id="custo-per-capita" name="custo-per-capita" placeholder="R$ 0,00" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label for="tempo-preparo">Tempo de preparo (minutos):</label>
-                        <input type="number" id="tempo-preparo" name="tempo-preparo" placeholder="00">
-                    </div>
-                    <div class="form-group">
-                        <label for="medida-caseira">Medida caseira final:</label>
-                        <input type="text" id="medida-caseira" name="medida-caseira">
-                    </div>
-                    <div class="form-group">
-                        <label for="rendimento">Rendimento Total (g ou ml):</label>
-                        <input type="number" step="0.01" id="rendimento" name="rendimento" placeholder="0.00">
-                    </div>
-                    <div class="form-group">
-                        <label for="peso-porcao">Peso da porção (g):</label>
-                        <input type="number" step="0.01" id="peso-porcao" name="peso-porcao" placeholder="0.00">
-                    </div>
-                    <div class="form-group">
-                        <label for="numero-porcoes">Número de porções:</label>
-                        <input type="number" id="numero-porcoes" name="numero-porcoes">
-                    </div>
-                    <div class="form-group">
-                        <label for="fcc">Fcc Geral:</label>
-                        <input type="number" step="0.01" id="fcc" name="fcc" placeholder="0.00" readonly>
+            <section class="section">
+                <h2 class="section-title">📝 Modo de preparo e Equipamentos</h2>
+                <div class="section-content">
+                    <div class="two-column">
+                        <div class="form-group">
+                            <label for="modo-preparo">Modo de preparo:</label>
+                            <textarea id="modo-preparo" name="modo-preparo"
+                                placeholder="Descreva o modo de preparo..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="equipamentos">Equipamentos e utensílios utilizados:</label>
+                            <textarea id="equipamentos" name="equipamentos"
+                                placeholder="Liste os equipamentos e utensílios..."></textarea>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <section class="section">
-            <h2 class="section-title">🍎 Perfil Nutricional</h2>
-            <div class="section-content">
-                <div class="table-container">
-                    <table id="nutricional-table">
-                        <thead>
-                        <tr>
-                            <th>Ingredientes</th>
-                            <th>Per capita (PL)</th>
-                            <th>PTN</th>
-                            <th>CHO</th>
-                            <th>LIP</th>
-                            <th>Sódio</th>
-                            <th>Gordura Saturada</th>
-                            <th>Ações</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
-                </div>
-
-
-                <div class="nutrition-extras">
-                    <table id="totais-macros-table">
-                        <thead>
-                            <tr>
-                                <th>Total</th>
-                                <th>Proteínas</th>
-                                <th>Carboidratos</th>
-                                <th>Lipídios</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong>Gramas</strong></td>
-                                <td id="total-proteinas-g">0.00</td>
-                                <td id="total-carboidratos-g">0.00</td>
-                                <td id="total-lipidios-g">0.00</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Kcal</strong></td>
-                                <td id="total-proteinas-kcal">0.00</td>
-                                <td id="total-carboidratos-kcal">0.00</td>
-                                <td id="total-lipidios-kcal">0.00</td>
-                            </tr>
-                            <tr>
-                                <td><strong>%</strong></td>
-                                <td id="total-proteinas-percent">0.00%</td>
-                                <td id="total-carboidratos-percent">0.00%</td>
-                                <td id="total-lipidios-percent">0.00%</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    
-                    <div class="form-group">
-                        <label for="vct">VCT (Kcal):</label>
-                        <input type="number" step="0.01" id="vct" name="vct" placeholder="0.00" readonly>
+            <section class="section">
+                <h2 class="section-title">📊 Informações Complementares</h2>
+                <div class="section-content">
+                    <div class="grid-4">
+                        <div class="form-group">
+                            <label for="custo-total">Custo total:</label>
+                            <input type="number" step="0.01" id="custo-total" name="custo-total" placeholder="R$ 0,00"
+                                readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="custo-per-capita">Custo per capita:</label>
+                            <input type="number" step="0.01" id="custo-per-capita" name="custo-per-capita"
+                                placeholder="R$ 0,00" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="tempo-preparo">Tempo de preparo (minutos):</label>
+                            <input type="number" id="tempo-preparo" name="tempo-preparo" placeholder="00">
+                        </div>
+                        <div class="form-group">
+                            <label for="medida-caseira">Medida caseira final:</label>
+                            <input type="text" id="medida-caseira" name="medida-caseira">
+                        </div>
+                        <div class="form-group">
+                            <label for="rendimento">
+                                Rendimento Total (g ou ml):
+                                <span class="info-tooltip-icon"
+                                    style="display: inline-flex; align-items: center; justify-content: center; width: 15px; height: 15px; border-radius: 50%; background: #e0f2fe; color: #0369a1; font-size: 10px; font-weight: bold; cursor: help; margin-left: 4px; vertical-align: middle;"
+                                    title="Recomendado: Inserir o rendimento real (peso após o cozimento) para obter o Fator de Cocção (FCC) real.">i</span>
+                            </label>
+                            <input type="number" step="0.01" id="rendimento" name="rendimento" placeholder="0.00">
+                            <small
+                                style="display: block; font-size: 0.75rem; color: #6b7280; margin-top: 4px; font-weight: 500; line-height: 1.3;">
+                                💡 Recomendado preencher com o peso pronto para calcular o Fator de Cocção (FCC) real.
+                            </small>
+                        </div>
+                        <div class="form-group">
+                            <label for="peso-porcao">Peso da porção (g):</label>
+                            <input type="number" step="0.01" id="peso-porcao" name="peso-porcao" placeholder="0.00">
+                        </div>
+                        <div class="form-group">
+                            <label for="numero-porcoes">Número de porções:</label>
+                            <input type="number" id="numero-porcoes" name="numero-porcoes">
+                        </div>
+                        <div class="form-group">
+                            <label for="fcc">Fcc Geral:</label>
+                            <input type="number" step="0.01" id="fcc" name="fcc" placeholder="0.00" readonly>
+                        </div>
                     </div>
                 </div>
+            </section>
+
+            <section class="section">
+                <h2 class="section-title">🍎 Perfil Nutricional</h2>
+                <div class="section-content">
+                    <div class="table-container">
+                        <table id="nutricional-table">
+                            <thead>
+                                <tr>
+                                    <th>Ingredientes</th>
+                                    <th>Per capita (PL)</th>
+                                    <th>PTN</th>
+                                    <th>CHO</th>
+                                    <th>LIP</th>
+                                    <th>Sódio</th>
+                                    <th>Gordura Saturada</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+
+
+                    <div class="nutrition-extras">
+                        <table id="totais-macros-table">
+                            <thead>
+                                <tr>
+                                    <th>Total</th>
+                                    <th>Proteínas</th>
+                                    <th>Carboidratos</th>
+                                    <th>Lipídios</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Gramas</strong></td>
+                                    <td id="total-proteinas-g">0.00</td>
+                                    <td id="total-carboidratos-g">0.00</td>
+                                    <td id="total-lipidios-g">0.00</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Kcal</strong></td>
+                                    <td id="total-proteinas-kcal">0.00</td>
+                                    <td id="total-carboidratos-kcal">0.00</td>
+                                    <td id="total-lipidios-kcal">0.00</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>%</strong></td>
+                                    <td id="total-proteinas-percent">0.00%</td>
+                                    <td id="total-carboidratos-percent">0.00%</td>
+                                    <td id="total-lipidios-percent">0.00%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="form-group">
+                            <label for="vct">VCT (Kcal):</label>
+                            <input type="number" step="0.01" id="vct" name="vct" placeholder="0.00" readonly>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary"
+                    th:text="${receitaId != null ? 'Atualizar Ficha Técnica' : 'Salvar Ficha Técnica'}">Salvar Ficha
+                    Técnica</button>
             </div>
-        </section>
+        </form>
+    </div>
 
-        <div class="form-actions">
-            <button type="submit" class="btn btn-primary" th:text="${receitaId != null ? 'Atualizar Ficha Técnica' : 'Salvar Ficha Técnica'}">Salvar Ficha Técnica</button>
-        </div>
-    </form>
-</div>
+    <script>
+        // Função para buscar ingredientes do backend para autocomplete
+        async function buscarIngredientes(query) {
+            console.log(`[DEBUG - API] Buscando ingredientes para a query: "${query}"`);
+            try {
+                const response = await fetch(`/api/ingredientes/buscar?nome=${encodeURIComponent(query)}`, {
+                    credentials: 'include'
+                });
 
-<script>
-    // Função para buscar ingredientes do backend para autocomplete
-    async function buscarIngredientes(query) {
-        console.log(`[DEBUG - API] Buscando ingredientes para a query: "${query}"`);
-        try {
-            const response = await fetch(`/api/ingredientes/buscar?nome=${encodeURIComponent(query)}`, {
-                credentials: 'include'
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                console.log("[DEBUG - API] Resposta da API de ingredientes:", data);
-                return data;
-            } else if (response.status === 401 || response.status === 403) {
-                alert('Sua sessão expirou ou você não está autorizado. Faça login novamente.');
-                window.location.href = '/login';
-                return [];
-            } else {
-                const errorText = await response.text();
-                console.error('[DEBUG - API] Erro ao buscar ingredientes:', response.status, response.statusText, errorText);
-                alert('Erro ao buscar ingredientes: ' + (errorText || response.statusText));
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log("[DEBUG - API] Resposta da API de ingredientes:", data);
+                    return data;
+                } else if (response.status === 401 || response.status === 403) {
+                    alert('Sua sessão expirou ou você não está autorizado. Faça login novamente.');
+                    window.location.href = '/login';
+                    return [];
+                } else {
+                    const errorText = await response.text();
+                    console.error('[DEBUG - API] Erro ao buscar ingredientes:', response.status, response.statusText, errorText);
+                    alert('Erro ao buscar ingredientes: ' + (errorText || response.statusText));
+                    return [];
+                }
+            } catch (error) {
+                console.error('[DEBUG - API] Erro na requisição de buscar ingredientes:', error);
+                alert('Ocorreu um erro na comunicação com o servidor.');
                 return [];
             }
-        } catch (error) {
-            console.error('[DEBUG - API] Erro na requisição de buscar ingredientes:', error);
-            alert('Ocorreu um erro na comunicação com o servidor.');
-            return [];
         }
-    }
 
-    // Função para adicionar uma nova linha na tabela de ingredientes
-    function adicionarIngrediente(ingredienteData = null) {
-        try {
-            console.log("[DEBUG - UI] Adicionando nova linha de ingrediente.");
-            const tableBody = document.querySelector('#ingredientes-table tbody');
-            const newRow = tableBody.insertRow();
-            newRow.innerHTML = `
+        // Função para adicionar uma nova linha na tabela de ingredientes
+        function adicionarIngrediente(ingredienteData = null) {
+            try {
+                console.log("[DEBUG - UI] Adicionando nova linha de ingrediente.");
+                const tableBody = document.querySelector('#ingredientes-table tbody');
+                const newRow = tableBody.insertRow();
+                newRow.innerHTML = `
                 <td><input type="text" class="ingrediente-nome" placeholder="Ingrediente"></td>
                 <td><input type="text" class="medida-caseira-ingrediente" placeholder="Medida"></td>
                 <td><input type="number" step="0.01" class="pb-ingrediente" placeholder="0.00"></td>
@@ -274,72 +296,72 @@
                 <td><button type="button" class="navbar-btn" onclick="removerLinha(this)">Remover</button></td>
             `;
 
-            const ingredienteNomeInput = newRow.querySelector('.ingrediente-nome');
-            const medidaCaseiraInput = newRow.querySelector('.medida-caseira-ingrediente');
-            const pbInput = newRow.querySelector('.pb-ingrediente');
-            const plInput = newRow.querySelector('.pl-ingrediente');
-            const fcInput = newRow.querySelector('.fc-ingrediente');
-            const custoCompraInput = newRow.querySelector('.custo-compra-ingrediente');
-            const pesoCompraInput = newRow.querySelector('.peso-compra-ingrediente');
-            const custoUtilizadoInput = newRow.querySelector('.custo-utilizado-ingrediente');
+                const ingredienteNomeInput = newRow.querySelector('.ingrediente-nome');
+                const medidaCaseiraInput = newRow.querySelector('.medida-caseira-ingrediente');
+                const pbInput = newRow.querySelector('.pb-ingrediente');
+                const plInput = newRow.querySelector('.pl-ingrediente');
+                const fcInput = newRow.querySelector('.fc-ingrediente');
+                const custoCompraInput = newRow.querySelector('.custo-compra-ingrediente');
+                const pesoCompraInput = newRow.querySelector('.peso-compra-ingrediente');
+                const custoUtilizadoInput = newRow.querySelector('.custo-utilizado-ingrediente');
 
-            // Se dados de ingrediente forem fornecidos (quando carregando do banco ou do autocomplete)
-            if (ingredienteData) {
-                ingredienteNomeInput.value = ingredienteData.ingredienteNome || '';
-                ingredienteNomeInput.dataset.ingredienteId = ingredienteData.ingredienteId; // Salva o ID
-                medidaCaseiraInput.value = ingredienteData.medidaCaseira || '';
-                pbInput.value = (ingredienteData.pesoBruto || 0).toFixed(2);
-                plInput.value = (ingredienteData.pesoLiquido || 0).toFixed(2);
-                fcInput.value = (ingredienteData.fatorCorrecao || 0).toFixed(2);
-                custoCompraInput.value = (ingredienteData.custoCompra || 0).toFixed(2);
-                custoUtilizadoInput.value = (ingredienteData.custoUtilizado || 0).toFixed(2);
-                pesoCompraInput.value = (ingredienteData.pesoCompra || 0).toFixed(2);
+                // Se dados de ingrediente forem fornecidos (quando carregando do banco ou do autocomplete)
+                if (ingredienteData) {
+                    ingredienteNomeInput.value = ingredienteData.ingredienteNome || '';
+                    ingredienteNomeInput.dataset.ingredienteId = ingredienteData.ingredienteId; // Salva o ID
+                    medidaCaseiraInput.value = ingredienteData.medidaCaseira || '';
+                    pbInput.value = (ingredienteData.pesoBruto || 0).toFixed(2);
+                    plInput.value = (ingredienteData.pesoLiquido || 0).toFixed(2);
+                    fcInput.value = (ingredienteData.fatorCorrecao || 0).toFixed(2);
+                    custoCompraInput.value = (ingredienteData.custoCompra || 0).toFixed(2);
+                    custoUtilizadoInput.value = (ingredienteData.custoUtilizado || 0).toFixed(2);
+                    pesoCompraInput.value = (ingredienteData.pesoCompra || 0).toFixed(2);
 
-                // Armazenar dados nutricionais no dataset da linha para cálculos
-                // Usar dados nutricionais do DTO se disponíveis, senão usar valores padrão
-                newRow.dataset.proteina = ingredienteData.proteina || 0;
-                newRow.dataset.carboidrato = ingredienteData.carboidrato || 0;
-                newRow.dataset.lipidio = ingredienteData.lipidio || 0;
-                newRow.dataset.sodio = ingredienteData.sodio || 0;
-                newRow.dataset.gorduraSaturada = ingredienteData.gorduraSaturada || 0;
-                newRow.dataset.kcal = ((ingredienteData.proteina || 0) * 4) + ((ingredienteData.carboidrato || 0) * 4) + ((ingredienteData.lipidio || 0) * 9);
+                    // Armazenar dados nutricionais no dataset da linha para cálculos
+                    // Usar dados nutricionais do DTO se disponíveis, senão usar valores padrão
+                    newRow.dataset.proteina = ingredienteData.proteina || 0;
+                    newRow.dataset.carboidrato = ingredienteData.carboidrato || 0;
+                    newRow.dataset.lipidio = ingredienteData.lipidio || 0;
+                    newRow.dataset.sodio = ingredienteData.sodio || 0;
+                    newRow.dataset.gorduraSaturada = ingredienteData.gorduraSaturada || 0;
+                    newRow.dataset.kcal = ((ingredienteData.proteina || 0) * 4) + ((ingredienteData.carboidrato || 0) * 4) + ((ingredienteData.lipidio || 0) * 9);
 
-                console.log("[DEBUG - LOAD] Ingrediente carregado/preenchido, dados na linha (tr.dataset):", newRow.dataset);
-                console.log("[DEBUG - LOAD] Dados nutricionais do ingrediente:", {
-                    proteina: ingredienteData.proteina,
-                    carboidrato: ingredienteData.carboidrato,
-                    lipidio: ingredienteData.lipidio,
-                    sodio: ingredienteData.sodio,
-                    gorduraSaturada: ingredienteData.gorduraSaturada
-                });
+                    console.log("[DEBUG - LOAD] Ingrediente carregado/preenchido, dados na linha (tr.dataset):", newRow.dataset);
+                    console.log("[DEBUG - LOAD] Dados nutricionais do ingrediente:", {
+                        proteina: ingredienteData.proteina,
+                        carboidrato: ingredienteData.carboidrato,
+                        lipidio: ingredienteData.lipidio,
+                        sodio: ingredienteData.sodio,
+                        gorduraSaturada: ingredienteData.gorduraSaturada
+                    });
+                }
+
+                setupAutocompleteForElement(ingredienteNomeInput);
+
+                pbInput.addEventListener('input', atualizarCalculosIngrediente);
+                plInput.addEventListener('input', atualizarCalculosIngrediente);
+                custoCompraInput.addEventListener('input', atualizarCalculosIngrediente);
+                pesoCompraInput.addEventListener('input', atualizarCalculosIngrediente);
+
+                // Se não for uma carga de dados (ou seja, é uma adição manual de linha),
+                // chamamos atualizarCalculosGlobais. Se for uma carga, será chamado no final da carga.
+                if (!ingredienteData) {
+                    atualizarCalculosGlobais();
+                }
+
+                console.log("[DEBUG - UI] Nova linha de ingrediente adicionada com sucesso.");
+            } catch (error) {
+                console.error("[DEBUG - UI] Erro ao adicionar ingrediente:", error);
+                alert('Erro ao adicionar ingrediente: ' + error.message);
             }
-
-            setupAutocompleteForElement(ingredienteNomeInput);
-
-            pbInput.addEventListener('input', atualizarCalculosIngrediente);
-            plInput.addEventListener('input', atualizarCalculosIngrediente);
-            custoCompraInput.addEventListener('input', atualizarCalculosIngrediente);
-            pesoCompraInput.addEventListener('input', atualizarCalculosIngrediente);
-
-            // Se não for uma carga de dados (ou seja, é uma adição manual de linha),
-            // chamamos atualizarCalculosGlobais. Se for uma carga, será chamado no final da carga.
-            if (!ingredienteData) {
-                atualizarCalculosGlobais();
-            }
-            
-            console.log("[DEBUG - UI] Nova linha de ingrediente adicionada com sucesso.");
-        } catch (error) {
-            console.error("[DEBUG - UI] Erro ao adicionar ingrediente:", error);
-            alert('Erro ao adicionar ingrediente: ' + error.message);
         }
-    }
 
-    // Função para adicionar uma nova linha na tabela nutricional (exemplo)
-    function adicionarNutriente() {
-        console.log("[DEBUG - UI] adicionarNutriente() chamada. (Esta função é para demonstração, não automática)");
-        const tableBody = document.querySelector('#nutricional-table tbody');
-        const newRow = tableBody.insertRow();
-        newRow.innerHTML = `
+        // Função para adicionar uma nova linha na tabela nutricional (exemplo)
+        function adicionarNutriente() {
+            console.log("[DEBUG - UI] adicionarNutriente() chamada. (Esta função é para demonstração, não automática)");
+            const tableBody = document.querySelector('#nutricional-table tbody');
+            const newRow = tableBody.insertRow();
+            newRow.innerHTML = `
             <td><input type="text" placeholder="Ingrediente"></td>
             <td><input type="number" step="0.01" placeholder="0.00"></td>
             <td><input type="number" step="0.01" placeholder="0.00"></td>
@@ -349,496 +371,500 @@
             <td><input type="number" step="0.01" placeholder="0.00"></td>
             <td><button type="button" class="btn-remover" onclick="removerLinha(this)">Remover</button></td>
         `;
-    }
+        }
 
-    function removerLinha(button) {
-        console.log("[DEBUG - UI] Removendo linha.");
-        const row = button.parentNode.parentNode;
-        row.parentNode.removeChild(row);
-        atualizarCalculosGlobais();
-    }
-
-    async function setupAutocompleteForElement(inputElement) {
-        let timeout = null;
-        inputElement.addEventListener('input', async function(e) {
-            clearTimeout(timeout);
-            const query = e.target.value;
-
-            // Limpa o ID do ingrediente e os dados nutricionais associados à linha
-            e.target.dataset.ingredienteId = '';
-            const currentRow = e.target.closest('tr');
-            if (currentRow) {
-                currentRow.dataset.proteina = '';
-                currentRow.dataset.carboidrato = '';
-                currentRow.dataset.lipidio = '';
-                currentRow.dataset.sodio = '';
-                currentRow.dataset.gorduraSaturada = '';
-                currentRow.dataset.kcal = '';
-                // Limpar o PL e PB também ao começar a digitar um novo ingrediente
-                // Não zera custoCompra para que o usuário não perca o valor já digitado.
-                currentRow.querySelector('.pb-ingrediente').value = '0.00';
-                currentRow.querySelector('.pl-ingrediente').value = '0.00';
-                currentRow.querySelector('.fc-ingrediente').value = '0.00';
-                currentRow.querySelector('.custo-utilizado-ingrediente').value = '0.00';
-            }
-
-            let old = inputElement.parentNode.querySelector('.autocomplete-list');
-            if (old) old.remove();
-
-            if (query.length < 2) return;
-
-            timeout = setTimeout(async () => {
-                const lista = await buscarIngredientes(query);
-
-                if (lista.length > 0) {
-                    let dropdown = document.createElement('div');
-                    dropdown.className = 'autocomplete-list';
-                    dropdown.style.position = 'absolute';
-                    dropdown.style.background = '#fff';
-                    dropdown.style.border = '1px solid #ccc';
-                    dropdown.style.zIndex = 1000;
-                    dropdown.style.maxHeight = '200px';
-                    dropdown.style.overflowY = 'auto';
-                    dropdown.style.width = inputElement.offsetWidth + 'px';
-
-                    lista.forEach(item => {
-                        let option = document.createElement('div');
-                        option.textContent = item.nome;
-                        option.dataset.ingredienteId = item.id;
-                        // Armazena todos os dados nutricionais no dataset do option
-                        option.dataset.proteina = item.proteina;
-                        option.dataset.carboidrato = item.carboidrato;
-                        option.dataset.lipidio = item.lipidio;
-                        option.dataset.sodio = item.sodio;
-                        option.dataset.gorduraSaturada = item.gorduraSaturada;
-                        option.dataset.kcal = (item.proteina * 4) + (item.carboidrato * 4) + (item.lipidio * 9); // Calcula Kcal por 100g
-
-                        option.onclick = () => {
-                            e.target.value = item.nome;
-                            e.target.dataset.ingredienteId = item.id;
-
-                            const tr = e.target.closest('tr');
-                            const plInput = tr.querySelector('.pl-ingrediente');
-                            const pbInput = tr.querySelector('.pb-ingrediente');
-                            const fcInput = tr.querySelector('.fc-ingrediente');
-                            const custoUtilizadoInput = tr.querySelector('.custo-utilizado-ingrediente');
-                            const custoCompraInput = tr.querySelector('.custo-compra-ingrediente');
-                            const pesoCompraInput = tr.querySelector('.peso-compra-ingrediente');
-
-                            tr.dataset.ingredienteId = item.id;
-                            tr.dataset.proteina = item.proteina;
-                            tr.dataset.carboidrato = item.carboidrato;
-                            tr.dataset.lipidio = item.lipidio;
-                            tr.dataset.sodio = item.sodio;
-                            tr.dataset.gorduraSaturada = item.gorduraSaturada;
-                            tr.dataset.kcal = option.dataset.kcal;
-
-                            const defaultPl = 100; // Define um PL padrão de 100g
-                            plInput.value = defaultPl.toFixed(2);
-                            pbInput.value = defaultPl.toFixed(2); // Pode ser igual ao PL para começar (FC = 1)
-                            fcInput.value = (1).toFixed(2); // FC inicial = 1 se PL=PB
-
-                            const custoCompra = parseFloat(custoCompraInput.value) || 0;
-                            const custoUtilizado = (defaultPl > 0) ? (custoCompra * (defaultPl / defaultPl)) : 0; // Se PL=PB, custoUtilizado = custoCompra
-                            custoUtilizadoInput.value = custoUtilizado.toFixed(2);
-
-                            pesoCompraInput.value = defaultPl.toFixed(2); // Define o peso da compra igual ao PL inicial
-
-                            console.log("[DEBUG - AUTOC] Item selecionado do autocomplete. Dados na linha (tr.dataset):", tr.dataset);
-                            console.log(`[DEBUG - AUTOC] PL e PB definidos para ${defaultPl}g. Recalculando.`);
-                            dropdown.remove();
-                            atualizarCalculosGlobais();
-                        };
-                        dropdown.appendChild(option);
-                    });
-                    inputElement.parentNode.appendChild(dropdown);
-                }
-            }, 300);
-        });
-
-        inputElement.addEventListener('blur', function() {
-            setTimeout(() => {
-                let old = inputElement.parentNode.querySelector('.autocomplete-list');
-                if (old) old.remove();
-            }, 100);
-        });
-    }
-
-    async function carregarFichaTecnicaExistente(fichaTecnicaId) {
-        console.log(`[DEBUG - LOAD] Tentando carregar ficha técnica com ID: ${fichaTecnicaId}`);
-        try {
-            const response = await fetch(`/api/receitas/${fichaTecnicaId}`, {
-                credentials: 'include'
-            });
-
-            if (response.ok) {
-                const fichaTecnica = await response.json();
-                console.log("[DEBUG - LOAD] Ficha Técnica carregada:", fichaTecnica);
-
-                // Acessar os dados da receita que estão aninhados em fichaTecnica.receita
-                const receita = fichaTecnica.receita;
-                if (!receita) {
-                    console.error("[DEBUG - LOAD] Estrutura da ficha técnica inválida - receita não encontrada");
-                    throw new Error("Estrutura da ficha técnica inválida");
-                }
-
-                document.getElementById('nome-preparacao').value = receita.nome || '';
-                document.getElementById('categoria').value = receita.categoria || '';
-                document.getElementById('modo-preparo').value = receita.modoPreparo || '';
-                document.getElementById('equipamentos').value = receita.equipamentos || '';
-                document.getElementById('tempo-preparo').value = receita.tempoPreparo || '';
-                document.getElementById('medida-caseira').value = receita.medidaCaseira || '';
-                document.getElementById('peso-porcao').value = (receita.pesoPorcao || 0).toFixed(2);
-                document.getElementById('numero-porcoes').value = receita.numeroPorcoes || '';
-                document.getElementById('fcc').value = (receita.fcc || 0).toFixed(2);
-                document.getElementById('rendimento').value = (receita.rendimento || 0).toFixed(2);
-
-                const tableBody = document.querySelector('#ingredientes-table tbody');
-                tableBody.innerHTML = '';
-
-                // Carregar ingredientes da receita
-                if (receita.ingredientes && receita.ingredientes.length > 0) {
-                    console.log("[DEBUG - LOAD] Carregando ingredientes da receita:", receita.ingredientes);
-                    receita.ingredientes.forEach((ingrediente, index) => {
-                        console.log(`[DEBUG - LOAD] Carregando ingrediente ${index + 1}:`, ingrediente);
-                        adicionarIngrediente(ingrediente);
-                    });
-                } else {
-                    console.log("[DEBUG - LOAD] Nenhum ingrediente encontrado na receita");
-                    adicionarIngrediente();
-                }
-
-                // Carregar perfil nutricional
-                if (fichaTecnica.perfilNutricional) {
-                    const perfil = fichaTecnica.perfilNutricional;
-                    // Carregar valores individuais dos macros (por enquanto usando valores padrão)
-                    // Estes valores serão recalculados quando atualizarCalculosGlobais() for chamado
-                    document.getElementById('total-proteinas-g').textContent = '0.00';
-                    document.getElementById('total-carboidratos-g').textContent = '0.00';
-                    document.getElementById('total-lipidios-g').textContent = '0.00';
-                    document.getElementById('total-proteinas-kcal').textContent = '0.00';
-                    document.getElementById('total-carboidratos-kcal').textContent = '0.00';
-                    document.getElementById('total-lipidios-kcal').textContent = '0.00';
-                    document.getElementById('total-proteinas-percent').textContent = '0.00%';
-                    document.getElementById('total-carboidratos-percent').textContent = '0.00%';
-                    document.getElementById('total-lipidios-percent').textContent = '0.00%';
-                    document.getElementById('vct').value = (perfil.vct || 0).toFixed(2);
-                }
-
-                atualizarCalculosGlobais();
-
-                // Adicionar um pequeno delay para garantir que todos os ingredientes foram carregados
-                setTimeout(() => {
-                    console.log("[DEBUG - LOAD] Recalculando perfil nutricional após carregamento completo");
-                    atualizarCalculosGlobais();
-                }, 500);
-
-            } else if (response.status === 404) {
-                console.warn(`[DEBUG - LOAD] Ficha Técnica com ID ${fichaTecnicaId} não encontrada. Criando nova ficha.`);
-                adicionarIngrediente();
-                atualizarCalculosGlobais();
-            } else if (response.status === 401 || response.status === 403) {
-                alert('Sua sessão expirou ou você não está autorizado. Faça login novamente.');
-                window.location.href = '/login';
-            } else {
-                const errorText = await response.text();
-                console.error(`[DEBUG - LOAD] Erro ao carregar ficha técnica ${fichaTecnicaId}:`, response.status, response.statusText, errorText);
-                alert('Erro ao carregar ficha técnica: ' + (errorText || response.statusText));
-                adicionarIngrediente();
-                atualizarCalculosGlobais();
-            }
-        } catch (error) {
-            console.error('[DEBUG - LOAD] Erro na requisição para carregar ficha técnica:', error);
-            alert('Ocorreu um erro na comunicação com o servidor ao carregar a ficha técnica.');
-            adicionarIngrediente();
+        function removerLinha(button) {
+            console.log("[DEBUG - UI] Removendo linha.");
+            const row = button.parentNode.parentNode;
+            row.parentNode.removeChild(row);
             atualizarCalculosGlobais();
         }
-    }
 
+        async function setupAutocompleteForElement(inputElement) {
+            let timeout = null;
+            inputElement.addEventListener('input', async function (e) {
+                clearTimeout(timeout);
+                const query = e.target.value;
 
-    function coletarDadosFormulario() {
-        console.log("[DEBUG - SUBMIT] Coletando dados do formulário para envio.");
-        
-        // Detectar se estamos editando uma receita existente
-        let receitaId = null;
-        
-        // Verificar URL params
-        const urlParams = new URLSearchParams(window.location.search);
-        const fichaTecnicaId = urlParams.get('id');
-        
-        // Verificar elemento hidden
-        const hiddenElement = document.getElementById('receita-id-hidden');
-        if (hiddenElement && hiddenElement.value) {
-            receitaId = hiddenElement.value;
-        }
-        
-        // Verificar URL path
-        if (!receitaId) {
-            const pathSegments = window.location.pathname.split('/');
-            const lastSegment = pathSegments[pathSegments.length - 1];
-            if (lastSegment && !isNaN(lastSegment)) {
-                receitaId = lastSegment;
-            }
-        }
-        
-        // Usar qualquer ID encontrado
-        const idToUse = fichaTecnicaId || receitaId;
-        
-        const dados = {
-            nome: document.getElementById('nome-preparacao').value,
-            categoria: document.getElementById('categoria').value,
-            modoPreparo: document.getElementById('modo-preparo').value,
-            tempoPreparo: parseFloat(document.getElementById('tempo-preparo').value) || 0,
-            pesoPorcao: parseFloat(document.getElementById('peso-porcao').value) || 0.0,
-            rendimento: parseFloat(document.getElementById('rendimento').value) || 0.0,
-            numeroPorcoes: parseInt(document.getElementById('numero-porcoes').value) || 0,
-            fcc: parseFloat(document.getElementById('fcc').value) || 0.0,
-            medidaCaseira: document.getElementById('medida-caseira').value,
-            equipamentos: document.getElementById('equipamentos').value,
-        };
+                // Limpa o ID do ingrediente e os dados nutricionais associados à linha
+                e.target.dataset.ingredienteId = '';
+                const currentRow = e.target.closest('tr');
+                if (currentRow) {
+                    currentRow.dataset.proteina = '';
+                    currentRow.dataset.carboidrato = '';
+                    currentRow.dataset.lipidio = '';
+                    currentRow.dataset.sodio = '';
+                    currentRow.dataset.gorduraSaturada = '';
+                    currentRow.dataset.kcal = '';
+                    // Limpar o PL e PB também ao começar a digitar um novo ingrediente
+                    // Não zera custoCompra para que o usuário não perca o valor já digitado.
+                    currentRow.querySelector('.pb-ingrediente').value = '0.00';
+                    currentRow.querySelector('.pl-ingrediente').value = '0.00';
+                    currentRow.querySelector('.fc-ingrediente').value = '0.00';
+                    currentRow.querySelector('.custo-utilizado-ingrediente').value = '0.00';
+                }
 
-        // Incluir o ID da receita se estiver editando
-        if (idToUse) {
-            dados.id = parseInt(idToUse);
-            console.log("[DEBUG - SUBMIT] Incluindo ID da receita para edição:", dados.id);
-        }
+                let old = inputElement.parentNode.querySelector('.autocomplete-list');
+                if (old) old.remove();
 
-        const ingredientes = [];
-        document.querySelectorAll('#ingredientes-table tbody tr').forEach(row => {
-            const ingredienteNomeInput = row.querySelector('.ingrediente-nome');
-            const ingredienteId = ingredienteNomeInput.dataset.ingredienteId;
+                if (query.length < 2) return;
 
-            if (ingredienteId && ingredienteNomeInput.value.trim() !== '') {
-                ingredientes.push({
-                    ingredienteId: parseInt(ingredienteId),
-                    ingredienteNome: ingredienteNomeInput.value.trim(),
-                    medidaCaseira: row.querySelector('.medida-caseira-ingrediente').value,
-                    pesoBruto: parseFloat(row.querySelector('.pb-ingrediente').value) || 0.0,
-                    pesoLiquido: parseFloat(row.querySelector('.pl-ingrediente').value) || 0.0,
-                    fatorCorrecao: parseFloat(row.querySelector('.fc-ingrediente').value) || 0.0,
-                    custoCompra: parseFloat(row.querySelector('.custo-compra-ingrediente').value) || 0.0,
-                    custoUtilizado: parseFloat(row.querySelector('.custo-utilizado-ingrediente').value) || 0.0,
-                    pesoCompra: parseFloat(row.querySelector('.peso-compra-ingrediente').value) || 0.0,
-                });
-            } else {
-                console.warn(`[DEBUG - SUBMIT] Ingrediente ignorado por falta de nome ou ID: ${ingredienteNomeInput.value}, ID: ${ingredienteId}`);
-            }
-        });
-        dados.ingredientes = ingredientes;
+                timeout = setTimeout(async () => {
+                    const lista = await buscarIngredientes(query);
 
-        const perfilNutricional = {
-            perCapita: parseFloat(document.getElementById('peso-porcao').value) || 0.0,
-            totalGramas: parseFloat(document.getElementById('total-proteinas-g').textContent) + 
-                        parseFloat(document.getElementById('total-carboidratos-g').textContent) + 
-                        parseFloat(document.getElementById('total-lipidios-g').textContent) || 0.0,
-            totalKcal: parseFloat(document.getElementById('total-proteinas-kcal').textContent) + 
-                      parseFloat(document.getElementById('total-carboidratos-kcal').textContent) + 
-                      parseFloat(document.getElementById('total-lipidios-kcal').textContent) || 0.0,
-            totalPorcentagem: parseFloat(document.getElementById('total-proteinas-percent').textContent.replace('%', '')) + 
-                             parseFloat(document.getElementById('total-carboidratos-percent').textContent.replace('%', '')) + 
-                             parseFloat(document.getElementById('total-lipidios-percent').textContent.replace('%', '')) || 0.0,
-            vct: parseFloat(document.getElementById('vct').value) || 0.0
-        };
+                    if (lista.length > 0) {
+                        let dropdown = document.createElement('div');
+                        dropdown.className = 'autocomplete-list';
+                        dropdown.style.position = 'absolute';
+                        dropdown.style.background = '#fff';
+                        dropdown.style.border = '1px solid #ccc';
+                        dropdown.style.zIndex = 1000;
+                        dropdown.style.maxHeight = '200px';
+                        dropdown.style.overflowY = 'auto';
+                        dropdown.style.width = inputElement.offsetWidth + 'px';
 
-        // Incluir o ID do perfil nutricional se estiver editando
-        if (idToUse) {
-            perfilNutricional.receitaId = parseInt(idToUse);
-        }
+                        lista.forEach(item => {
+                            let option = document.createElement('div');
+                            option.textContent = item.nome;
+                            option.dataset.ingredienteId = item.id;
+                            // Armazena todos os dados nutricionais no dataset do option
+                            option.dataset.proteina = item.proteina;
+                            option.dataset.carboidrato = item.carboidrato;
+                            option.dataset.lipidio = item.lipidio;
+                            option.dataset.sodio = item.sodio;
+                            option.dataset.gorduraSaturada = item.gorduraSaturada;
+                            option.dataset.kcal = (item.proteina * 4) + (item.carboidrato * 4) + (item.lipidio * 9); // Calcula Kcal por 100g
 
-        dados.custoTotal = parseFloat(document.getElementById('custo-total').value) || 0.0;
-        dados.custoPerCapita = parseFloat(document.getElementById('custo-per-capita').value) || 0.0;
-        dados.rendimento = parseFloat(document.getElementById('rendimento').value) || 0.0;
+                            option.onclick = () => {
+                                e.target.value = item.nome;
+                                e.target.dataset.ingredienteId = item.id;
 
+                                const tr = e.target.closest('tr');
+                                const plInput = tr.querySelector('.pl-ingrediente');
+                                const pbInput = tr.querySelector('.pb-ingrediente');
+                                const fcInput = tr.querySelector('.fc-ingrediente');
+                                const custoUtilizadoInput = tr.querySelector('.custo-utilizado-ingrediente');
+                                const custoCompraInput = tr.querySelector('.custo-compra-ingrediente');
+                                const pesoCompraInput = tr.querySelector('.peso-compra-ingrediente');
 
-        if (perfilNutricional.totalKcal > 0 || perfilNutricional.totalGramas > 0 || perfilNutricional.vct > 0) {
-            dados.perfilNutricional = perfilNutricional;
-        } else {
-            dados.perfilNutricional = null;
-        }
+                                tr.dataset.ingredienteId = item.id;
+                                tr.dataset.proteina = item.proteina;
+                                tr.dataset.carboidrato = item.carboidrato;
+                                tr.dataset.lipidio = item.lipidio;
+                                tr.dataset.sodio = item.sodio;
+                                tr.dataset.gorduraSaturada = item.gorduraSaturada;
+                                tr.dataset.kcal = option.dataset.kcal;
 
-        return dados;
-    }
+                                const defaultPl = 100; // Define um PL padrão de 100g
+                                plInput.value = defaultPl.toFixed(2);
+                                pbInput.value = defaultPl.toFixed(2); // Pode ser igual ao PL para começar (FC = 1)
+                                fcInput.value = (1).toFixed(2); // FC inicial = 1 se PL=PB
 
-    document.getElementById('fichaTecnicaForm').addEventListener('submit', async function(event) {
-        event.preventDefault();
-        const dadosParaEnviar = coletarDadosFormulario();
-        console.log("[DEBUG - SUBMIT] Dados a serem enviados:", dadosParaEnviar);
+                                const custoCompra = parseFloat(custoCompraInput.value) || 0;
+                                const custoUtilizado = (defaultPl > 0) ? (custoCompra * (defaultPl / defaultPl)) : 0; // Se PL=PB, custoUtilizado = custoCompra
+                                custoUtilizadoInput.value = custoUtilizado.toFixed(2);
 
-        // Detectar se estamos editando uma receita existente
-        let receitaId = null;
-        
-        // Verificar URL params
-        const urlParams = new URLSearchParams(window.location.search);
-        const fichaTecnicaId = urlParams.get('id');
-        
-        // Verificar elemento hidden
-        const hiddenElement = document.getElementById('receita-id-hidden');
-        if (hiddenElement && hiddenElement.value) {
-            receitaId = hiddenElement.value;
-        }
-        
-        // Verificar URL path
-        if (!receitaId) {
-            const pathSegments = window.location.pathname.split('/');
-            const lastSegment = pathSegments[pathSegments.length - 1];
-            if (lastSegment && !isNaN(lastSegment)) {
-                receitaId = lastSegment;
-            }
-        }
-        
-        // Usar qualquer ID encontrado
-        const idToUse = fichaTecnicaId || receitaId;
-        
-        const method = idToUse ? 'PUT' : 'POST';
-        const url = idToUse ? `/api/receitas/${idToUse}` : '/api/receitas';
+                                pesoCompraInput.value = defaultPl.toFixed(2); // Define o peso da compra igual ao PL inicial
 
-        console.log("[DEBUG - SUBMIT] Configuração da requisição:", {
-            idToUse: idToUse,
-            method: method,
-            url: url,
-            isEditing: !!idToUse
-        });
-
-        try {
-            const response = await fetch(url, {
-                method: method,
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(dadosParaEnviar),
-                credentials: 'include'
+                                console.log("[DEBUG - AUTOC] Item selecionado do autocomplete. Dados na linha (tr.dataset):", tr.dataset);
+                                console.log(`[DEBUG - AUTOC] PL e PB definidos para ${defaultPl}g. Recalculando.`);
+                                dropdown.remove();
+                                atualizarCalculosGlobais();
+                            };
+                            dropdown.appendChild(option);
+                        });
+                        inputElement.parentNode.appendChild(dropdown);
+                    }
+                }, 300);
             });
 
-            if (response.ok) {
-                const successMessage = idToUse ? 'Ficha Técnica atualizada com sucesso!' : 'Ficha Técnica salva com sucesso!';
-                alert(successMessage);
-                const responseData = await response.json();
-                window.location.href = `/visualizar?id=${responseData.id}`;
-            } else if (response.status === 401 || response.status === 403) {
-                alert('Sua sessão expirou ou você não está autorizado. Faça login novamente.');
-                window.location.href = '/login';
-            } else {
-                const errorData = await response.json();
-                console.error('[DEBUG - SUBMIT] Erro ao salvar ficha técnica:', errorData);
-                alert('Erro ao salvar ficha técnica: ' + (errorData.message || response.statusText));
-            }
-        } catch (error) {
-            console.error('[DEBUG - SUBMIT] Erro na requisição:', error);
-            alert('Ocorreu um erro na comunicação com o servidor.');
+            inputElement.addEventListener('blur', function () {
+                setTimeout(() => {
+                    let old = inputElement.parentNode.querySelector('.autocomplete-list');
+                    if (old) old.remove();
+                }, 100);
+            });
         }
-    });
 
-    document.querySelectorAll('.pb-ingrediente, .pl-ingrediente, .custo-compra-ingrediente, .peso-compra-ingrediente').forEach(input => {
-        input.addEventListener('input', atualizarCalculosIngrediente);
-    });
+        async function carregarFichaTecnicaExistente(fichaTecnicaId) {
+            console.log(`[DEBUG - LOAD] Tentando carregar ficha técnica com ID: ${fichaTecnicaId}`);
+            try {
+                const response = await fetch(`/api/receitas/${fichaTecnicaId}`, {
+                    credentials: 'include'
+                });
 
-    function atualizarCalculosIngrediente(event) {
-        console.log("[DEBUG - CALC] Evento 'input' disparado para cálculo de ingrediente.");
-        const row = event.target.closest('tr');
-        const pb = parseFloat(row.querySelector('.pb-ingrediente').value) || 0;
-        const pl = parseFloat(row.querySelector('.pl-ingrediente').value) || 0;
-        const custoCompra = parseFloat(row.querySelector('.custo-compra-ingrediente').value) || 0;
-        const pesoCompra = parseFloat(row.querySelector('.peso-compra-ingrediente').value) || 0;
+                if (response.ok) {
+                    const fichaTecnica = await response.json();
+                    console.log("[DEBUG - LOAD] Ficha Técnica carregada:", fichaTecnica);
 
-        console.log("[DEBUG - CALC] Valores lidos:", {
-            pb: pb,
-            pl: pl,
-            custoCompra: custoCompra,
-            pesoCompra: pesoCompra
-        });
+                    // Acessar os dados da receita que estão aninhados em fichaTecnica.receita
+                    const receita = fichaTecnica.receita;
+                    if (!receita) {
+                        console.error("[DEBUG - LOAD] Estrutura da ficha técnica inválida - receita não encontrada");
+                        throw new Error("Estrutura da ficha técnica inválida");
+                    }
 
-        const fc = (pb > 0 && pl > 0) ? (pb / pl) : 0;
-        row.querySelector('.fc-ingrediente').value = fc.toFixed(2);
+                    document.getElementById('nome-preparacao').value = receita.nome || '';
+                    document.getElementById('categoria').value = receita.categoria || '';
+                    document.getElementById('modo-preparo').value = receita.modoPreparo || '';
+                    document.getElementById('equipamentos').value = receita.equipamentos || '';
+                    document.getElementById('tempo-preparo').value = receita.tempoPreparo || '';
+                    document.getElementById('medida-caseira').value = receita.medidaCaseira || '';
+                    document.getElementById('peso-porcao').value = (receita.pesoPorcao || 0).toFixed(2);
+                    document.getElementById('numero-porcoes').value = receita.numeroPorcoes || '';
+                    document.getElementById('fcc').value = (receita.fcc || 0).toFixed(2);
+                    document.getElementById('agua-quantidade').value = (receita.aguaQuantidade || 0.00).toFixed(2);
+                    document.getElementById('agua-fcc').value = (receita.aguaFcc || 0.00).toFixed(2);
+                    document.getElementById('rendimento').value = (receita.rendimento || 0).toFixed(2);
 
-        // Cálculo do custo utilizado: (custo da compra / peso da compra) * peso bruto utilizado
-        const custoUtilizado = (pesoCompra > 0 && pb > 0) ? (custoCompra / pesoCompra) * pb : 0;
-        
-        console.log("[DEBUG - CALC] Cálculo do custo utilizado:", {
-            custoPorGrama: custoCompra / pesoCompra,
-            custoUtilizado: custoUtilizado,
-            formula: `(${custoCompra} / ${pesoCompra}) * ${pb} = ${custoUtilizado}`
-        });
-        
-        row.querySelector('.custo-utilizado-ingrediente').value = custoUtilizado.toFixed(2);
+                    const tableBody = document.querySelector('#ingredientes-table tbody');
+                    tableBody.innerHTML = '';
 
-        atualizarCalculosGlobais();
-    }
+                    // Carregar ingredientes da receita
+                    if (receita.ingredientes && receita.ingredientes.length > 0) {
+                        console.log("[DEBUG - LOAD] Carregando ingredientes da receita:", receita.ingredientes);
+                        receita.ingredientes.forEach((ingrediente, index) => {
+                            console.log(`[DEBUG - LOAD] Carregando ingrediente ${index + 1}:`, ingrediente);
+                            adicionarIngrediente(ingrediente);
+                        });
+                    } else {
+                        console.log("[DEBUG - LOAD] Nenhum ingrediente encontrado na receita");
+                        adicionarIngrediente();
+                    }
 
-    // Função para atualizar cálculos globais (Custo Total, Custo Per Capita, FCC Geral, Totais Nutricionais)
-    function atualizarCalculosGlobais() {
-        console.log("[DEBUG - CALC] Iniciando atualização de cálculos globais.");
-        let custoTotal = 0;
-        let totalPesoLiquido = 0;
-        let totalPesoBruto = 0;
-        let totalProteina = 0;
-        let totalCarboidrato = 0;
-        let totalLipidio = 0;
-        let totalSodio = 0;
-        let totalGorduraSaturada = 0;
-        let totalKcal = 0;
+                    // Carregar perfil nutricional
+                    if (fichaTecnica.perfilNutricional) {
+                        const perfil = fichaTecnica.perfilNutricional;
+                        // Carregar valores individuais dos macros (por enquanto usando valores padrão)
+                        // Estes valores serão recalculados quando atualizarCalculosGlobais() for chamado
+                        document.getElementById('total-proteinas-g').textContent = '0.00';
+                        document.getElementById('total-carboidratos-g').textContent = '0.00';
+                        document.getElementById('total-lipidios-g').textContent = '0.00';
+                        document.getElementById('total-proteinas-kcal').textContent = '0.00';
+                        document.getElementById('total-carboidratos-kcal').textContent = '0.00';
+                        document.getElementById('total-lipidios-kcal').textContent = '0.00';
+                        document.getElementById('total-proteinas-percent').textContent = '0.00%';
+                        document.getElementById('total-carboidratos-percent').textContent = '0.00%';
+                        document.getElementById('total-lipidios-percent').textContent = '0.00%';
+                        document.getElementById('vct').value = (perfil.vct || 0).toFixed(2);
+                    }
 
-        // Clear the existing rows in the nutritional table
-        const nutricionalTableBody = document.querySelector('#nutricional-table tbody');
-        nutricionalTableBody.innerHTML = '';
+                    atualizarCalculosGlobais();
 
-        document.querySelectorAll('#ingredientes-table tbody tr').forEach((row, index) => {
-            console.log(`[DEBUG - CALC] Processando linha de ingrediente ${index + 1}:`, row.dataset);
+                    // Adicionar um pequeno delay para garantir que todos os ingredientes foram carregados
+                    setTimeout(() => {
+                        console.log("[DEBUG - LOAD] Recalculando perfil nutricional após carregamento completo");
+                        atualizarCalculosGlobais();
+                    }, 500);
 
-            const ingredienteNome = row.querySelector('.ingrediente-nome')?.value || 'Desconhecido';
-            const custoUtilizado = parseFloat(row.querySelector('.custo-utilizado-ingrediente')?.value) || 0;
-            const pl = parseFloat(row.querySelector('.pl-ingrediente')?.value) || 0;
-            const pb = parseFloat(row.querySelector('.pb-ingrediente')?.value) || 0;
+                } else if (response.status === 404) {
+                    console.warn(`[DEBUG - LOAD] Ficha Técnica com ID ${fichaTecnicaId} não encontrada. Criando nova ficha.`);
+                    adicionarIngrediente();
+                    atualizarCalculosGlobais();
+                } else if (response.status === 401 || response.status === 403) {
+                    alert('Sua sessão expirou ou você não está autorizado. Faça login novamente.');
+                    window.location.href = '/login';
+                } else {
+                    const errorText = await response.text();
+                    console.error(`[DEBUG - LOAD] Erro ao carregar ficha técnica ${fichaTecnicaId}:`, response.status, response.statusText, errorText);
+                    alert('Erro ao carregar ficha técnica: ' + (errorText || response.statusText));
+                    adicionarIngrediente();
+                    atualizarCalculosGlobais();
+                }
+            } catch (error) {
+                console.error('[DEBUG - LOAD] Erro na requisição para carregar ficha técnica:', error);
+                alert('Ocorreu um erro na comunicação com o servidor ao carregar a ficha técnica.');
+                adicionarIngrediente();
+                atualizarCalculosGlobais();
+            }
+        }
 
-            custoTotal += custoUtilizado;
-            totalPesoLiquido += pl;
-            totalPesoBruto += pb;
 
-            const proteinaBase = parseFloat(row.dataset.proteina) || 0;
-            const carboidratoBase = parseFloat(row.dataset.carboidrato) || 0;
-            const lipidioBase = parseFloat(row.dataset.lipidio) || 0;
-            const sodioBase = parseFloat(row.dataset.sodio) || 0;
-            const gorduraSaturadaBase = parseFloat(row.dataset.gorduraSaturada) || 0;
-            const kcalBase = parseFloat(row.dataset.kcal) || 0; // Kcal por 100g
+        function coletarDadosFormulario() {
+            console.log("[DEBUG - SUBMIT] Coletando dados do formulário para envio.");
 
-            console.log(`[DEBUG - CALC] Ingrediente ${index + 1} - PL: ${pl}, PTN_Base: ${proteinaBase}, CHO_Base: ${carboidratoBase}, LIP_Base: ${lipidioBase}, Kcal/100g: ${kcalBase}`);
+            // Detectar se estamos editando uma receita existente
+            let receitaId = null;
 
-            let proteinaProporcional = 0;
-            let carboidratoProporcional = 0;
-            let lipidioProporcional = 0;
-            let sodioProporcional = 0;
-            let gorduraSaturadaProporcional = 0;
-            let kcalProporcional = 0;
+            // Verificar URL params
+            const urlParams = new URLSearchParams(window.location.search);
+            const fichaTecnicaId = urlParams.get('id');
 
-            if (pl > 0) {
-                const fatorProporcional = pl / 100;
-                proteinaProporcional = proteinaBase * fatorProporcional;
-                carboidratoProporcional = carboidratoBase * fatorProporcional;
-                lipidioProporcional = lipidioBase * fatorProporcional;
-                sodioProporcional = sodioBase * fatorProporcional;
-                gorduraSaturadaProporcional = gorduraSaturadaBase * fatorProporcional;
-                kcalProporcional = kcalBase * fatorProporcional; // Kcal para o PL usado
+            // Verificar elemento hidden
+            const hiddenElement = document.getElementById('receita-id-hidden');
+            if (hiddenElement && hiddenElement.value) {
+                receitaId = hiddenElement.value;
             }
 
-            totalProteina += proteinaProporcional;
-            totalCarboidrato += carboidratoProporcional;
-            totalLipidio += lipidioProporcional;
-            totalSodio += sodioProporcional;
-            totalGorduraSaturada += gorduraSaturadaProporcional;
-            totalKcal += kcalProporcional;
+            // Verificar URL path
+            if (!receitaId) {
+                const pathSegments = window.location.pathname.split('/');
+                const lastSegment = pathSegments[pathSegments.length - 1];
+                if (lastSegment && !isNaN(lastSegment)) {
+                    receitaId = lastSegment;
+                }
+            }
 
-            // Add row to the Perfil Nutricional table
-            const newNutriRow = nutricionalTableBody.insertRow();
-            const numeroPorcoes = parseInt(document.getElementById('numero-porcoes').value) || 1;
-            
-            // Valores por porção
-            const plPorPorcao = pl / numeroPorcoes;
-            const proteinaPorPorcao = proteinaProporcional / numeroPorcoes;
-            const carboidratoPorPorcao = carboidratoProporcional / numeroPorcoes;
-            const lipidioPorPorcao = lipidioProporcional / numeroPorcoes;
-            const sodioPorPorcao = sodioProporcional / numeroPorcoes;
-            const gorduraSaturadaPorPorcao = gorduraSaturadaProporcional / numeroPorcoes;
-            
-            newNutriRow.innerHTML = `
+            // Usar qualquer ID encontrado
+            const idToUse = fichaTecnicaId || receitaId;
+
+            const dados = {
+                nome: document.getElementById('nome-preparacao').value,
+                categoria: document.getElementById('categoria').value,
+                modoPreparo: document.getElementById('modo-preparo').value,
+                tempoPreparo: parseFloat(document.getElementById('tempo-preparo').value) || 0,
+                pesoPorcao: parseFloat(document.getElementById('peso-porcao').value) || 0.0,
+                rendimento: parseFloat(document.getElementById('rendimento').value) || 0.0,
+                numeroPorcoes: parseInt(document.getElementById('numero-porcoes').value) || 0,
+                fcc: parseFloat(document.getElementById('fcc').value) || 0.0,
+                aguaQuantidade: parseFloat(document.getElementById('agua-quantidade').value) || 0.0,
+                aguaFcc: parseFloat(document.getElementById('agua-fcc').value) || 0.0,
+                medidaCaseira: document.getElementById('medida-caseira').value,
+                equipamentos: document.getElementById('equipamentos').value,
+            };
+
+            // Incluir o ID da receita se estiver editando
+            if (idToUse) {
+                dados.id = parseInt(idToUse);
+                console.log("[DEBUG - SUBMIT] Incluindo ID da receita para edição:", dados.id);
+            }
+
+            const ingredientes = [];
+            document.querySelectorAll('#ingredientes-table tbody tr').forEach(row => {
+                const ingredienteNomeInput = row.querySelector('.ingrediente-nome');
+                const ingredienteId = ingredienteNomeInput.dataset.ingredienteId;
+
+                if (ingredienteId && ingredienteNomeInput.value.trim() !== '') {
+                    ingredientes.push({
+                        ingredienteId: parseInt(ingredienteId),
+                        ingredienteNome: ingredienteNomeInput.value.trim(),
+                        medidaCaseira: row.querySelector('.medida-caseira-ingrediente').value,
+                        pesoBruto: parseFloat(row.querySelector('.pb-ingrediente').value) || 0.0,
+                        pesoLiquido: parseFloat(row.querySelector('.pl-ingrediente').value) || 0.0,
+                        fatorCorrecao: parseFloat(row.querySelector('.fc-ingrediente').value) || 0.0,
+                        custoCompra: parseFloat(row.querySelector('.custo-compra-ingrediente').value) || 0.0,
+                        custoUtilizado: parseFloat(row.querySelector('.custo-utilizado-ingrediente').value) || 0.0,
+                        pesoCompra: parseFloat(row.querySelector('.peso-compra-ingrediente').value) || 0.0,
+                    });
+                } else {
+                    console.warn(`[DEBUG - SUBMIT] Ingrediente ignorado por falta de nome ou ID: ${ingredienteNomeInput.value}, ID: ${ingredienteId}`);
+                }
+            });
+            dados.ingredientes = ingredientes;
+
+            const perfilNutricional = {
+                perCapita: parseFloat(document.getElementById('peso-porcao').value) || 0.0,
+                totalGramas: parseFloat(document.getElementById('total-proteinas-g').textContent) +
+                    parseFloat(document.getElementById('total-carboidratos-g').textContent) +
+                    parseFloat(document.getElementById('total-lipidios-g').textContent) || 0.0,
+                totalKcal: parseFloat(document.getElementById('total-proteinas-kcal').textContent) +
+                    parseFloat(document.getElementById('total-carboidratos-kcal').textContent) +
+                    parseFloat(document.getElementById('total-lipidios-kcal').textContent) || 0.0,
+                totalPorcentagem: parseFloat(document.getElementById('total-proteinas-percent').textContent.replace('%', '')) +
+                    parseFloat(document.getElementById('total-carboidratos-percent').textContent.replace('%', '')) +
+                    parseFloat(document.getElementById('total-lipidios-percent').textContent.replace('%', '')) || 0.0,
+                vct: parseFloat(document.getElementById('vct').value) || 0.0
+            };
+
+            // Incluir o ID do perfil nutricional se estiver editando
+            if (idToUse) {
+                perfilNutricional.receitaId = parseInt(idToUse);
+            }
+
+            dados.custoTotal = parseFloat(document.getElementById('custo-total').value) || 0.0;
+            dados.custoPerCapita = parseFloat(document.getElementById('custo-per-capita').value) || 0.0;
+            dados.rendimento = parseFloat(document.getElementById('rendimento').value) || 0.0;
+
+
+            if (perfilNutricional.totalKcal > 0 || perfilNutricional.totalGramas > 0 || perfilNutricional.vct > 0) {
+                dados.perfilNutricional = perfilNutricional;
+            } else {
+                dados.perfilNutricional = null;
+            }
+
+            return dados;
+        }
+
+        document.getElementById('fichaTecnicaForm').addEventListener('submit', async function (event) {
+            event.preventDefault();
+            const dadosParaEnviar = coletarDadosFormulario();
+            console.log("[DEBUG - SUBMIT] Dados a serem enviados:", dadosParaEnviar);
+
+            // Detectar se estamos editando uma receita existente
+            let receitaId = null;
+
+            // Verificar URL params
+            const urlParams = new URLSearchParams(window.location.search);
+            const fichaTecnicaId = urlParams.get('id');
+
+            // Verificar elemento hidden
+            const hiddenElement = document.getElementById('receita-id-hidden');
+            if (hiddenElement && hiddenElement.value) {
+                receitaId = hiddenElement.value;
+            }
+
+            // Verificar URL path
+            if (!receitaId) {
+                const pathSegments = window.location.pathname.split('/');
+                const lastSegment = pathSegments[pathSegments.length - 1];
+                if (lastSegment && !isNaN(lastSegment)) {
+                    receitaId = lastSegment;
+                }
+            }
+
+            // Usar qualquer ID encontrado
+            const idToUse = fichaTecnicaId || receitaId;
+
+            const method = idToUse ? 'PUT' : 'POST';
+            const url = idToUse ? `/api/receitas/${idToUse}` : '/api/receitas';
+
+            console.log("[DEBUG - SUBMIT] Configuração da requisição:", {
+                idToUse: idToUse,
+                method: method,
+                url: url,
+                isEditing: !!idToUse
+            });
+
+            try {
+                const response = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(dadosParaEnviar),
+                    credentials: 'include'
+                });
+
+                if (response.ok) {
+                    const successMessage = idToUse ? 'Ficha Técnica atualizada com sucesso!' : 'Ficha Técnica salva com sucesso!';
+                    alert(successMessage);
+                    const responseData = await response.json();
+                    window.location.href = `/visualizar?id=${responseData.id}`;
+                } else if (response.status === 401 || response.status === 403) {
+                    alert('Sua sessão expirou ou você não está autorizado. Faça login novamente.');
+                    window.location.href = '/login';
+                } else {
+                    const errorData = await response.json();
+                    console.error('[DEBUG - SUBMIT] Erro ao salvar ficha técnica:', errorData);
+                    alert('Erro ao salvar ficha técnica: ' + (errorData.message || response.statusText));
+                }
+            } catch (error) {
+                console.error('[DEBUG - SUBMIT] Erro na requisição:', error);
+                alert('Ocorreu um erro na comunicação com o servidor.');
+            }
+        });
+
+        document.querySelectorAll('.pb-ingrediente, .pl-ingrediente, .custo-compra-ingrediente, .peso-compra-ingrediente').forEach(input => {
+            input.addEventListener('input', atualizarCalculosIngrediente);
+        });
+
+        function atualizarCalculosIngrediente(event) {
+            console.log("[DEBUG - CALC] Evento 'input' disparado para cálculo de ingrediente.");
+            const row = event.target.closest('tr');
+            const pb = parseFloat(row.querySelector('.pb-ingrediente').value) || 0;
+            const pl = parseFloat(row.querySelector('.pl-ingrediente').value) || 0;
+            const custoCompra = parseFloat(row.querySelector('.custo-compra-ingrediente').value) || 0;
+            const pesoCompra = parseFloat(row.querySelector('.peso-compra-ingrediente').value) || 0;
+
+            console.log("[DEBUG - CALC] Valores lidos:", {
+                pb: pb,
+                pl: pl,
+                custoCompra: custoCompra,
+                pesoCompra: pesoCompra
+            });
+
+            const fc = (pb > 0 && pl > 0) ? (pb / pl) : 0;
+            row.querySelector('.fc-ingrediente').value = fc.toFixed(2);
+
+            // Cálculo do custo utilizado: (custo da compra / peso da compra) * peso bruto utilizado
+            const custoUtilizado = (pesoCompra > 0 && pb > 0) ? (custoCompra / pesoCompra) * pb : 0;
+
+            console.log("[DEBUG - CALC] Cálculo do custo utilizado:", {
+                custoPorGrama: custoCompra / pesoCompra,
+                custoUtilizado: custoUtilizado,
+                formula: `(${custoCompra} / ${pesoCompra}) * ${pb} = ${custoUtilizado}`
+            });
+
+            row.querySelector('.custo-utilizado-ingrediente').value = custoUtilizado.toFixed(2);
+
+            atualizarCalculosGlobais();
+        }
+
+        // Função para atualizar cálculos globais (Custo Total, Custo Per Capita, FCC Geral, Totais Nutricionais)
+        function atualizarCalculosGlobais() {
+            console.log("[DEBUG - CALC] Iniciando atualização de cálculos globais.");
+            let custoTotal = 0;
+            let totalPesoLiquido = 0;
+            let totalPesoBruto = 0;
+            let totalProteina = 0;
+            let totalCarboidrato = 0;
+            let totalLipidio = 0;
+            let totalSodio = 0;
+            let totalGorduraSaturada = 0;
+            let totalKcal = 0;
+
+            // Clear the existing rows in the nutritional table
+            const nutricionalTableBody = document.querySelector('#nutricional-table tbody');
+            nutricionalTableBody.innerHTML = '';
+
+            document.querySelectorAll('#ingredientes-table tbody tr').forEach((row, index) => {
+                console.log(`[DEBUG - CALC] Processando linha de ingrediente ${index + 1}:`, row.dataset);
+
+                const ingredienteNome = row.querySelector('.ingrediente-nome')?.value || 'Desconhecido';
+                const custoUtilizado = parseFloat(row.querySelector('.custo-utilizado-ingrediente')?.value) || 0;
+                const pl = parseFloat(row.querySelector('.pl-ingrediente')?.value) || 0;
+                const pb = parseFloat(row.querySelector('.pb-ingrediente')?.value) || 0;
+
+                custoTotal += custoUtilizado;
+                totalPesoLiquido += pl;
+                totalPesoBruto += pb;
+
+                const proteinaBase = parseFloat(row.dataset.proteina) || 0;
+                const carboidratoBase = parseFloat(row.dataset.carboidrato) || 0;
+                const lipidioBase = parseFloat(row.dataset.lipidio) || 0;
+                const sodioBase = parseFloat(row.dataset.sodio) || 0;
+                const gorduraSaturadaBase = parseFloat(row.dataset.gorduraSaturada) || 0;
+                const kcalBase = parseFloat(row.dataset.kcal) || 0; // Kcal por 100g
+
+                console.log(`[DEBUG - CALC] Ingrediente ${index + 1} - PL: ${pl}, PTN_Base: ${proteinaBase}, CHO_Base: ${carboidratoBase}, LIP_Base: ${lipidioBase}, Kcal/100g: ${kcalBase}`);
+
+                let proteinaProporcional = 0;
+                let carboidratoProporcional = 0;
+                let lipidioProporcional = 0;
+                let sodioProporcional = 0;
+                let gorduraSaturadaProporcional = 0;
+                let kcalProporcional = 0;
+
+                if (pl > 0) {
+                    const fatorProporcional = pl / 100;
+                    proteinaProporcional = proteinaBase * fatorProporcional;
+                    carboidratoProporcional = carboidratoBase * fatorProporcional;
+                    lipidioProporcional = lipidioBase * fatorProporcional;
+                    sodioProporcional = sodioBase * fatorProporcional;
+                    gorduraSaturadaProporcional = gorduraSaturadaBase * fatorProporcional;
+                    kcalProporcional = kcalBase * fatorProporcional; // Kcal para o PL usado
+                }
+
+                totalProteina += proteinaProporcional;
+                totalCarboidrato += carboidratoProporcional;
+                totalLipidio += lipidioProporcional;
+                totalSodio += sodioProporcional;
+                totalGorduraSaturada += gorduraSaturadaProporcional;
+                totalKcal += kcalProporcional;
+
+                // Add row to the Perfil Nutricional table
+                const newNutriRow = nutricionalTableBody.insertRow();
+                const numeroPorcoes = parseInt(document.getElementById('numero-porcoes').value) || 1;
+
+                // Valores por porção
+                const plPorPorcao = pl / numeroPorcoes;
+                const proteinaPorPorcao = proteinaProporcional / numeroPorcoes;
+                const carboidratoPorPorcao = carboidratoProporcional / numeroPorcoes;
+                const lipidioPorPorcao = lipidioProporcional / numeroPorcoes;
+                const sodioPorPorcao = sodioProporcional / numeroPorcoes;
+                const gorduraSaturadaPorPorcao = gorduraSaturadaProporcional / numeroPorcoes;
+
+                newNutriRow.innerHTML = `
                 <td>${ingredienteNome}</td>
                 <td>${plPorPorcao.toFixed(2)}</td>
                 <td>${proteinaPorPorcao.toFixed(2)}</td>
@@ -847,172 +873,178 @@
                 <td>${sodioPorPorcao.toFixed(2)}</td>
                 <td>${gorduraSaturadaPorPorcao.toFixed(2)}</td>
                 <td></td> `;
-        });
+            });
 
-        console.log("[DEBUG - CALC] Totais brutos antes de exibir:", {
-            totalProteina: totalProteina.toFixed(2),
-            totalCarboidrato: totalCarboidrato.toFixed(2),
-            totalLipidio: totalLipidio.toFixed(2),
-            totalSodio: totalSodio.toFixed(2),
-            totalGorduraSaturada: totalGorduraSaturada.toFixed(2),
-            totalKcal: totalKcal.toFixed(2),
-            custoTotal: custoTotal.toFixed(2),
-            totalPesoLiquido: totalPesoLiquido.toFixed(2),
-            totalPesoBruto: totalPesoBruto.toFixed(2)
-        });
+            console.log("[DEBUG - CALC] Totais brutos antes de exibir:", {
+                totalProteina: totalProteina.toFixed(2),
+                totalCarboidrato: totalCarboidrato.toFixed(2),
+                totalLipidio: totalLipidio.toFixed(2),
+                totalSodio: totalSodio.toFixed(2),
+                totalGorduraSaturada: totalGorduraSaturada.toFixed(2),
+                totalKcal: totalKcal.toFixed(2),
+                custoTotal: custoTotal.toFixed(2),
+                totalPesoLiquido: totalPesoLiquido.toFixed(2),
+                totalPesoBruto: totalPesoBruto.toFixed(2)
+            });
 
-        const aguaFccSelect = document.getElementById('agua-fcc');
-        const percentualDeAguaAdicionada = parseFloat(aguaFccSelect.value) || 0;
+            const aguaQuantidadeInput = document.getElementById('agua-quantidade');
+            const aguaFccSelect = document.getElementById('agua-fcc');
+            const aguaAdicionada = parseFloat(aguaQuantidadeInput.value) || 0;
+            const aproveitamentoAgua = parseFloat(aguaFccSelect.value) || 0;
+            const aguaRetidaNoFcc = aguaAdicionada * aproveitamentoAgua;
 
-        const rendimentoDigitado = parseFloat(document.getElementById('rendimento').value) || 0;
-        // Se o usuário digitou o rendimento, usar ele como base para o peso final da preparação
-        let pesoLiquidoFinalDaPreparacao = rendimentoDigitado > 0 ? rendimentoDigitado : totalPesoLiquido * (1 + percentualDeAguaAdicionada);
+            const rendimentoDigitado = parseFloat(document.getElementById('rendimento').value) || 0;
+            // Se o usuário digitou o rendimento, usar ele como base para o peso final da preparação.
+            // Caso contrário, o peso final é a soma do peso líquido dos ingredientes com a água retida no cozimento.
+            let pesoLiquidoFinalDaPreparacao = rendimentoDigitado > 0 ? rendimentoDigitado : (totalPesoLiquido + aguaRetidaNoFcc);
 
-        // FCC Geral = (rendimento digitado + água adicionada) / peso líquido inicial
-        const fccGeral = (totalPesoLiquido > 0) ? (pesoLiquidoFinalDaPreparacao / totalPesoLiquido) : 1.0;
-        document.getElementById('fcc').value = fccGeral.toFixed(2);
+            // FCC Geral = (peso final) / (peso líquido inicial dos ingredientes)
+            const fccGeral = (totalPesoLiquido > 0) ? (pesoLiquidoFinalDaPreparacao / totalPesoLiquido) : 1.0;
+            document.getElementById('fcc').value = fccGeral.toFixed(2);
 
-        document.getElementById('custo-total').value = custoTotal.toFixed(2);
+            document.getElementById('custo-total').value = custoTotal.toFixed(2);
 
-        const numeroPorcoes = parseInt(document.getElementById('numero-porcoes').value) || 1;
-        const custoPerCapita = numeroPorcoes > 0 ? (custoTotal / numeroPorcoes) : 0;
-        document.getElementById('custo-per-capita').value = custoPerCapita.toFixed(2);
+            const numeroPorcoes = parseInt(document.getElementById('numero-porcoes').value) || 1;
+            const custoPerCapita = numeroPorcoes > 0 ? (custoTotal / numeroPorcoes) : 0;
+            document.getElementById('custo-per-capita').value = custoPerCapita.toFixed(2);
 
-        // Atualizar totais nutricionais
-        const proteinaPorPorcao = totalProteina / numeroPorcoes;
-        const carboidratoPorPorcao = totalCarboidrato / numeroPorcoes;
-        const lipidioPorPorcao = totalLipidio / numeroPorcoes;
-        const kcalPorPorcao = totalKcal / numeroPorcoes;
-        
-        // Totais dos macros em gramas
-        const totalMacrosGramas = proteinaPorPorcao + carboidratoPorPorcao + lipidioPorPorcao;
-        
-        // Totais dos macros em kcal
-        const proteinaKcal = proteinaPorPorcao * 4;
-        const carboidratoKcal = carboidratoPorPorcao * 4;
-        const lipidioKcal = lipidioPorPorcao * 9;
-        const totalMacrosKcal = proteinaKcal + carboidratoKcal + lipidioKcal;
-        
-        // Totais dos macros em %
-        let proteinaPercent = 0;
-        let carboidratoPercent = 0;
-        let lipidioPercent = 0;
-        
-        if (totalMacrosKcal > 0) {
-            proteinaPercent = (proteinaKcal / totalMacrosKcal) * 100;
-            carboidratoPercent = (carboidratoKcal / totalMacrosKcal) * 100;
-            lipidioPercent = (lipidioKcal / totalMacrosKcal) * 100;
-        }
+            // Atualizar totais nutricionais
+            const proteinaPorPorcao = totalProteina / numeroPorcoes;
+            const carboidratoPorPorcao = totalCarboidrato / numeroPorcoes;
+            const lipidioPorPorcao = totalLipidio / numeroPorcoes;
+            const kcalPorPorcao = totalKcal / numeroPorcoes;
 
-        // Atualizar os elementos da tabela usando textContent
-        document.getElementById('total-proteinas-g').textContent = proteinaPorPorcao.toFixed(2);
-        document.getElementById('total-carboidratos-g').textContent = carboidratoPorPorcao.toFixed(2);
-        document.getElementById('total-lipidios-g').textContent = lipidioPorPorcao.toFixed(2);
-        document.getElementById('total-proteinas-kcal').textContent = proteinaKcal.toFixed(2);
-        document.getElementById('total-carboidratos-kcal').textContent = carboidratoKcal.toFixed(2);
-        document.getElementById('total-lipidios-kcal').textContent = lipidioKcal.toFixed(2);
-        document.getElementById('total-proteinas-percent').textContent = proteinaPercent.toFixed(2) + '%';
-        document.getElementById('total-carboidratos-percent').textContent = carboidratoPercent.toFixed(2) + '%';
-        document.getElementById('total-lipidios-percent').textContent = lipidioPercent.toFixed(2) + '%';
-        document.getElementById('vct').value = totalMacrosKcal.toFixed(2);
+            // Totais dos macros em gramas
+            const totalMacrosGramas = proteinaPorPorcao + carboidratoPorPorcao + lipidioPorPorcao;
 
-        const pesoPorcaoInput = document.getElementById('peso-porcao');
-        const numeroPorcoesInput = document.getElementById('numero-porcoes');
+            // Totais dos macros em kcal
+            const proteinaKcal = proteinaPorPorcao * 4;
+            const carboidratoKcal = carboidratoPorPorcao * 4;
+            const lipidioKcal = lipidioPorPorcao * 9;
+            const totalMacrosKcal = proteinaKcal + carboidratoKcal + lipidioKcal;
 
-        // Só calcular automaticamente se ambos os campos estiverem vazios ou se apenas o peso da porção estiver preenchido
-        const pesoPorcaoValue = parseFloat(pesoPorcaoInput.value) || 0;
-        const numeroPorcoesValue = parseInt(numeroPorcoesInput.value) || 0;
-        
-        // Se o usuário digitou um número de porções, não sobrescrever automaticamente
-        if (numeroPorcoesValue > 0) {
-            // Se o usuário definiu o número de porções, calcular o peso da porção
-            if (pesoLiquidoFinalDaPreparacao > 0) {
-                pesoPorcaoInput.value = (pesoLiquidoFinalDaPreparacao / numeroPorcoesValue).toFixed(2);
+            // Totais dos macros em %
+            let proteinaPercent = 0;
+            let carboidratoPercent = 0;
+            let lipidioPercent = 0;
+
+            if (totalMacrosKcal > 0) {
+                proteinaPercent = (proteinaKcal / totalMacrosKcal) * 100;
+                carboidratoPercent = (carboidratoKcal / totalMacrosKcal) * 100;
+                lipidioPercent = (lipidioKcal / totalMacrosKcal) * 100;
             }
-        } else if (pesoPorcaoValue > 0 && pesoLiquidoFinalDaPreparacao > 0) {
-            // Se o usuário definiu o peso da porção, calcular o número de porções
-            numeroPorcoesInput.value = Math.floor(pesoLiquidoFinalDaPreparacao / pesoPorcaoValue);
-        } else {
-            // Se nenhum dos dois estiver preenchido, deixar vazio
-            pesoPorcaoInput.value = '';
-            numeroPorcoesInput.value = '';
-        }
-        console.log("[DEBUG - CALC] Cálculos globais atualizados. Valores exibidos no formulário.");
-    }
 
-    document.addEventListener('DOMContentLoaded', () => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const fichaTecnicaId = urlParams.get('id');
-        
-        // Verificar se o ID foi passado via Thymeleaf (para edição)
-        // Usar uma abordagem mais robusta para detectar o ID da receita
-        let receitaIdFromModel = null;
-        
-        // Tentar obter o ID do modelo Thymeleaf de várias formas
-        try {
-            // Verificar se existe um elemento com o ID da receita
-            const receitaIdElement = document.querySelector('[data-receita-id]');
-            if (receitaIdElement) {
-                receitaIdFromModel = receitaIdElement.dataset.receitaId;
-                console.log('[DEBUG] ID encontrado via data-receita-id:', receitaIdFromModel);
-            }
-            
-            // Verificar o elemento hidden específico
-            const hiddenElement = document.getElementById('receita-id-hidden');
-            if (hiddenElement && hiddenElement.value) {
-                receitaIdFromModel = hiddenElement.value;
-                console.log('[DEBUG] ID encontrado via hidden element:', receitaIdFromModel);
-            }
-            
-            // Verificar se o título indica que é edição
-            const tituloElement = document.querySelector('.titulo-ficha');
-            if (tituloElement && tituloElement.textContent.includes('Editar')) {
-                console.log('[DEBUG] Título indica edição:', tituloElement.textContent);
-                // Se estamos em modo de edição, tentar extrair o ID da URL
-                const pathSegments = window.location.pathname.split('/');
-                const lastSegment = pathSegments[pathSegments.length - 1];
-                if (lastSegment && !isNaN(lastSegment)) {
-                    receitaIdFromModel = lastSegment;
-                    console.log('[DEBUG] ID extraído da URL path:', receitaIdFromModel);
+            // Atualizar os elementos da tabela usando textContent
+            document.getElementById('total-proteinas-g').textContent = proteinaPorPorcao.toFixed(2);
+            document.getElementById('total-carboidratos-g').textContent = carboidratoPorPorcao.toFixed(2);
+            document.getElementById('total-lipidios-g').textContent = lipidioPorPorcao.toFixed(2);
+            document.getElementById('total-proteinas-kcal').textContent = proteinaKcal.toFixed(2);
+            document.getElementById('total-carboidratos-kcal').textContent = carboidratoKcal.toFixed(2);
+            document.getElementById('total-lipidios-kcal').textContent = lipidioKcal.toFixed(2);
+            document.getElementById('total-proteinas-percent').textContent = proteinaPercent.toFixed(2) + '%';
+            document.getElementById('total-carboidratos-percent').textContent = carboidratoPercent.toFixed(2) + '%';
+            document.getElementById('total-lipidios-percent').textContent = lipidioPercent.toFixed(2) + '%';
+            document.getElementById('vct').value = totalMacrosKcal.toFixed(2);
+
+            const pesoPorcaoInput = document.getElementById('peso-porcao');
+            const numeroPorcoesInput = document.getElementById('numero-porcoes');
+
+            // Só calcular automaticamente se ambos os campos estiverem vazios ou se apenas o peso da porção estiver preenchido
+            const pesoPorcaoValue = parseFloat(pesoPorcaoInput.value) || 0;
+            const numeroPorcoesValue = parseInt(numeroPorcoesInput.value) || 0;
+
+            // Se o usuário digitou um número de porções, não sobrescrever automaticamente
+            if (numeroPorcoesValue > 0) {
+                // Se o usuário definiu o número de porções, calcular o peso da porção
+                if (pesoLiquidoFinalDaPreparacao > 0) {
+                    pesoPorcaoInput.value = (pesoLiquidoFinalDaPreparacao / numeroPorcoesValue).toFixed(2);
                 }
+            } else if (pesoPorcaoValue > 0 && pesoLiquidoFinalDaPreparacao > 0) {
+                // Se o usuário definiu o peso da porção, calcular o número de porções
+                numeroPorcoesInput.value = Math.floor(pesoLiquidoFinalDaPreparacao / pesoPorcaoValue);
+            } else {
+                // Se nenhum dos dois estiver preenchido, deixar vazio
+                pesoPorcaoInput.value = '';
+                numeroPorcoesInput.value = '';
             }
-        } catch (error) {
-            console.warn('Erro ao detectar ID da receita:', error);
-        }
-        
-        // Usar o ID da URL ou do modelo Thymeleaf
-        const idToLoad = fichaTecnicaId || receitaIdFromModel;
-
-        console.log('[DEBUG] ID detectado para carregamento:', {
-            fichaTecnicaId: fichaTecnicaId,
-            receitaIdFromModel: receitaIdFromModel,
-            idToLoad: idToLoad,
-            currentPath: window.location.pathname,
-            currentUrl: window.location.href
-        });
-
-        if (idToLoad) {
-            console.log('[DEBUG] Carregando ficha técnica com ID:', idToLoad);
-            carregarFichaTecnicaExistente(idToLoad);
-        } else {
-            console.log('[DEBUG] Criando nova ficha técnica');
-            adicionarIngrediente();
-            atualizarCalculosGlobais();
+            console.log("[DEBUG - CALC] Cálculos globais atualizados. Valores exibidos no formulário.");
         }
 
-        document.querySelectorAll('.ingrediente-nome').forEach(input => {
-            setupAutocompleteForElement(input);
-        });
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const fichaTecnicaId = urlParams.get('id');
 
-        document.querySelectorAll('.pb-ingrediente, .pl-ingrediente, .custo-compra-ingrediente, .peso-compra-ingrediente').forEach(input => {
-            input.addEventListener('input', atualizarCalculosIngrediente);
-        });
+            // Verificar se o ID foi passado via Thymeleaf (para edição)
+            // Usar uma abordagem mais robusta para detectar o ID da receita
+            let receitaIdFromModel = null;
 
-        document.getElementById('numero-porcoes').addEventListener('input', atualizarCalculosGlobais);
-        document.getElementById('peso-porcao').addEventListener('input', atualizarCalculosGlobais);
-        document.getElementById('agua-fcc').addEventListener('change', atualizarCalculosGlobais);
-        document.getElementById('rendimento').addEventListener('input', atualizarCalculosGlobais);
-    });
-</script>
+            // Tentar obter o ID do modelo Thymeleaf de várias formas
+            try {
+                // Verificar se existe um elemento com o ID da receita
+                const receitaIdElement = document.querySelector('[data-receita-id]');
+                if (receitaIdElement) {
+                    receitaIdFromModel = receitaIdElement.dataset.receitaId;
+                    console.log('[DEBUG] ID encontrado via data-receita-id:', receitaIdFromModel);
+                }
+
+                // Verificar o elemento hidden específico
+                const hiddenElement = document.getElementById('receita-id-hidden');
+                if (hiddenElement && hiddenElement.value) {
+                    receitaIdFromModel = hiddenElement.value;
+                    console.log('[DEBUG] ID encontrado via hidden element:', receitaIdFromModel);
+                }
+
+                // Verificar se o título indica que é edição
+                const tituloElement = document.querySelector('.titulo-ficha');
+                if (tituloElement && tituloElement.textContent.includes('Editar')) {
+                    console.log('[DEBUG] Título indica edição:', tituloElement.textContent);
+                    // Se estamos em modo de edição, tentar extrair o ID da URL
+                    const pathSegments = window.location.pathname.split('/');
+                    const lastSegment = pathSegments[pathSegments.length - 1];
+                    if (lastSegment && !isNaN(lastSegment)) {
+                        receitaIdFromModel = lastSegment;
+                        console.log('[DEBUG] ID extraído da URL path:', receitaIdFromModel);
+                    }
+                }
+            } catch (error) {
+                console.warn('Erro ao detectar ID da receita:', error);
+            }
+
+            // Usar o ID da URL ou do modelo Thymeleaf
+            const idToLoad = fichaTecnicaId || receitaIdFromModel;
+
+            console.log('[DEBUG] ID detectado para carregamento:', {
+                fichaTecnicaId: fichaTecnicaId,
+                receitaIdFromModel: receitaIdFromModel,
+                idToLoad: idToLoad,
+                currentPath: window.location.pathname,
+                currentUrl: window.location.href
+            });
+
+            if (idToLoad) {
+                console.log('[DEBUG] Carregando ficha técnica com ID:', idToLoad);
+                carregarFichaTecnicaExistente(idToLoad);
+            } else {
+                console.log('[DEBUG] Criando nova ficha técnica');
+                adicionarIngrediente();
+                atualizarCalculosGlobais();
+            }
+
+            document.querySelectorAll('.ingrediente-nome').forEach(input => {
+                setupAutocompleteForElement(input);
+            });
+
+            document.querySelectorAll('.pb-ingrediente, .pl-ingrediente, .custo-compra-ingrediente, .peso-compra-ingrediente').forEach(input => {
+                input.addEventListener('input', atualizarCalculosIngrediente);
+            });
+
+            document.getElementById('numero-porcoes').addEventListener('input', atualizarCalculosGlobais);
+            document.getElementById('peso-porcao').addEventListener('input', atualizarCalculosGlobais);
+            document.getElementById('agua-quantidade').addEventListener('input', atualizarCalculosGlobais);
+            document.getElementById('agua-fcc').addEventListener('change', atualizarCalculosGlobais);
+            document.getElementById('rendimento').addEventListener('input', atualizarCalculosGlobais);
+        });
+    </script>
 </body>
+
 </html>

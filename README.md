@@ -1,88 +1,128 @@
-# Sistema Nutrição
-<<<<<<< HEAD
-=======
-Feito por João Ritter, Marcelo Moro, Wendel Nunes e Leandro Najar
->>>>>>> fc076e4d9167fb33197732aedd08aea76152802e
+# 🥗 Sistema de Nutrição - Guia de Deploy (Docker no Servidor da Faculdade)
 
-Sistema web para gestão de fichas técnicas de receitas e montagem de refeições, voltado para nutricionistas e profissionais da área de alimentação.
+Este guia prático ensina como subir e gerenciar a aplicação no servidor Linux da faculdade utilizando **Docker** e **Docker Compose**.
 
-## Objetivo
-Permitir o cadastro, visualização, edição e agrupamento de fichas técnicas de receitas, facilitando o controle nutricional, de custos e a montagem de cardápios/planejamentos alimentares.
+---
 
-## Funcionalidades Principais
-- **Cadastro de Fichas Técnicas:**
-  - Ingredientes, modo de preparo, perfil nutricional, custos, rendimento, etc.
-- **Visualização e Edição de Fichas Técnicas:**
-  - Listagem, busca, edição e exclusão de receitas.
-- **Cadastro de Ingredientes:**
-  - Ingredientes próprios ou do sistema, com valores nutricionais.
-- **Montagem de Refeições:**
-  - Crie refeições agrupando várias fichas técnicas.
-  - Dê um nome à refeição e selecione as fichas técnicas desejadas.
-  - Edite ou exclua refeições já criadas.
-- **Dashboard:**
-  - Acesso rápido às principais funções do sistema.
-- **Autenticação:**
-  - Controle de acesso por usuário.
+## 🛠️ Estrutura do Ambiente do Servidor
+* **IP do Servidor na Rede Interna:** `10.21.19.20`
+* **Porta de Acesso Web:** `80` (HTTP Padrão)
+* **Banco de Dados:** MySQL 8 rodando internamente na rede do Docker.
+* **Ferramenta de Orquestração:** `docker-compose` (versão 1.29.2 com hífen).
 
-## Tecnologias Utilizadas
-- Java 17+
-- Spring Boot
-- Spring Data JPA
-- Thymeleaf
-- HTML5, CSS3, JavaScript
-- H2 Database (padrão, pode ser adaptado para outros bancos)
+---
 
-## Requisitos
-- Java 17 ou superior
-- Maven
+## 🚀 Passo a Passo: Subir a Aplicação do Zero
 
-## Como Executar
-1. Clone o repositório:
+### Passo 1: Transferir os arquivos
+Conecte-se via **WinSCP** e envie toda a pasta do projeto para o diretório `~/nutricaoMJW/Sistema-Nutricao` no servidor da faculdade.
+> *Nota: Não é necessário copiar a pasta `target/`, o Docker gerará uma nova compilação automaticamente.*
+
+---
+
+### Passo 2: Acessar a pasta e criar as senhas
+Acesse o servidor via **PuTTY**, entre na pasta do projeto e crie o arquivo com as credenciais do banco MySQL:
+
+```bash
+cd ~/nutricaoMJW/Sistema-Nutricao
+
+# Cria o arquivo de ambiente
+cat > .env << 'EOF'
+DB_ROOT_PASSWORD=www.com.brj
+DB_PASSWORD=www.com.brj
+EOF
+```
+
+---
+
+### Passo 3: Limpeza completa do Docker
+Para garantir que nenhuma porta ou container antigo cause conflito, limpe o ambiente:
+
+```bash
+# Para o compose atual e apaga volumes anteriores
+docker-compose down -v
+
+# Remove outros containers antigos que ocupam as portas 80 ou 3306
+docker rm -f nutricao-nginx nutricao-mysql nutricao-app
+```
+
+---
+
+### Passo 4: Subir os Containers
+
+1. **Suba o Banco de Dados MySQL** primeiro para que ele configure o schema e insira a tabela TACO automaticamente:
    ```bash
-   git clone <url-do-repositorio>
+   docker-compose up -d db
    ```
-2. Entre na pasta do projeto:
+
+2. **Suba a aplicação Spring Boot** diretamente ligada à rede do banco na porta `80`:
    ```bash
-<<<<<<< HEAD
-   cd SistemaNutricao
-=======
-   cd Sistema Nutricao
->>>>>>> fc076e4d9167fb33197732aedd08aea76152802e
+   docker run -d --name nutricao-app \
+     --network sistema-nutricao_default \
+     -p 80:8080 \
+     -e SPRING_PROFILES_ACTIVE=docker \
+     -e DB_HOST=db \
+     -e DB_PORT=3306 \
+     -e DB_NAME=nutricao \
+     -e DB_USERNAME=root \
+     -e DB_PASSWORD=www.com.brj \
+     -v app_logs:/app/logs \
+     sistema-nutricao_app:latest
    ```
-3. Execute o projeto com Maven:
+
+---
+
+### Passo 5: Acompanhar se o sistema iniciou com sucesso
+Monitore a subida da aplicação pelo log em tempo real:
+
+```bash
+docker logs -f nutricao-app
+```
+*Assim que aparecer a mensagem `Tomcat started on port 8080` e `Nutricionista Criado.`, aperte **`Ctrl + C`** para liberar o terminal.*
+
+---
+
+## 🖥️ Como Acessar o Sistema
+Abra qualquer navegador conectado à rede da faculdade e acesse:
+
+👉 **`http://10.21.19.20`** (Ou `http://10.21.19.20/login`)
+
+* **Usuário Padrão:** `nutricionista`
+* **Senha Padrão:** `nutricionista`
+
+---
+
+## 🔄 Como Atualizar o Sistema (Após alterar o código)
+Caso você faça alterações nas telas HTML ou no código Java e queira atualizar o servidor:
+
+1. Transfira os arquivos modificados usando o **WinSCP**.
+2. Acesse o **PuTTY** e execute:
    ```bash
-   ./mvnw spring-boot:run
+   cd ~/nutricaoMJW/Sistema-Nutricao
+   
+   # Recompila o projeto e atualiza a imagem Docker
+   docker-compose build app
+   
+   # Reinicia o container da aplicação com a nova versão
+   docker rm -f nutricao-app
+   
+   docker run -d --name nutricao-app \
+     --network sistema-nutricao_default \
+     -p 80:8080 \
+     -e SPRING_PROFILES_ACTIVE=docker \
+     -e DB_HOST=db \
+     -e DB_PORT=3306 \
+     -e DB_NAME=nutricao \
+     -e DB_USERNAME=root \
+     -e DB_PASSWORD=www.com.brj \
+     -v app_logs:/app/logs \
+     sistema-nutricao_app:latest
    ```
-   Ou, se preferir, gere o JAR e execute:
-   ```bash
-   ./mvnw clean package
-   java -jar target/*.jar
-   ```
-4. Acesse no navegador:
-   - [http://localhost:8080](http://localhost:8080)
 
-## Estrutura de Pastas
-- `src/main/java/com/mjwsolucoes/sistemanutricao/` - Código fonte Java
-- `src/main/resources/templates/` - Templates HTML (Thymeleaf)
-- `src/main/resources/static/css/` - Arquivos CSS
-- `src/main/resources/static/images/` - Imagens
+---
 
-## Exemplos de Uso
-- **Criar Ficha Técnica:**
-  - Acesse "Criar Ficha Técnica" no dashboard, preencha os campos e salve.
-- **Montar Refeição:**
-  - Acesse "Refeições" no dashboard, clique em "Criar Nova Refeição", selecione as fichas técnicas desejadas e salve.
-- **Editar/Excluir:**
-  - Use os botões de ação nas listas para editar ou excluir fichas técnicas e refeições.
-
-## Observações
-- O sistema pode ser facilmente adaptado para outros bancos de dados.
-- O layout é responsivo e pode ser customizado via CSS.
-
-## Licença
-<<<<<<< HEAD
-Projeto acadêmico - livre para uso e adaptação. 
-=======
-Projeto acadêmico - livre para uso e adaptação. 
->>>>>>> fc076e4d9167fb33197732aedd08aea76152802e
+## 📊 Comandos Úteis de Monitoramento
+* **Ver logs do Banco:** `docker-compose logs -f db`
+* **Ver logs do App:** `docker logs -f nutricao-app`
+* **Ver containers ativos:** `docker ps`
+* **Ver uso de memória/CPU:** `docker stats`

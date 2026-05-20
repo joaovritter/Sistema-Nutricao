@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+      lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Visualizar Receitas</title>
+    <title>Visualizar Fichas Técnicas</title>
     <link rel="stylesheet" href="/css/dashboard.css">
     <link rel="stylesheet" href="/css/visualizarFichaTecnica.css">
     <link rel="stylesheet" href="/css/navbar.css">
@@ -18,8 +19,10 @@
     </div>
     <div class="header-actions">
         <a th:href="@{/dashboard}" class="btn navbar-btn">Voltar ao Dashboard</a>
-        <a th:href="@{/fichatecnica}" class="btn navbar-btn" sec:authorize="hasAnyAuthority('NUTRICIONISTA', 'ADMIN')">
-            Criar Nova Receita
+        <a th:href="@{/refeicoes}" class="btn navbar-btn">Refeições</a>
+        <a th:href="@{/fichatecnica}" class="btn navbar-btn"
+           sec:authorize="hasAnyAuthority('NUTRICIONISTA', 'ADMIN')">
+            + Criar Ficha Técnica
         </a>
     </div>
 </header>
@@ -28,11 +31,8 @@
     <div class="receita-list-section">
         <h2>Receitas Cadastradas</h2>
 
-        <div th:if="${receitas.isEmpty()}" class="no-receitas-message">
-            <p>Nenhuma receita cadastrada ainda. <a th:href="@{/fichatecnica}" sec:authorize="hasAnyAuthority('NUTRICIONISTA', 'ADMIN')">Crie uma agora!</a></p>
-        </div>
-
-        <div th:unless="${receitas.isEmpty()}" class="receitas-table-container">
+        <!-- Tabela sempre visível — mensagem embutida quando vazia -->
+        <div class="receitas-table-container">
             <table>
                 <thead>
                 <tr>
@@ -40,22 +40,45 @@
                     <th>Categoria</th>
                     <th>Nutricionista</th>
                     <th>Tempo de Preparo (min)</th>
-                    <th>Rendimento (porções)</th>
+                    <th>Porções</th>
                     <th>Ações</th>
                 </tr>
                 </thead>
                 <tbody>
+                <!-- Linha de aviso quando não há receitas -->
+                <tr th:if="${receitas == null or receitas.isEmpty()}">
+                    <td colspan="6" style="text-align:center; padding:24px; color:#6b7280;">
+                        Nenhuma ficha técnica cadastrada ainda.
+                        <a th:href="@{/fichatecnica}"
+                           sec:authorize="hasAnyAuthority('NUTRICIONISTA', 'ADMIN')"
+                           style="color:#059669; font-weight:600;">Crie uma agora!</a>
+                    </td>
+                </tr>
+                <!-- Linhas das receitas -->
                 <tr th:each="receita : ${receitas}">
-                    <td th:text="${receita.nome}">Salada de Frutas</td>
-                    <td th:text="${receita.categoria}">Sobremesa</td>
-                    <td th:text="${receita.nutricionista?.username ?: 'N/A'}">Fulano de Tal</td>
-                    <td th:text="${receita.tempoPreparo}">30</td>
-                    <td th:text="${receita.numeroPorcoes}">4</td>
+                    <td th:text="${receita.nome}">Nome</td>
+                    <td th:text="${receita.categoria}">Categoria</td>
+                    <td th:text="${receita.nutricionista != null ? receita.nutricionista.username : 'N/A'}">Nutricionista</td>
+                    <td th:text="${receita.tempoPreparo != null ? receita.tempoPreparo + ' min' : '—'}">—</td>
+                    <td th:text="${receita.numeroPorcoes != null ? receita.numeroPorcoes : '—'}">—</td>
                     <td>
-                        <a th:href="@{/receita/detalhes/{id}(id=${receita.id})}" class="btn btn-detalhes">Detalhes</a>
-                        <a th:href="@{/receita/editar/{id}(id=${receita.id})}" class="btn btn-editar" sec:authorize="hasAnyAuthority('NUTRICIONISTA', 'ADMIN')">Editar</a>
-                        <form th:action="@{/receita/excluir/{id}(id=${receita.id})}" method="post" style="display:inline;" sec:authorize="hasAnyAuthority('ADMIN')">
-                            <button type="submit" class="btn btn-excluir">Excluir</button>
+                        <!-- Botão VISUALIZAR — abre detalhesReceita.html -->
+                        <a th:href="@{/receita/detalhes/{id}(id=${receita.id})}"
+                           class="btn btn-detalhes">Visualizar</a>
+
+                        <!-- Botão EDITAR — só para nutricionista/admin -->
+                        <a th:href="@{/receita/editar/{id}(id=${receita.id})}"
+                           class="btn btn-editar"
+                           sec:authorize="hasAnyAuthority('NUTRICIONISTA', 'ADMIN')">Editar</a>
+
+                        <!-- Botão EXCLUIR — só para admin -->
+                        <form th:action="@{/receita/excluir/{id}(id=${receita.id})}"
+                              method="post" style="display:inline;"
+                              sec:authorize="hasAnyAuthority('ADMIN')">
+                            <button type="submit" class="btn btn-excluir"
+                                    onclick="return confirm('Tem certeza que deseja excluir esta ficha?')">
+                                Excluir
+                            </button>
                         </form>
                     </td>
                 </tr>

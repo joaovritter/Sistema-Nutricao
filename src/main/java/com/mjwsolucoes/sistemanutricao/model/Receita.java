@@ -45,6 +45,12 @@ public class Receita {
     @Column(nullable = false)
     private Double fcc; // Corrigido para Double
 
+    @Column(nullable = true)
+    private Double aguaQuantidade;
+
+    @Column(nullable = true)
+    private Double aguaFcc;
+
     @Column(nullable = false)
     private String medidaCaseira;
 

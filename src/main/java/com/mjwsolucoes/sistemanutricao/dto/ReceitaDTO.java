@@ -41,6 +41,8 @@ public class ReceitaDTO {
     private Integer numeroPorcoes;
 
     private Double fcc; // Tipo Double no DTO
+    private Double aguaQuantidade;
+    private Double aguaFcc;
     private String medidaCaseira;
 
     // Estes campos para o username/userId do nutricionista são preenchidos no serviço, não enviados pelo frontend

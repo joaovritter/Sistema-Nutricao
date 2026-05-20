@@ -1,0 +1,29 @@
+# Ignorar arquivos gerados pelo Maven e IDE
+target/
+*.iml
+*.iws
+*.ipr
+.idea/
+.settings/
+.classpath
+.project
+
+# Ignorar logs e arquivos temporários
+*.log
+build-log.txt
+
+# Ignorar arquivos do Git
+.git/
+.gitignore
+.gitattributes
+
+# Ignorar documentação e SQL (não precisam ir para a imagem Docker)
+*.pdf
+ManualDeUsoSistemaNutricao.pdf
+
+# Ignorar variáveis de ambiente locais
+.env
+.env.local
+
+# Node modules (se houver algum front-end tool)
+node_modules/

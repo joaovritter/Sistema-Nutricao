@@ -36,7 +36,7 @@ public class HomeController {
 
     @GetMapping("/fichatecnica")
     public String criar() {
-        return "criarFichatecnica";
+        return "criarFichaTecnica";
     }
 
     @GetMapping("/criarIngrediente")

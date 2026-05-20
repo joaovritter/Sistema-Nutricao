@@ -1,0 +1,8 @@
+﻿.\mvnw.cmd : The JAVA_HOME environment variable is not defined correctly, 
+No linha:1 caractere:1
++ .\mvnw.cmd spring-boot:run 2>&1 | Out-File -FilePath ".\build-log.txt ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (The JAVA_HOME e...ned correctly, :String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+this environment variable is needed to run this program. 

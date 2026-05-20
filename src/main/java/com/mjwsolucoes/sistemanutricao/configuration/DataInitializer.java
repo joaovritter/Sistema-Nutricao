@@ -38,9 +38,9 @@ public class DataInitializer implements CommandLineRunner {
             System.out.println("Admin Criado.");
         }
 
-        // Verifica se o nutricionista "user" já existe no banco de dados.
-        if (userRepository.findByUsername("user").isEmpty()) {
-            // Cria um novo nutricionista com a role USER.
+        // Verifica se o nutricionista "nutricionista" já existe no banco de dados.
+        if (userRepository.findByUsername("nutricionista").isEmpty()) {
+            // Cria um novo nutricionista com a role NUTRICIONISTA.
             User nutricionista = new User();
             nutricionista.setUsername("nutricionista");
             nutricionista.setPassword(passwordEncoder.encode("nutricionista")); // Criptografa a senha.

@@ -19,13 +19,13 @@
     -webkit-backdrop-filter: blur(16px);
     padding: 14px 32px;
     color: #fff;
-    box-shadow: 0 1px 0 rgba(255,255,255,0.06),
-                0 8px 32px -4px rgba(0,0,0,0.28);
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.06),
+        0 8px 32px -4px rgba(0, 0, 0, 0.28);
     font-family: 'Plus Jakarta Sans', sans-serif;
     position: sticky;
     top: 0;
     z-index: 100;
-    border-bottom: 1px solid rgba(255,255,255,0.07);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
 }
 
 .logo-container {
@@ -38,7 +38,7 @@
     width: 36px;
     height: 36px;
     border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 .header h1 {
@@ -51,9 +51,9 @@
 
 /* ── Botão Logout — Ghost estilo pill ────────────────── */
 .navbar-btn {
-    background: rgba(255,255,255,0.08) !important;
+    background: rgba(255, 255, 255, 0.08) !important;
     color: #d1fae5 !important;
-    border: 1px solid rgba(255,255,255,0.14) !important;
+    border: 1px solid rgba(255, 255, 255, 0.14) !important;
     border-radius: 100px !important;
     padding: 8px 20px !important;
     cursor: pointer;
@@ -65,10 +65,10 @@
 }
 
 .navbar-btn:hover {
-    background: rgba(255,255,255,0.16) !important;
-    border-color: rgba(255,255,255,0.28) !important;
+    background: rgba(255, 255, 255, 0.16) !important;
+    border-color: rgba(255, 255, 255, 0.28) !important;
     transform: translateY(-1px);
-    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
 }
 
 .navbar-btn:active {
@@ -88,6 +88,12 @@
         text-align: center;
         padding: 14px 16px;
     }
-    .logo-container { flex-direction: column; }
-    .header h1 { font-size: 0.95rem; }
+
+    .logo-container {
+        flex-direction: column;
+    }
+
+    .header h1 {
+        font-size: 0.95rem;
+    }
 }

@@ -1,0 +1,53 @@
+services:
+
+  # ─── Banco de Dados MySQL ──────────────────────────────────────────────────
+  db:
+    image: mysql:8.0
+    container_name: nutricao-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-www.com.brj}
+      MYSQL_DATABASE: nutricao
+      MYSQL_USER: nutricao_user
+      MYSQL_PASSWORD: ${DB_PASSWORD:-nutricao123}
+    ports:
+      - "3307:3306"        # porta 3307 no host para não conflitar com MySQL local
+    volumes:
+      - mysql_data:/var/lib/mysql                        # dados persistidos
+      - ./init-sql:/docker-entrypoint-initdb.d           # scripts SQL rodados na 1ª inicialização
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD:-www.com.brj}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  # ─── Aplicação Spring Boot ─────────────────────────────────────────────────
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nutricao-app
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy    # aguarda o MySQL estar pronto antes de iniciar
+    ports:
+      - "80:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_NAME: nutricao
+      DB_USERNAME: nutricao_user
+      DB_PASSWORD: ${DB_PASSWORD:-nutricao123}
+      # Logs menos verbosos em produção
+      LOGGING_LEVEL_ORG_HIBERNATE_SQL: WARN
+    volumes:
+      - app_logs:/app/logs
+
+volumes:
+  mysql_data:
+    driver: local
+  app_logs:
+    driver: local

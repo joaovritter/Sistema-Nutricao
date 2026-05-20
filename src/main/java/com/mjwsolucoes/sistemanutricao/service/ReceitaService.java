@@ -53,6 +53,8 @@ public class ReceitaService {
         receita.setRendimento(receitaDTO.getRendimento());
         receita.setNumeroPorcoes(receitaDTO.getNumeroPorcoes());
         receita.setFcc(receitaDTO.getFcc());
+        receita.setAguaQuantidade(receitaDTO.getAguaQuantidade());
+        receita.setAguaFcc(receitaDTO.getAguaFcc());
         receita.setMedidaCaseira(receitaDTO.getMedidaCaseira());
         receita.setEquipamentos(receitaDTO.getEquipamentos());
         receita.setNutricionista(nutricionista);
@@ -136,6 +138,8 @@ public class ReceitaService {
         receita.setRendimento(receitaDTO.getRendimento());
         receita.setNumeroPorcoes(receitaDTO.getNumeroPorcoes());
         receita.setFcc(receitaDTO.getFcc());
+        receita.setAguaQuantidade(receitaDTO.getAguaQuantidade());
+        receita.setAguaFcc(receitaDTO.getAguaFcc());
         receita.setMedidaCaseira(receitaDTO.getMedidaCaseira());
         receita.setEquipamentos(receitaDTO.getEquipamentos());
 
@@ -236,6 +240,8 @@ public class ReceitaService {
         dto.setRendimento(receita.getRendimento());
         dto.setNumeroPorcoes(receita.getNumeroPorcoes());
         dto.setFcc(receita.getFcc());
+        dto.setAguaQuantidade(receita.getAguaQuantidade());
+        dto.setAguaFcc(receita.getAguaFcc());
         dto.setMedidaCaseira(receita.getMedidaCaseira());
         dto.setEquipamentos(receita.getEquipamentos());
         if (receita.getNutricionista() != null) {
