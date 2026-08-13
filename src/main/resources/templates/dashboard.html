@@ -4,67 +4,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fichas Técnicas de Nutrição</title>
+    <title>Nutra</title>
     <link rel="stylesheet" href="/css/dashboard.css">
     <link rel="stylesheet" href="/css/navbar.css">
+    <link rel="stylesheet" href="/css/sidebar.css">
+    <link rel="stylesheet" href="/css/animacoes.css">
+    <link rel="stylesheet" href="/css/tema.css">
+    <script src="/js/animacoes.js" defer></script>
 </head>
 <body>
-<header class="header">
-    <div class="logo-container">
-        <img src="/images/logo.png" alt="Logo Nutrição" class="logo">
-        <h1>Fichas Técnicas de Nutrição</h1>
-    </div>
-    <form th:action="@{/logout}" method="post" style="display:inline;">
-        <button type="submit" class="navbar-btn">Logout</button>
-    </form>
-</header>
+<div class="app-shell">
 
-<main class="container">
+    <div th:replace="~{fragments/sidebar :: sidebar('inicio')}"></div>
 
-    <div class="card visualizar">
-        <a href="/visualizar">
-            <div class="card-content" >
-                <div class="card-icon">
-                    <img src="images/view-icon.png" alt="Visualizar" class="icon">
+    <div class="main-area">
+        <main class="container page-anim" data-stagger>
+
+            <div class="stat-grid">
+                <div class="stat-card card-anim">
+                    <div class="stat-numero" th:text="${totalFichas}">0</div>
+                    <div class="stat-label">Fichas técnicas</div>
                 </div>
-                <div class="card-text">
-                    <h2>Visualizar Fichas Técnicas</h2>
-                    <p>Visualize as fichas técnicas cadastradas no sistema</p>
+                <div class="stat-card card-anim">
+                    <div class="stat-numero" th:text="${totalRefeicoes}">0</div>
+                    <div class="stat-label">Refeições</div>
+                </div>
+                <div class="stat-card card-anim" sec:authorize="hasAnyAuthority('NUTRICIONISTA', 'ADMIN')">
+                    <div class="stat-numero" th:text="${totalIngredientes}">0</div>
+                    <div class="stat-label">Ingredientes</div>
                 </div>
             </div>
-        </a>
-    </div>
 
-    <div class="card criar" sec:authorize="hasAnyAuthority('NUTRICIONISTA', 'ADMIN')">
-        <a href="/fichatecnica">
-            <div class="card-content">
-                <div class="card-icon">
-                    <img src="images/create-icon.png" alt="Criar" class="icon">
-                </div>
-                <div class="card-text">
-                    <h2>Criar Ficha Técnica</h2>
-                    <p>Cadastre uma ficha ténica no sistema</p>
-                </div>
-            </div>
-        </a>
-    </div>
+            <div class="painel card-anim" sec:authorize="hasAnyAuthority('NUTRICIONISTA', 'ADMIN')">
+                <h2>Fichas por categoria</h2>
 
-    <div class="card refeicoes">
-        <a href="/refeicoes">
-            <div class="card-content">
-                <div class="card-icon">
-                    <img src="images/refeicao.png" alt="Refeições" class="icon">
+                <div th:if="${#lists.isEmpty(categorias)}" class="painel-vazio">
+                    Nenhuma ficha técnica cadastrada ainda.
                 </div>
-                <div class="card-text">
-                    <h2>Refeições</h2>
-                    <p>Monte refeições agrupando várias fichas técnicas</p>
+
+                <div class="categoria-linha" th:each="categoria : ${categorias}">
+                    <span class="categoria-nome" th:text="${categoria.nome}">Categoria</span>
+                    <div class="categoria-trilho">
+                        <div class="categoria-preenchimento" th:style="'width:' + ${categoria.percentual} + '%'"></div>
+                    </div>
+                    <span class="categoria-numero" th:text="${categoria.quantidade}">0</span>
                 </div>
             </div>
-        </a>
+
+        </main>
     </div>
 
-</main>
-
-
+</div>
 </body>
 </html>

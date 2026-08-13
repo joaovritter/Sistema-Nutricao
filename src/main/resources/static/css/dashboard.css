@@ -1,39 +1,153 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
-
 /* ── Reset ──────────────────────────────────────────── */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-family: var(--fonte-corpo, 'Inter', sans-serif);
 }
 
 /* ═══════════════════════════════════════════════════════
    BODY — Background suave com textura
 ═══════════════════════════════════════════════════════ */
 body {
-    background-color: #F0FDF4;
+    background-color: var(--creme-50, #f7faf7);
     background-image:
-        radial-gradient(ellipse at 20% 50%, rgba(16, 185, 129, 0.06) 0%, transparent 60%),
-        radial-gradient(ellipse at 80% 10%, rgba(52, 211, 153, 0.05) 0%, transparent 50%);
+        radial-gradient(ellipse at 20% 50%, rgba(22, 78, 54, 0.05) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 10%, rgba(47, 122, 84, 0.05) 0%, transparent 50%);
     min-height: 100vh;
-    color: #111827;
+    color: var(--tinta-900, #16211c);
 }
 
 /* ═══════════════════════════════════════════════════════
    CONTAINER
 ═══════════════════════════════════════════════════════ */
 .container {
-    max-width: 720px;
-    margin: 48px auto;
+    max-width: 960px;
+    margin: 40px auto;
     padding: 0 24px;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 20px;
 }
 
 /* ═══════════════════════════════════════════════════════
-   CARDS DE MENU — Floating Premium
+   STAT CARDS — contadores em "leitura de laudo"
+═══════════════════════════════════════════════════════ */
+.stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 16px;
+}
+
+.stat-card {
+    position: relative;
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 24px 22px 20px;
+    border: 1px solid rgba(15, 54, 37, 0.08);
+    box-shadow:
+        0 0 0 1px rgba(0, 0, 0, 0.03),
+        0 16px 32px -12px rgba(15, 54, 37, 0.14);
+    overflow: hidden;
+}
+
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--verde-700, #164e36), var(--verde-500, #2f7a54));
+}
+
+.stat-card .stat-numero {
+    font-family: var(--fonte-dado, 'JetBrains Mono', monospace);
+    font-variant-numeric: tabular-nums;
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: var(--verde-900, #0f3625);
+    line-height: 1;
+    letter-spacing: -0.02em;
+}
+
+.stat-card .stat-label {
+    margin-top: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--tinta-500, #5b6b63);
+}
+
+/* ═══════════════════════════════════════════════════════
+   PAINEL DE CATEGORIAS
+═══════════════════════════════════════════════════════ */
+.painel {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 26px 28px;
+    border: 1px solid rgba(15, 54, 37, 0.08);
+    box-shadow:
+        0 0 0 1px rgba(0, 0, 0, 0.03),
+        0 16px 32px -12px rgba(15, 54, 37, 0.10);
+}
+
+.painel h2 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--verde-900, #0f3625);
+    margin-bottom: 18px;
+}
+
+.categoria-linha {
+    display: grid;
+    grid-template-columns: minmax(120px, 1fr) 3fr auto;
+    align-items: center;
+    gap: 16px;
+    padding: 9px 0;
+    border-bottom: 1px solid rgba(15, 54, 37, 0.06);
+}
+
+.categoria-linha:last-child {
+    border-bottom: none;
+}
+
+.categoria-nome {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--tinta-900, #16211c);
+}
+
+.categoria-trilho {
+    height: 8px;
+    border-radius: 999px;
+    background: var(--verde-200, #cfe8da);
+    overflow: hidden;
+}
+
+.categoria-preenchimento {
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--verde-700, #164e36), var(--verde-500, #2f7a54));
+}
+
+.categoria-numero {
+    font-family: var(--fonte-dado, 'JetBrains Mono', monospace);
+    font-variant-numeric: tabular-nums;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--verde-900, #0f3625);
+    text-align: right;
+    min-width: 28px;
+}
+
+.painel-vazio {
+    color: var(--tinta-500, #5b6b63);
+    font-size: 0.9rem;
+}
+
+/* ═══════════════════════════════════════════════════════
+   CARDS DE MENU — mantidos para outras telas que ainda
+   usam .card (ex.: listas de opções fora da dashboard)
 ═══════════════════════════════════════════════════════ */
 .card {
     background: #FFFFFF;
@@ -57,9 +171,9 @@ body {
 .card:hover {
     transform: scale(1.018) translateY(-2px);
     box-shadow:
-        0 0 0 1px rgba(16, 185, 129, 0.12),
+        0 0 0 1px rgba(22, 78, 54, 0.12),
         0 28px 56px -10px rgba(0, 0, 0, 0.14),
-        0 8px 16px -4px rgba(16, 185, 129, 0.08);
+        0 8px 16px -4px rgba(22, 78, 54, 0.08);
 }
 
 .card:active {
@@ -82,7 +196,7 @@ body {
     content: '';
     display: block;
     height: 3px;
-    background: linear-gradient(90deg, #059669, #34d399, #6ee7b7);
+    background: linear-gradient(90deg, var(--verde-700, #164e36), var(--verde-500, #2f7a54), var(--verde-200, #cfe8da));
     opacity: 0;
     transition: opacity 0.3s ease;
 }
@@ -96,13 +210,13 @@ body {
 .icon {
     width: 64px;
     height: 64px;
-    filter: drop-shadow(0 2px 8px rgba(16, 185, 129, 0.2));
+    filter: drop-shadow(0 2px 8px rgba(22, 78, 54, 0.2));
 }
 
 .card-text { flex-grow: 1; }
 
 .card-text h2 {
-    color: #0a0f1e;
+    color: var(--tinta-900, #16211c);
     margin-bottom: 5px;
     font-size: 1.2rem;
     font-weight: 800;
@@ -110,7 +224,7 @@ body {
 }
 
 .card-text p {
-    color: #6B7280;
+    color: var(--tinta-500, #6B7280);
     font-size: 0.9rem;
     font-weight: 400;
     line-height: 1.55;
@@ -127,13 +241,19 @@ body {
 }
 
 .card:hover .card-content::after {
-    color: #10b981;
+    color: var(--verde-500, #2f7a54);
     transform: translateX(4px);
 }
 
 /* ── Responsividade ─────────────────────────────────── */
 @media (max-width: 768px) {
-    .card-content { padding: 20px; }
     .container { margin: 24px auto; padding: 0 16px; }
+    .card-content { padding: 20px; }
     .card-text h2 { font-size: 1.05rem; }
+    .stat-card .stat-numero { font-size: 2rem; }
+    .categoria-linha {
+        grid-template-columns: 1fr;
+        row-gap: 6px;
+    }
+    .categoria-numero { text-align: left; }
 }

@@ -1,5 +1,5 @@
 <<<<<<< HEAD
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700;800&display=swap');
 
 :root {
     --emerald-500:  #10b981;
@@ -20,7 +20,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-family: 'Raleway', sans-serif;
 }
 
 body {
@@ -121,7 +121,7 @@ input[type="text"] {
     border-radius: 8px;
     margin-bottom: 12px;
     font-size: 0.875rem;
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-family: 'Raleway', sans-serif;
     font-weight: 500;
     background: var(--bg-input);
     color: #111827;
@@ -145,7 +145,7 @@ button[type="submit"] {
     font-size: 0.84rem;
     font-weight: 700;
     cursor: pointer;
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-family: 'Raleway', sans-serif;
     transition: all 0.3s var(--ease-premium);
     box-shadow: 0 6px 20px -6px var(--emerald-glow);
 }
@@ -168,7 +168,7 @@ button[type="button"] {
     font-size: 0.84rem;
     font-weight: 600;
     cursor: pointer;
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-family: 'Raleway', sans-serif;
     transition: all 0.3s var(--ease-premium);
 }
 
@@ -191,7 +191,7 @@ button[type="button"]:active { transform: scale(0.97); }
     cursor: pointer;
     font-size: 0.84rem;
     font-weight: 700;
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-family: 'Raleway', sans-serif;
     display: inline-flex;
     align-items: center;
     gap: 7px;

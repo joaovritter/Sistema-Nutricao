@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=Raleway:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap');
 
 /* ── Reset ──────────────────────────────────────────── */
 * {
@@ -8,45 +8,119 @@
 }
 
 /* ═══════════════════════════════════════════════════════
-   NAVBAR — Glass-morphism Premium
+   TOKENS — paleta única do sistema (verde pinho + neutros)
+   Antes conviviam dois verdes (pinho do header x esmeralda
+   dos cards); a partir daqui os cards também bebem daqui.
+═══════════════════════════════════════════════════════ */
+:root {
+    --verde-900: #0f3625;
+    --verde-700: #164e36;
+    --verde-500: #2f7a54;
+    --verde-200: #cfe8da;
+    --creme-50: #f7faf7;
+    --tinta-900: #16211c;
+    --tinta-500: #5b6b63;
+
+    /* Acento único de nutrição (macro/cúrcuma) — só pra indicar item ativo
+       na sidebar, nunca vira cor de fundo/base. */
+    --nutri-500: #d97706;
+    --nutri-200: #fde3c2;
+
+    /* Par "Wellness Calm": Lora (curvas orgânicas, títulos/nav) + Raleway
+       (corpo/UI) — combinação com mood calm/health/natural/organic. */
+    --fonte-display: 'Lora', serif;
+    --fonte-corpo: 'Raleway', sans-serif;
+    --fonte-dado: 'JetBrains Mono', monospace;
+}
+
+h1, h2, .titulo-destaque {
+    font-family: var(--fonte-display);
+}
+
+/* ═══════════════════════════════════════════════════════
+   NAVBAR — pílula flutuante, glass-morphism
 ═══════════════════════════════════════════════════════ */
 .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 16px;
     background: rgba(22, 78, 54, 0.97);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    padding: 14px 32px;
+    padding: 12px 20px;
     color: #fff;
     box-shadow: 0 1px 0 rgba(255, 255, 255, 0.06),
-        0 8px 32px -4px rgba(0, 0, 0, 0.28);
-    font-family: 'Plus Jakarta Sans', sans-serif;
+        0 16px 40px -8px rgba(15, 54, 37, 0.45);
+    font-family: var(--fonte-corpo);
     position: sticky;
-    top: 0;
+    top: 16px;
     z-index: 100;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 999px;
+    max-width: 1100px;
+    margin: 16px auto 0;
 }
 
 .logo-container {
     display: flex;
     align-items: center;
     gap: 12px;
+    flex-shrink: 0;
 }
 
 .logo {
-    width: 36px;
-    height: 36px;
+    width: 34px;
+    height: 34px;
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 .header h1 {
-    font-size: 1.05rem;
+    font-size: 1rem;
     font-weight: 700;
     letter-spacing: -0.01em;
     color: #ecfdf5;
     margin: 0;
+    white-space: nowrap;
+}
+
+/* ── Links de navegação ──────────────────────────────── */
+.navbar-links {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-wrap: wrap;
+}
+
+.navbar-links a {
+    font-family: var(--fonte-display);
+    color: #d1fae5;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0;
+    padding: 8px 16px;
+    border-radius: 999px;
+    transition: background 0.25s ease, color 0.25s ease;
+    white-space: nowrap;
+}
+
+.navbar-links a:hover {
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
+}
+
+.navbar-links a.ativo {
+    background: var(--verde-500);
+    color: #fff;
+}
+
+.navbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
 }
 
 /* ── Botão Logout — Ghost estilo pill ────────────────── */
@@ -57,7 +131,7 @@
     border-radius: 100px !important;
     padding: 8px 20px !important;
     cursor: pointer;
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-family: var(--fonte-corpo);
     font-size: 0.82rem;
     font-weight: 600;
     letter-spacing: 0.02em;
@@ -80,20 +154,71 @@
     text-decoration: none;
 }
 
+/* ── Botão hambúrguer (mobile) ───────────────────────── */
+.nav-toggle {
+    display: none;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 999px;
+    width: 38px;
+    height: 38px;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.nav-toggle span,
+.nav-toggle::before,
+.nav-toggle::after {
+    content: '';
+    display: block;
+    width: 16px;
+    height: 2px;
+    background: #ecfdf5;
+    border-radius: 2px;
+    transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.nav-toggle span { margin: 3px 0; }
+
 /* ── Responsividade ─────────────────────────────────── */
-@media (max-width: 768px) {
+@media (max-width: 860px) {
     .header {
-        flex-direction: column;
-        gap: 12px;
-        text-align: center;
-        padding: 14px 16px;
+        flex-wrap: wrap;
+        border-radius: 24px;
+        margin: 12px 12px 0;
+        top: 12px;
+        padding: 10px 16px;
     }
 
-    .logo-container {
+    .nav-toggle {
+        display: flex;
+    }
+
+    .navbar-links {
+        order: 3;
+        width: 100%;
         flex-direction: column;
+        align-items: stretch;
+        gap: 2px;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+    }
+
+    .navbar-links.aberto {
+        max-height: 320px;
+        margin-top: 8px;
+        padding-top: 8px;
+        border-top: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .navbar-links a {
+        text-align: center;
     }
 
     .header h1 {
-        font-size: 0.95rem;
+        font-size: 0.9rem;
     }
 }

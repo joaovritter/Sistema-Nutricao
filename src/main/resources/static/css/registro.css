@@ -1,10 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700;800&display=swap');
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-family: 'Raleway', sans-serif;
 }
 
 body, html {
@@ -122,7 +122,7 @@ body {
     border: none;
     border-radius: 10px;
     font-size: 0.95rem;
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-family: 'Raleway', sans-serif;
     font-weight: 500;
     background: #F3F4F6;
     color: #111827;
@@ -153,7 +153,7 @@ body {
     border-radius: 12px;
     font-size: 0.95rem;
     font-weight: 700;
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-family: 'Raleway', sans-serif;
     cursor: pointer;
     letter-spacing: 0.02em;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -189,7 +189,7 @@ body {
     background: none;
     border: none;
     cursor: pointer;
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-family: 'Raleway', sans-serif;
     font-weight: 500;
     transition: color 0.2s ease;
 }

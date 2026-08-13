@@ -3,14 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fichas Técnicas de Nutrição</title>
+    <title>Nutra</title>
     <link rel="stylesheet" href="/css/index.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/animacoes.css">
+    <script src="/js/animacoes.js" defer></script>
 </head>
 <body>
 <div class="container">
     <div class="content-left">
-        <h1 class="main-title">Fichas Técnicas de Nutrição</h1>
+        <h1 class="main-title">
+            <img src="/images/logoNutra.png" alt="Nutra" class="main-logo">
+        </h1>
 
         <div class="description">
             <h2>Gerencie suas<br>fichas técnicas<br>de maneira simples<br>e descomplicada.</h2>
@@ -29,7 +32,7 @@
         <div class="error-message" th:if="${param.disabled}">
             Usuário desativado.
         </div>
-        <div class="login-box">
+        <div class="login-box hero-anim">
             <form th:action="@{/login}" method="post">
                 <div class="form-group">
                     <label for="username">Username</label>

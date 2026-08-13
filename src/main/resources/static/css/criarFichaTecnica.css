@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700;800&display=swap');
 
 /* ═══════════════════════════════════════════════════════
    DESIGN TOKENS — Sistema Premium
@@ -41,7 +41,7 @@
    BODY
 ═══════════════════════════════════════════════════════ */
 body {
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-family: 'Raleway', sans-serif;
     background-color: var(--bg-page);
     background-image:
         radial-gradient(ellipse at 15% 40%, rgba(16, 185, 129, 0.05) 0%, transparent 60%);
@@ -178,7 +178,7 @@ textarea {
     border: none;
     border-radius: var(--radius-sm);
     font-size: 0.875rem;
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-family: 'Raleway', sans-serif;
     font-weight: 500;
     background: var(--bg-input);
     color: var(--text-700);
@@ -257,7 +257,7 @@ td input {
     padding: 6px 9px;
     margin: 0;
     font-size: 0.845rem;
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-family: 'Raleway', sans-serif;
     font-weight: 500;
     background: var(--bg-input);
     color: var(--text-700);
@@ -291,7 +291,7 @@ tbody tr:hover td {
     cursor: pointer;
     font-size: 0.84rem;
     font-weight: 700;
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-family: 'Raleway', sans-serif;
     display: inline-flex;
     align-items: center;
     gap: 7px;

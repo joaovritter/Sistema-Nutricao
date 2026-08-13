@@ -7,20 +7,20 @@
     <title>Ficha Técnica de Preparação Alimentar</title>
     <link rel="stylesheet" href="/css/criarFichaTecnica.css">
     <link rel="stylesheet" href="/css/navbar.css">
+    <link rel="stylesheet" href="/css/sidebar.css">
+    <link rel="stylesheet" href="/css/animacoes.css">
+    <link rel="stylesheet" href="/css/tema.css">
+    <script src="/js/animacoes.js" defer></script>
 </head>
 
 <body>
+<div class="app-shell">
 
-    <header class="header">
-        <div class="logo-container">
-            <img src="/images/logo.png" alt="Logo Nutrição" class="logo">
-            <h1>Fichas Técnicas de Nutrição</h1>
-        </div>
-        <button type="button" class="navbar-btn" onclick="window.location.href='/dashboard'">Voltar</button>
+    <div th:replace="~{fragments/sidebar :: sidebar('ficha')}"></div>
 
-    </header>
+    <div class="main-area">
 
-    <div class="container">
+    <div class="container page-anim">
         <span class="titulo-ficha" th:text="${receitaId != null ? 'Editar Ficha Técnica' : 'Ficha Técnica'}">Ficha
             Técnica</span>
 
@@ -57,7 +57,7 @@
             </section>
 
             <section class="section">
-                <h2 class="section-title">🥬 Ingredientes</h2>
+                <h2 class="section-title">Ingredientes</h2>
                 <div class="section-content">
                     <div class="table-container">
                         <table id="ingredientes-table">
@@ -109,7 +109,7 @@
             </section>
 
             <section class="section">
-                <h2 class="section-title">📝 Modo de preparo e Equipamentos</h2>
+                <h2 class="section-title">Modo de preparo e Equipamentos</h2>
                 <div class="section-content">
                     <div class="two-column">
                         <div class="form-group">
@@ -127,7 +127,7 @@
             </section>
 
             <section class="section">
-                <h2 class="section-title">📊 Informações Complementares</h2>
+                <h2 class="section-title">Informações Complementares</h2>
                 <div class="section-content">
                     <div class="grid-4">
                         <div class="form-group">
@@ -178,7 +178,7 @@
             </section>
 
             <section class="section">
-                <h2 class="section-title">🍎 Perfil Nutricional</h2>
+                <h2 class="section-title">Perfil Nutricional</h2>
                 <div class="section-content">
                     <div class="table-container">
                         <table id="nutricional-table">
@@ -293,7 +293,14 @@
                 <td><input type="number" step="0.01" class="custo-compra-ingrediente" placeholder="R$ 0,00"></td>
                 <td><input type="number" step="0.01" class="peso-compra-ingrediente" placeholder="0.00"></td>
                 <td><input type="number" step="0.01" class="custo-utilizado-ingrediente" placeholder="R$ 0,00" readonly></td>
-                <td><button type="button" class="navbar-btn" onclick="removerLinha(this)">Remover</button></td>
+                <td><button type="button" class="btn-excluir" title="Remover ingrediente" aria-label="Remover ingrediente" onclick="removerLinha(this)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M3 6h18"/>
+                        <path d="M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2"/>
+                        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                        <path d="M10 11v6M14 11v6"/>
+                    </svg>
+                </button></td>
             `;
 
                 const ingredienteNomeInput = newRow.querySelector('.ingrediente-nome');
@@ -369,7 +376,14 @@
             <td><input type="number" step="0.01" placeholder="0.00"></td>
             <td><input type="number" step="0.01" placeholder="0.00"></td>
             <td><input type="number" step="0.01" placeholder="0.00"></td>
-            <td><button type="button" class="btn-remover" onclick="removerLinha(this)">Remover</button></td>
+            <td><button type="button" class="btn-excluir" title="Remover linha" aria-label="Remover linha" onclick="removerLinha(this)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M3 6h18"/>
+                    <path d="M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2"/>
+                    <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                    <path d="M10 11v6M14 11v6"/>
+                </svg>
+            </button></td>
         `;
         }
 
@@ -737,20 +751,20 @@
 
                 if (response.ok) {
                     const successMessage = idToUse ? 'Ficha Técnica atualizada com sucesso!' : 'Ficha Técnica salva com sucesso!';
-                    alert(successMessage);
+                    toast(successMessage, 'success');
                     const responseData = await response.json();
-                    window.location.href = `/visualizar?id=${responseData.id}`;
+                    setTimeout(() => { window.location.href = `/visualizar?id=${responseData.id}`; }, 600);
                 } else if (response.status === 401 || response.status === 403) {
-                    alert('Sua sessão expirou ou você não está autorizado. Faça login novamente.');
-                    window.location.href = '/login';
+                    toast('Sua sessão expirou ou você não está autorizado. Faça login novamente.', 'error');
+                    setTimeout(() => { window.location.href = '/login'; }, 1200);
                 } else {
                     const errorData = await response.json();
                     console.error('[DEBUG - SUBMIT] Erro ao salvar ficha técnica:', errorData);
-                    alert('Erro ao salvar ficha técnica: ' + (errorData.message || response.statusText));
+                    toast('Erro ao salvar ficha técnica: ' + (errorData.message || response.statusText), 'error');
                 }
             } catch (error) {
                 console.error('[DEBUG - SUBMIT] Erro na requisição:', error);
-                alert('Ocorreu um erro na comunicação com o servidor.');
+                toast('Ocorreu um erro na comunicação com o servidor.', 'error');
             }
         });
 
@@ -789,6 +803,12 @@
 
             atualizarCalculosGlobais();
         }
+
+        // Qual dos dois campos de porcionamento o usuário editou por último.
+        // O campo editado manda; o outro é derivado dele. Sem isso, um peso de
+        // porção digitado era sobrescrito no recálculo seguinte pelo resultado
+        // de "rendimento / nº de porções".
+        let campoPorcaoMestre = null; // 'peso' | 'porcoes' | null
 
         // Função para atualizar cálculos globais (Custo Total, Custo Per Capita, FCC Geral, Totais Nutricionais)
         function atualizarCalculosGlobais() {
@@ -851,6 +871,12 @@
                 totalSodio += sodioProporcional;
                 totalGorduraSaturada += gorduraSaturadaProporcional;
                 totalKcal += kcalProporcional;
+
+                // Linha ainda em branco (usuário acabou de clicar em "Adicionar
+                // Ingrediente") não entra no Perfil Nutricional.
+                if (!ingredienteNome.trim() || ingredienteNome === 'Desconhecido') {
+                    return;
+                }
 
                 // Add row to the Perfil Nutricional table
                 const newNutriRow = nutricionalTableBody.insertRow();
@@ -949,21 +975,30 @@
             const pesoPorcaoInput = document.getElementById('peso-porcao');
             const numeroPorcoesInput = document.getElementById('numero-porcoes');
 
-            // Só calcular automaticamente se ambos os campos estiverem vazios ou se apenas o peso da porção estiver preenchido
             const pesoPorcaoValue = parseFloat(pesoPorcaoInput.value) || 0;
             const numeroPorcoesValue = parseInt(numeroPorcoesInput.value) || 0;
 
-            // Se o usuário digitou um número de porções, não sobrescrever automaticamente
-            if (numeroPorcoesValue > 0) {
-                // Se o usuário definiu o número de porções, calcular o peso da porção
-                if (pesoLiquidoFinalDaPreparacao > 0) {
-                    pesoPorcaoInput.value = (pesoLiquidoFinalDaPreparacao / numeroPorcoesValue).toFixed(2);
+            // Deriva um campo a partir do outro, preservando o que o usuário digitou.
+            const derivarPorcoes = () =>
+                numeroPorcoesInput.value = Math.max(1, Math.floor(pesoLiquidoFinalDaPreparacao / pesoPorcaoValue));
+            const derivarPeso = () =>
+                pesoPorcaoInput.value = (pesoLiquidoFinalDaPreparacao / numeroPorcoesValue).toFixed(2);
+
+            if (pesoLiquidoFinalDaPreparacao > 0) {
+                if (campoPorcaoMestre === 'peso' && pesoPorcaoValue > 0) {
+                    // Usuário definiu o peso da porção: ele é mantido e o nº de porções segue.
+                    derivarPorcoes();
+                } else if (campoPorcaoMestre === 'porcoes' && numeroPorcoesValue > 0) {
+                    derivarPeso();
+                } else if (numeroPorcoesValue > 0) {
+                    // Recálculo disparado por outra coisa (ingrediente, rendimento, água):
+                    // mantém o nº de porções e reajusta o peso.
+                    derivarPeso();
+                } else if (pesoPorcaoValue > 0) {
+                    derivarPorcoes();
                 }
-            } else if (pesoPorcaoValue > 0 && pesoLiquidoFinalDaPreparacao > 0) {
-                // Se o usuário definiu o peso da porção, calcular o número de porções
-                numeroPorcoesInput.value = Math.floor(pesoLiquidoFinalDaPreparacao / pesoPorcaoValue);
-            } else {
-                // Se nenhum dos dois estiver preenchido, deixar vazio
+            } else if (!campoPorcaoMestre && pesoPorcaoValue === 0 && numeroPorcoesValue === 0) {
+                // Nada calculado e nada digitado: deixa os campos vazios.
                 pesoPorcaoInput.value = '';
                 numeroPorcoesInput.value = '';
             }
@@ -1038,13 +1073,21 @@
                 input.addEventListener('input', atualizarCalculosIngrediente);
             });
 
-            document.getElementById('numero-porcoes').addEventListener('input', atualizarCalculosGlobais);
-            document.getElementById('peso-porcao').addEventListener('input', atualizarCalculosGlobais);
+            document.getElementById('numero-porcoes').addEventListener('input', () => {
+                campoPorcaoMestre = 'porcoes';
+                atualizarCalculosGlobais();
+            });
+            document.getElementById('peso-porcao').addEventListener('input', () => {
+                campoPorcaoMestre = 'peso';
+                atualizarCalculosGlobais();
+            });
             document.getElementById('agua-quantidade').addEventListener('input', atualizarCalculosGlobais);
             document.getElementById('agua-fcc').addEventListener('change', atualizarCalculosGlobais);
             document.getElementById('rendimento').addEventListener('input', atualizarCalculosGlobais);
         });
     </script>
+    </div>
+</div>
 </body>
 
 </html>

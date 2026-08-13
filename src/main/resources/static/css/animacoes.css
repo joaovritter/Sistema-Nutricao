@@ -1,0 +1,121 @@
+/* ═══════════════════════════════════════════════════════
+   ANIMAÇÕES — padrão Ritter&Co (adaptado para CSS puro)
+   Ver docs/ANIMACOES.md para o prompt/design completo.
+═══════════════════════════════════════════════════════ */
+
+:root {
+    --anim-fast: 300ms;
+    --anim-slow: 400ms;
+    --ease-out: cubic-bezier(0, 0, 0.2, 1);
+    --cor-primaria: #164e36;
+    --cor-primaria-dark: #0f3625;
+    --radius-anim: 18px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        transition-duration: 0.001ms !important;
+    }
+}
+
+/* Entrada de página */
+@keyframes page-enter {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+.page-anim {
+    animation: page-enter var(--anim-fast) var(--ease-out) both;
+}
+
+/* Entrada de tela cheia (login/hero) */
+@keyframes hero-enter {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+.hero-anim {
+    animation: hero-enter var(--anim-slow) var(--ease-out) both;
+}
+
+/* Card com stagger — delay vem de --i, setado via data-stagger (JS) ou th:style */
+@keyframes card-enter {
+    from { opacity: 0; transform: scale(0.9); }
+    to   { opacity: 1; transform: scale(1); }
+}
+.card-anim {
+    opacity: 0;
+    animation: card-enter 350ms var(--ease-out) forwards;
+    animation-delay: calc(var(--i, 0) * 80ms);
+    transition: transform 200ms var(--ease-out), box-shadow 200ms var(--ease-out);
+}
+.card-anim:hover {
+    transform: translateY(-6px);
+}
+
+/* Seções em sequência */
+.section-anim {
+    opacity: 0;
+    animation: card-enter var(--anim-fast) var(--ease-out) forwards;
+}
+.section-anim:nth-of-type(1) { animation-delay: 100ms; }
+.section-anim:nth-of-type(2) { animation-delay: 200ms; }
+.section-anim:nth-of-type(3) { animation-delay: 300ms; }
+
+/* Skeleton (para listas carregadas via fetch) */
+@keyframes skeleton-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+}
+.skeleton {
+    background: #e3e3e3;
+    border-radius: 8px;
+    animation: skeleton-pulse 1.2s ease-in-out infinite;
+}
+
+/* Toast / feedback global */
+@keyframes toast-in {
+    from { opacity: 0; transform: translate(-50%, 12px); }
+    to   { opacity: 1; transform: translate(-50%, 0); }
+}
+@keyframes toast-out {
+    from { opacity: 1; transform: translate(-50%, 0); }
+    to   { opacity: 0; transform: translate(-50%, 12px); }
+}
+.toast {
+    position: fixed;
+    left: 50%;
+    bottom: 24px;
+    transform: translateX(-50%);
+    min-width: 260px;
+    max-width: 90vw;
+    padding: 14px 20px;
+    border-radius: 12px;
+    color: #fff;
+    font-family: var(--fonte-corpo, 'Inter', sans-serif);
+    font-weight: 600;
+    font-size: 0.9rem;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    z-index: 2000;
+    animation: toast-in 250ms var(--ease-out) both;
+}
+.toast.toast--fechando {
+    animation: toast-out 200ms var(--ease-out) both;
+}
+.toast--success { background: var(--cor-primaria); }
+.toast--error   { background: #b3261e; }
+.toast--info    { background: #2b5b8c; }
+
+/* View Transitions API (progressive enhancement — Chromium recente) */
+@view-transition {
+    navigation: auto;
+}
+@keyframes page-exit {
+    from { opacity: 1; transform: translateY(0); }
+    to   { opacity: 0; transform: translateY(-16px); }
+}
+::view-transition-old(root) {
+    animation: page-exit var(--anim-fast) var(--ease-out) both;
+}
+::view-transition-new(root) {
+    animation: page-enter var(--anim-fast) var(--ease-out) both;
+}

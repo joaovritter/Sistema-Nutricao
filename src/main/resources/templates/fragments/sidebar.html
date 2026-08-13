@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<body>
+
+<!-- Navegação principal. `atual` marca o item ativo:
+     visualizar | ficha | refeicoes | ingredientes -->
+<aside class="sidebar" th:fragment="sidebar(atual)">
+
+    <div class="sidebar-brand">
+        <a href="/dashboard">
+            <img src="/images/logoNutra.png" alt="Nutra">
+        </a>
+        <span class="sidebar-tagline">Fichas técnicas</span>
+    </div>
+
+    <nav class="sidebar-nav">
+        <a href="/visualizar" class="sidebar-link"
+           th:classappend="${atual == 'visualizar'} ? ' ativo'">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/>
+                <circle cx="12" cy="12" r="3"/>
+            </svg>
+            Visualizar
+        </a>
+
+        <a href="/fichatecnica" class="sidebar-link"
+           th:classappend="${atual == 'ficha'} ? ' ativo'"
+           sec:authorize="hasAnyAuthority('NUTRICIONISTA', 'ADMIN')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="5" y="4" width="14" height="17" rx="2"/>
+                <path d="M9 4V3a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1"/>
+                <path d="M12 11v6M9 14h6"/>
+            </svg>
+            Criar Ficha
+        </a>
+
+        <a href="/refeicoes" class="sidebar-link"
+           th:classappend="${atual == 'refeicoes'} ? ' ativo'">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M3 11h18a9 9 0 0 1-9 8 9 9 0 0 1-9-8Z"/>
+                <path d="M8 11V8a4 4 0 0 1 8 0v3"/>
+            </svg>
+            Refeições
+        </a>
+
+        <a href="/criarIngrediente" class="sidebar-link"
+           th:classappend="${atual == 'ingredientes'} ? ' ativo'"
+           sec:authorize="hasAnyAuthority('NUTRICIONISTA', 'ADMIN')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M20 4c-10 0-16 6-16 14 0 1 .5 2 2 2 8 0 14-6 14-16 0 0 0 0 0 0Z"/>
+                <path d="M8 20c2-6 6-10 12-12"/>
+            </svg>
+            Ingredientes
+        </a>
+    </nav>
+
+    <div class="sidebar-footer">
+        <form th:action="@{/logout}" method="post">
+            <button type="submit" class="sidebar-link sidebar-link--sair">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                    <path d="M16 17l5-5-5-5"/>
+                    <path d="M21 12H9"/>
+                </svg>
+                Sair
+            </button>
+        </form>
+    </div>
+
+</aside>
+
+</body>
+</html>

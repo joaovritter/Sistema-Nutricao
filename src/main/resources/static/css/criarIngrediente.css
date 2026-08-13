@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700;800&display=swap');
 
 :root {
     --emerald-500:  #10b981;
@@ -21,7 +21,7 @@
 }
 
 body {
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-family: 'Raleway', sans-serif;
     background-color: var(--bg-page);
     background-image: radial-gradient(ellipse at 20% 40%, rgba(16,185,129,0.05) 0%, transparent 60%);
     color: #374151;
@@ -111,7 +111,7 @@ input, select, textarea {
     border: none;
     border-radius: 8px;
     font-size: 0.875rem;
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-family: 'Raleway', sans-serif;
     font-weight: 500;
     background: var(--bg-input);
     color: #111827;
@@ -153,7 +153,7 @@ textarea {
     cursor: pointer;
     font-size: 0.84rem;
     font-weight: 700;
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-family: 'Raleway', sans-serif;
     transition: all 0.3s var(--ease-premium);
     margin-right: 10px;
     letter-spacing: 0.01em;

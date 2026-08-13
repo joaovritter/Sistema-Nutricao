@@ -1,0 +1,447 @@
+@import url('https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=Raleway:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap');
+
+/* ═══════════════════════════════════════════════════════
+   TEMA — padronização visual do Nutra
+   Linguagem de referência: sidebar + tela de Refeições.
+   Superfícies brancas, verde só como acento, formas
+   arredondadas e bordas finas no lugar de blocos cheios.
+
+   Carregue este arquivo por ÚLTIMO em cada tela: ele
+   normaliza o que os CSS antigos pintavam de verde.
+═══════════════════════════════════════════════════════ */
+
+:root {
+    /* Escala verde única (mesma da sidebar) */
+    --verde-900: #0f3625;
+    --verde-700: #164e36;
+    --verde-500: #2f7a54;
+    --verde-200: #cfe8da;
+    --verde-50:  #eef6f1;
+
+    --creme-50: #f7faf7;
+    --tinta-900: #16211c;
+    --tinta-500: #5b6b63;
+    --tinta-300: #97a59d;
+
+    --superficie: #ffffff;
+    --contorno: rgba(22, 78, 54, 0.15);
+    --contorno-forte: rgba(22, 78, 54, 0.28);
+
+    /* Ação destrutiva */
+    --perigo-600: #b3261e;
+    --perigo-700: #8c1d17;
+
+    --fonte-display: 'Lora', serif;
+    --fonte-corpo: 'Raleway', sans-serif;
+    --fonte-dado: 'JetBrains Mono', monospace;
+
+    --raio-sm: 10px;
+    --raio-md: 14px;
+    --raio-lg: 20px;
+    --raio-pill: 999px;
+
+    --sombra-card: 0 1px 2px rgba(15, 54, 37, 0.04), 0 12px 28px -14px rgba(15, 54, 37, 0.18);
+
+    /* Compatibilidade: os CSS antigos consomem estes nomes.
+       Remapeados para a escala acima, então tudo que os usa
+       herda a paleta nova sem edição arquivo a arquivo. */
+    --emerald-500: #2f7a54;
+    --emerald-600: #256b47;
+    --emerald-700: #164e36;
+    --emerald-800: #123f2c;
+    --emerald-900: #0f3625;
+    --emerald-light: #eef6f1;
+    --emerald-ring: rgba(47, 122, 84, 0.20);
+    --emerald-glow: rgba(22, 78, 54, 0.22);
+    --border-soft: rgba(22, 78, 54, 0.12);
+    --shadow-sm: 0 1px 2px rgba(15, 54, 37, 0.05);
+    --shadow-card: 0 1px 2px rgba(15, 54, 37, 0.04), 0 12px 28px -14px rgba(15, 54, 37, 0.18);
+    --shadow-float: 0 1px 2px rgba(15, 54, 37, 0.04), 0 16px 36px -18px rgba(15, 54, 37, 0.20);
+    --bg-page: #f7faf7;
+    --bg-input: #f2f6f3;
+    --text-900: #16211c;
+    --text-700: #16211c;
+    --text-500: #3b4a43;
+    --text-400: #5b6b63;
+    --text-300: #97a59d;
+}
+
+/* ── Fundo da página ──────────────────────────────────── */
+body {
+    background-color: var(--creme-50);
+    background-image:
+        radial-gradient(ellipse at 12% 0%, rgba(47, 122, 84, 0.05) 0%, transparent 55%),
+        radial-gradient(ellipse at 100% 0%, rgba(22, 78, 54, 0.04) 0%, transparent 45%);
+    background-attachment: fixed;
+    color: var(--tinta-900);
+}
+
+/* ═══════════════════════════════════════════════════════
+   SUPERFÍCIES — cartões brancos com contorno fino
+═══════════════════════════════════════════════════════ */
+/* Observação: `.container` não é padronizado aqui de propósito —
+   ele é card em umas telas e só wrapper de layout no dashboard.
+   As sombras já foram suavizadas pelos tokens --shadow-* acima. */
+.detalhes-container,
+.receita-list-section,
+.refeicao-list,
+.refeicao-form {
+    background: var(--superficie);
+    border: 1px solid var(--contorno);
+    border-radius: var(--raio-lg);
+    box-shadow: var(--sombra-card);
+}
+
+/* ── Títulos de tela (eram barras verdes cheias) ─────── */
+.titulo-ficha,
+.titulo-formulario {
+    display: block;
+    background: none;
+    background-image: none;
+    box-shadow: none;
+    border: none;
+    border-radius: 0;
+    padding: 26px 28px 0;
+    margin: 0;
+    text-align: left;
+    text-transform: none;
+    letter-spacing: -0.01em;
+    font-family: var(--fonte-display, 'Lora', serif);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--verde-900);
+}
+
+.titulo-ficha::before,
+.titulo-formulario::before {
+    display: none;
+}
+
+/* ── Seções ──────────────────────────────────────────── */
+.section {
+    margin: 20px 28px;
+    border: 1px solid var(--contorno);
+    border-radius: var(--raio-md);
+    overflow: hidden;
+    box-shadow: none;
+    background: var(--superficie);
+}
+
+.section-title {
+    background: var(--verde-50);
+    background-image: none;
+    color: var(--verde-900);
+    border-bottom: 1px solid var(--contorno);
+    padding: 12px 18px;
+    font-family: var(--fonte-corpo, 'Raleway', sans-serif);
+    font-weight: 700;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+}
+
+.section-content {
+    background: var(--superficie);
+    background-image: none;
+    padding: 22px 18px;
+}
+
+/* Detalhe de acento na lateral da seção */
+.section-title::before {
+    content: '';
+    display: inline-block;
+    width: 3px;
+    height: 12px;
+    margin-right: 10px;
+    border-radius: 2px;
+    background: var(--verde-500);
+    vertical-align: -1px;
+}
+
+/* ═══════════════════════════════════════════════════════
+   TÍTULOS DE BLOCO
+═══════════════════════════════════════════════════════ */
+.receita-list-section h2,
+.refeicao-list h2,
+.detalhes-container h2 {
+    font-family: var(--fonte-display, 'Lora', serif);
+    color: var(--verde-900);
+    background: none;
+    -webkit-text-fill-color: currentColor;
+}
+
+/* ═══════════════════════════════════════════════════════
+   BOTÕES — verde chapado, pílula (igual à sidebar)
+═══════════════════════════════════════════════════════ */
+.btn,
+.btn-primary,
+.btn-criar,
+button[type="submit"]:not(.btn-excluir) {
+    background: var(--verde-700);
+    background-image: none;
+    color: #ffffff;
+    border: 1px solid var(--verde-700);
+    border-radius: var(--raio-pill);
+    padding: 10px 22px;
+    font-family: var(--fonte-corpo, 'Raleway', sans-serif);
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0;
+    cursor: pointer;
+    box-shadow: none;
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.btn:hover,
+.btn-primary:hover,
+.btn-criar:hover,
+button[type="submit"]:not(.btn-excluir):hover {
+    background: var(--verde-900);
+    background-image: none;
+    border-color: var(--verde-900);
+    color: #ffffff;
+    transform: none;
+    box-shadow: none;
+}
+
+.btn:active,
+button[type="submit"]:active {
+    transform: scale(0.98);
+}
+
+/* ── Botão secundário / fantasma ─────────────────────── */
+.btn-secondary,
+.btn-voltar,
+button[type="button"]:not(.btn-excluir):not(.btn-perfil) {
+    background: var(--superficie);
+    background-image: none;
+    color: var(--verde-700);
+    border: 1px solid var(--contorno-forte);
+    border-radius: var(--raio-pill);
+    padding: 10px 22px;
+    font-family: var(--fonte-corpo, 'Raleway', sans-serif);
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: none;
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.btn-secondary:hover,
+.btn-voltar:hover,
+button[type="button"]:not(.btn-excluir):not(.btn-perfil):hover {
+    background: var(--verde-50);
+    color: var(--verde-900);
+    border-color: var(--verde-500);
+    transform: none;
+    box-shadow: none;
+}
+
+/* ── Ações de linha (tabelas) ────────────────────────── */
+.btn-detalhes,
+.btn-editar {
+    border-radius: var(--raio-pill);
+    padding: 6px 14px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    box-shadow: none;
+    background-image: none;
+}
+
+.btn-detalhes {
+    background: var(--verde-50);
+    color: var(--verde-700);
+    border: 1px solid var(--contorno);
+}
+
+.btn-editar {
+    background: #fdf6ec;
+    color: #9a6410;
+    border: 1px solid rgba(154, 100, 16, 0.2);
+}
+
+.btn-detalhes:hover { background: var(--verde-200); }
+.btn-editar:hover   { background: #f8ebd8; }
+
+/* ── Excluir — só o ícone, em vermelho sólido ────────── */
+.btn-excluir {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    border-radius: var(--raio-pill);
+    background: var(--perigo-600);
+    background-image: none;
+    border: 1px solid var(--perigo-600);
+    color: #ffffff;
+    cursor: pointer;
+    box-shadow: none;
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.btn-excluir svg {
+    width: 16px;
+    height: 16px;
+    display: block;
+}
+
+/* Amplia a área de toque para ~44px sem alterar o layout da linha */
+.btn-excluir::after {
+    content: '';
+    position: absolute;
+    inset: -7px;
+}
+
+.btn-excluir:hover {
+    background: var(--perigo-700);
+    border-color: var(--perigo-700);
+    color: #ffffff;
+}
+
+.btn-excluir:focus-visible {
+    outline: 3px solid var(--perigo-600);
+    outline-offset: 2px;
+}
+
+/* ═══════════════════════════════════════════════════════
+   FORMULÁRIOS
+═══════════════════════════════════════════════════════ */
+label {
+    color: var(--tinta-500);
+    font-family: var(--fonte-corpo, 'Raleway', sans-serif);
+    font-weight: 600;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+input,
+select,
+textarea {
+    background: var(--superficie);
+    border: 1px solid var(--contorno);
+    border-radius: var(--raio-sm);
+    color: var(--tinta-900);
+    font-family: var(--fonte-corpo, 'Raleway', sans-serif);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    background: var(--superficie);
+    border-color: var(--verde-500);
+    box-shadow: 0 0 0 3px var(--emerald-ring);
+    transform: none;
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: var(--tinta-300);
+}
+
+/* Inputs dentro de tabelas seguem o mesmo padrão */
+td input,
+td select {
+    background: var(--superficie);
+    border: 1px solid var(--contorno);
+    border-radius: var(--raio-sm);
+    color: var(--tinta-900);
+}
+
+td input:focus,
+td select:focus {
+    background: var(--superficie);
+    border-color: var(--verde-500);
+    box-shadow: 0 0 0 2.5px var(--emerald-ring);
+    transform: none;
+}
+
+/* ═══════════════════════════════════════════════════════
+   TABELAS — cabeçalho claro, linhas separadas por fio
+═══════════════════════════════════════════════════════ */
+table {
+    background: var(--superficie);
+}
+
+th,
+#totais-macros-table th {
+    background: var(--verde-50);
+    background-image: none;
+    color: var(--verde-900);
+    border: none;
+    border-bottom: 1px solid var(--contorno);
+    font-family: var(--fonte-corpo, 'Raleway', sans-serif);
+    font-weight: 700;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+td {
+    border-bottom: 1px solid rgba(22, 78, 54, 0.08);
+    color: var(--tinta-900);
+}
+
+tbody tr:hover,
+#totais-macros-table tbody tr:hover {
+    background: var(--verde-50);
+    background-image: none;
+}
+
+#totais-macros-table td:first-child {
+    background: transparent;
+    color: var(--verde-900);
+}
+
+#totais-macros-table tbody tr:nth-child(even) {
+    background-color: #fbfdfb;
+}
+
+.table-container,
+.receitas-table-container {
+    border: 1px solid var(--contorno);
+    border-radius: var(--raio-md);
+    box-shadow: none;
+    overflow: hidden;
+}
+
+/* ═══════════════════════════════════════════════════════
+   BLOCOS AUXILIARES
+═══════════════════════════════════════════════════════ */
+.water-calc,
+.nutrition-details,
+.ingredientes-info,
+.receita-info,
+.checkbox-card {
+    background: var(--verde-50);
+    background-image: none;
+    border: 1px solid var(--contorno);
+    border-radius: var(--raio-md);
+}
+
+.no-data-message,
+.no-receitas-message {
+    color: var(--tinta-500);
+    background: transparent;
+    background-image: none;
+}
+
+/* ═══════════════════════════════════════════════════════
+   RESPONSIVO
+═══════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+    .titulo-ficha,
+    .titulo-formulario {
+        font-size: 1.25rem;
+        padding: 20px 18px 0;
+    }
+
+    .section {
+        margin: 16px 18px;
+    }
+}

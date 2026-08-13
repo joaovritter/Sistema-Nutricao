@@ -1,22 +1,32 @@
 package com.mjwsolucoes.sistemanutricao.controller;
 
+import com.mjwsolucoes.sistemanutricao.dto.CategoriaResumoDTO;
+import com.mjwsolucoes.sistemanutricao.model.CategoriaReceita;
 import com.mjwsolucoes.sistemanutricao.model.Receita;
+import com.mjwsolucoes.sistemanutricao.repository.IngredienteRepository;
 import com.mjwsolucoes.sistemanutricao.repository.ReceitaRepository;
+import com.mjwsolucoes.sistemanutricao.repository.RefeicaoRepository;
 import com.mjwsolucoes.sistemanutricao.service.ReceitaService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
 public class HomeController {
     private ReceitaRepository receitaRepository;
     private ReceitaService receitaService;
+    private RefeicaoRepository refeicaoRepository;
+    private IngredienteRepository ingredienteRepository;
 
-    public HomeController(ReceitaRepository receitaRepository, ReceitaService receitaService) {
+    public HomeController(ReceitaRepository receitaRepository, ReceitaService receitaService,
+                           RefeicaoRepository refeicaoRepository, IngredienteRepository ingredienteRepository) {
         this.receitaRepository = receitaRepository;
         this.receitaService = receitaService;
+        this.refeicaoRepository = refeicaoRepository;
+        this.ingredienteRepository = ingredienteRepository;
     }
 
     @GetMapping("/")
@@ -30,8 +40,31 @@ public class HomeController {
     }
 
     @GetMapping("/dashboard")
-    public String login() {
+    public String login(Model model) {
+        model.addAttribute("totalFichas", receitaRepository.count());
+        model.addAttribute("totalRefeicoes", refeicaoRepository.count());
+        model.addAttribute("totalIngredientes", ingredienteRepository.count());
+        model.addAttribute("categorias", resumoPorCategoria());
         return "dashboard";
+    }
+
+    private List<CategoriaResumoDTO> resumoPorCategoria() {
+        List<Object[]> contagens = receitaRepository.countByCategoria();
+
+        long maior = 1L;
+        for (Object[] linha : contagens) {
+            maior = Math.max(maior, (Long) linha[1]);
+        }
+
+        List<CategoriaResumoDTO> resumo = new ArrayList<>();
+        for (Object[] linha : contagens) {
+            CategoriaReceita categoria = (CategoriaReceita) linha[0];
+            long quantidade = (Long) linha[1];
+            int percentual = (int) Math.round((quantidade * 100.0) / maior);
+            resumo.add(new CategoriaResumoDTO(categoria.getDescricao(), quantidade, percentual));
+        }
+        resumo.sort((a, b) -> Long.compare(b.getQuantidade(), a.getQuantidade()));
+        return resumo;
     }
 
     @GetMapping("/fichatecnica")

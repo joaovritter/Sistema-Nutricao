@@ -3,26 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Criar Ingrediente - Sistema de Nutrição</title>
+  <title>Criar Ingrediente - Nutra</title>
   <link rel="stylesheet" href="/css/CriarIngrediente.css">
   <link rel="stylesheet" href="/css/navbar.css">
+  <link rel="stylesheet" href="/css/sidebar.css">
+  <link rel="stylesheet" href="/css/animacoes.css">
+  <link rel="stylesheet" href="/css/tema.css">
+  <script src="/js/animacoes.js" defer></script>
 </head>
 <body>
+<div class="app-shell">
 
-<header class="header">
-  <div class="logo-container">
-    <img src="/images/logo.png" alt="Logo Nutrição" class="logo">
-    <h1>Sistema de Nutrição</h1>
-  </div>
-  <button type="button" class="navbar-btn" onclick="window.location.href='/criarFichaTecnica'">Voltar</button>
-</header>
+<div th:replace="~{fragments/sidebar :: sidebar('ingredientes')}"></div>
 
-<div class="container">
+<div class="main-area">
+
+<div class="container page-anim">
   <span class="titulo-formulario">Criar Novo Ingrediente</span>
 
   <form id="ingredienteForm" th:action="@{/ingredientes/criar}" method="post">
     <section class="section">
-      <h2 class="section-title">📝 Informações Básicas</h2>
+      <h2 class="section-title">Informações Básicas</h2>
       <div class="section-content">
         <div class="form-row">
           <div class="form-group">
@@ -34,7 +35,7 @@
     </section>
 
     <section class="section">
-      <h2 class="section-title">🍎 Informações Nutricionais (por 100g)</h2>
+      <h2 class="section-title">Informações Nutricionais (por 100g)</h2>
       <div class="section-content">
         <div class="grid-4">
           <div class="form-group">
@@ -155,17 +156,19 @@
             .then(data => {
               // Lida com a resposta de sucesso do backend
               console.log('Ingrediente criado com sucesso:', data);
-              alert('Ingrediente criado com sucesso!');
+              toast('Ingrediente criado com sucesso!', 'success');
               // Redireciona para outra página após o sucesso
-              window.location.replace('/criarFichaTecnica');
+              setTimeout(() => window.location.replace('/criarFichaTecnica'), 600);
             })
             .catch(error => {
               // Lida com erros na requisição ou na resposta
               console.error('Erro ao enviar dados do ingrediente:', error);
-              alert('Erro ao criar ingrediente: ' + error.message);
+              toast('Erro ao criar ingrediente: ' + error.message, 'error');
             });
   });
 </script>
 
+</div>
+</div>
 </body>
 </html>

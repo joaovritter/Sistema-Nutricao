@@ -27,4 +27,8 @@ public interface ReceitaRepository extends JpaRepository<Receita, Long> {
 
     // Verifica se existe receita com determinado nome para um nutricionista
     boolean existsByNomeAndNutricionistaId(String nome, Long nutricionistaId);
+
+    // Contagem de receitas agrupadas por categoria, para o resumo da dashboard
+    @Query("SELECT r.categoria, COUNT(r) FROM Receita r GROUP BY r.categoria")
+    List<Object[]> countByCategoria();
 }

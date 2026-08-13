@@ -1,3 +1,5 @@
+USE nutricao;
+
 INSERT INTO ingrediente (nome, proteina, carboidrato, lipidio, sodio, gordura_saturada, is_ingrediente_sistema, nutricionista_id) VALUES
 ('Arroz, integral, cozido', 2.588, 25.810, 1.000, 1.245, 0.300, TRUE, NULL),
 ('Arroz, integral, cru', 7.323, 77.451, 1.865, 1.646, 0.300, TRUE, NULL),

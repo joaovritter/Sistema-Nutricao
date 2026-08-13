@@ -6,7 +6,11 @@
     <title>Refeições</title>
     <link rel="stylesheet" href="/css/dashboard.css">
     <link rel="stylesheet" href="/css/navbar.css">
+    <link rel="stylesheet" href="/css/sidebar.css">
     <link rel="stylesheet" href="/css/refeicoes.css">
+    <link rel="stylesheet" href="/css/animacoes.css">
+    <link rel="stylesheet" href="/css/tema.css">
+    <script src="/js/animacoes.js" defer></script>
     <style>
         /* ── Modal overlay ──────────────────────────────── */
         .modal-overlay {
@@ -122,30 +126,28 @@
 
         /* ── Botão ver perfil ───────────────────────────── */
         .btn-perfil {
-            background: linear-gradient(135deg, #10b981, #059669);
-            color: #fff;
-            border: none;
-            border-radius: 8px;
+            background: var(--verde-50, #eef6f1);
+            color: var(--verde-700, #164e36);
+            border: 1px solid var(--contorno, rgba(22, 78, 54, 0.15));
+            border-radius: var(--raio-pill, 999px);
             padding: 6px 14px;
             font-size: 0.78rem;
             font-weight: 600;
             cursor: pointer;
-            transition: opacity 0.2s;
+            transition: background 0.2s ease;
         }
-        .btn-perfil:hover { opacity: 0.85; }
+        .btn-perfil:hover { background: var(--verde-200, #cfe8da); }
     </style>
 </head>
 
 <body>
-    <header class="header">
-        <div class="logo-container">
-            <img src="/images/logo.png" alt="Logo Nutrição" class="logo">
-            <h1>Fichas Técnicas de Nutrição</h1>
-        </div>
-        <button type="button" class="navbar-btn" onclick="window.location.href='/dashboard'">Voltar</button>
-    </header>
+<div class="app-shell">
 
-    <div class="container">
+    <div th:replace="~{fragments/sidebar :: sidebar('refeicoes')}"></div>
+
+    <div class="main-area">
+
+    <div class="container page-anim">
 
         <!-- ── Lista de refeições ──────────────────────── -->
         <div class="refeicao-list card">
@@ -175,7 +177,7 @@
                 <label>Selecione as Fichas Técnicas:</label><br>
                 <div id="checkboxReceitas" style="margin-bottom:14px; max-height:300px; overflow-y:auto;"></div>
                 <button type="submit" class="btn btn-icon">Salvar</button>
-                <button type="button" class="navbar-btn" onclick="cancelarFormulario()">Cancelar</button>
+                <button type="button" class="btn btn-secondary" onclick="cancelarFormulario()">Cancelar</button>
             </form>
         </div>
     </div>
@@ -278,9 +280,16 @@
                                 <td>${refeicao.nome}</td>
                                 <td>${receitasNomes}</td>
                                 <td class="actions">
-                                    <button class="btn-perfil" onclick='verPerfilNutricional(${refeicao.id}, "${refeicao.nome.replace(/"/g, '\\"')}")'>🍎 Ver Perfil</button>
+                                    <button class="btn-perfil" onclick='verPerfilNutricional(${refeicao.id}, "${refeicao.nome.replace(/"/g, '\\"')}")'>Ver Perfil</button>
                                     <button class="btn btn-editar" onclick='editarRefeicao(${refeicao.id})'>Editar</button>
-                                    <button class="btn btn-excluir" onclick='excluirRefeicao(${refeicao.id})'>Excluir</button>
+                                    <button class="btn btn-excluir" title="Excluir refeição" aria-label="Excluir refeição" onclick='excluirRefeicao(${refeicao.id})'>
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                            <path d="M3 6h18"/>
+                                            <path d="M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2"/>
+                                            <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                                            <path d="M10 11v6M14 11v6"/>
+                                        </svg>
+                                    </button>
                                 </td>
                             </tr>`;
                     });
@@ -331,8 +340,8 @@
 
             fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body, credentials: 'include' })
                 .then(r => { if (!r.ok) throw new Error('Erro ao salvar'); return r.json(); })
-                .then(() => { cancelarFormulario(); carregarRefeicoes(); })
-                .catch(() => alert('Erro ao salvar a refeição.'));
+                .then(() => { cancelarFormulario(); carregarRefeicoes(); toast(id ? 'Refeição atualizada com sucesso!' : 'Refeição criada com sucesso!', 'success'); })
+                .catch(() => toast('Erro ao salvar a refeição.', 'error'));
         }
 
         // ─── Editar refeição ──────────────────────────────
@@ -347,8 +356,8 @@
         function excluirRefeicao(id) {
             if (!confirm('Tem certeza que deseja excluir esta refeição?')) return;
             fetch(`/api/refeicoes/${id}`, { method: 'DELETE', credentials: 'include' })
-                .then(() => carregarRefeicoes())
-                .catch(() => alert('Erro ao excluir.'));
+                .then(() => { carregarRefeicoes(); toast('Refeição excluída com sucesso!', 'success'); })
+                .catch(() => toast('Erro ao excluir.', 'error'));
         }
 
         // ─── Ver Perfil Nutricional da Refeição ───────────
@@ -448,6 +457,8 @@
         // ─── Init ─────────────────────────────────────────
         window.onload = () => { carregarRefeicoes(); };
     </script>
+    </div>
+</div>
 </body>
 
 </html>

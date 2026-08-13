@@ -9,25 +9,19 @@
     <link rel="stylesheet" href="/css/dashboard.css">
     <link rel="stylesheet" href="/css/visualizarFichaTecnica.css">
     <link rel="stylesheet" href="/css/navbar.css">
+    <link rel="stylesheet" href="/css/sidebar.css">
+    <link rel="stylesheet" href="/css/animacoes.css">
+    <link rel="stylesheet" href="/css/tema.css">
+    <script src="/js/animacoes.js" defer></script>
 </head>
 
 <body>
-<header class="header">
-    <div class="logo-container">
-        <img src="/images/logo.png" alt="Logo Nutrição" class="logo">
-        <h1>Fichas Técnicas de Nutrição</h1>
-    </div>
-    <div class="header-actions">
-        <a th:href="@{/dashboard}" class="btn navbar-btn">Voltar ao Dashboard</a>
-        <a th:href="@{/refeicoes}" class="btn navbar-btn">Refeições</a>
-        <a th:href="@{/fichatecnica}" class="btn navbar-btn"
-           sec:authorize="hasAnyAuthority('NUTRICIONISTA', 'ADMIN')">
-            + Criar Ficha Técnica
-        </a>
-    </div>
-</header>
+<div class="app-shell">
 
-<main class="container">
+<div th:replace="~{fragments/sidebar :: sidebar('visualizar')}"></div>
+
+<div class="main-area">
+<main class="container page-anim">
     <div class="receita-list-section">
         <h2>Receitas Cadastradas</h2>
 
@@ -76,8 +70,15 @@
                               method="post" style="display:inline;"
                               sec:authorize="hasAnyAuthority('ADMIN')">
                             <button type="submit" class="btn btn-excluir"
+                                    title="Excluir ficha" aria-label="Excluir ficha"
                                     onclick="return confirm('Tem certeza que deseja excluir esta ficha?')">
-                                Excluir
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"
+                                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <path d="M3 6h18"/>
+                                    <path d="M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2"/>
+                                    <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                                    <path d="M10 11v6M14 11v6"/>
+                                </svg>
                             </button>
                         </form>
                     </td>
@@ -87,6 +88,8 @@
         </div>
     </div>
 </main>
+</div>
 
+</div>
 </body>
 </html>
