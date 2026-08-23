@@ -1,0 +1,846 @@
+/* ═══════════════════════════════════════════════════════
+   ALIMENTOS — listagem da tabela TACO e cadastros próprios
+═══════════════════════════════════════════════════════ */
+
+.pagina-cabecalho {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 18px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.pagina-cabecalho h1 {
+    font-family: var(--fonte-display);
+    font-size: 1.7rem;
+    font-weight: 700;
+    color: var(--verde-900);
+    letter-spacing: -0.01em;
+}
+
+.pagina-cabecalho p {
+    margin-top: 5px;
+    font-size: 0.92rem;
+    color: var(--tinta-500);
+}
+
+/* ── Tabela ──────────────────────────────────────────── */
+.tabela-cartao {
+    background: var(--superficie);
+    border: 1px solid var(--contorno);
+    border-radius: var(--raio-lg);
+    box-shadow: var(--sombra-card);
+    overflow: hidden;
+}
+
+.tabela-rolagem {
+    overflow-x: auto;
+}
+
+.tabela-dados {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.tabela-dados thead th {
+    background: var(--verde-50);
+    color: var(--verde-700);
+    text-align: left;
+    padding: 13px 16px;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--contorno);
+    white-space: nowrap;
+}
+
+.tabela-dados thead th.num,
+.tabela-dados tbody td.num {
+    text-align: right;
+    font-family: var(--fonte-dado);
+}
+
+.tabela-dados tbody td {
+    padding: 13px 16px;
+    border-bottom: 1px solid var(--contorno);
+    color: var(--tinta-900);
+    vertical-align: middle;
+}
+
+.tabela-dados tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.tabela-dados tbody tr {
+    transition: background .15s;
+}
+
+.tabela-dados tbody tr:hover {
+    background: var(--creme-50);
+}
+
+/* Linha inteira clicável leva aos detalhes do alimento */
+.linha-alimento {
+    cursor: pointer;
+}
+
+.alimento-nome {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.alimento-nome a {
+    color: var(--verde-900);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.alimento-nome a:hover {
+    text-decoration: underline;
+}
+
+.alimento-autor {
+    display: block;
+    font-size: 0.76rem;
+    color: var(--tinta-300);
+    margin-top: 2px;
+}
+
+/* Ordenação clicável no cabeçalho */
+.tabela-dados thead th a {
+    color: inherit;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.tabela-dados thead th a:hover {
+    color: var(--verde-900);
+}
+
+.ordem-marca {
+    font-size: 0.65rem;
+}
+
+/* ═══════════════════════════════════════════════════════
+   DETALHES DE UM ALIMENTO
+═══════════════════════════════════════════════════════ */
+
+.alimento-detalhe {
+    background: var(--superficie);
+    border: 1px solid var(--contorno);
+    border-radius: var(--raio-lg);
+    box-shadow: var(--sombra-card);
+    padding: 30px 32px;
+}
+
+.alimento-detalhe header {
+    border-bottom: 1px solid var(--contorno);
+    padding-bottom: 20px;
+    margin-bottom: 24px;
+}
+
+.alimento-detalhe h1 {
+    font-family: var(--fonte-display);
+    font-size: 1.6rem;
+    color: var(--verde-900);
+    margin-bottom: 10px;
+    line-height: 1.25;
+}
+
+.alimento-detalhe .base-referencia {
+    font-size: 0.85rem;
+    color: var(--tinta-500);
+    margin-top: 10px;
+}
+
+.macro-grade {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 14px;
+}
+
+.macro-card {
+    border: 1px solid var(--contorno);
+    border-radius: var(--raio-md);
+    padding: 18px;
+    background: var(--creme-50);
+}
+
+.macro-card.destaque {
+    background: var(--verde-50);
+    border-color: var(--verde-200);
+}
+
+.macro-rotulo {
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--tinta-500);
+}
+
+.macro-valor {
+    font-family: var(--fonte-dado);
+    font-size: 1.55rem;
+    font-weight: 700;
+    color: var(--verde-900);
+    margin-top: 7px;
+    line-height: 1;
+}
+
+.macro-unidade {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--tinta-500);
+    margin-left: 3px;
+}
+
+/* Barra proporcional de distribuição dos macros */
+.distribuicao {
+    margin-top: 28px;
+}
+
+.distribuicao h2 {
+    font-family: var(--fonte-display);
+    font-size: 1.05rem;
+    color: var(--verde-900);
+    margin-bottom: 14px;
+}
+
+.distribuicao-trilho {
+    display: flex;
+    height: 16px;
+    border-radius: var(--raio-pill);
+    overflow: hidden;
+    border: 1px solid var(--contorno);
+    background: var(--creme-50);
+}
+
+.distribuicao-parte {
+    height: 100%;
+}
+
+.parte-proteina    { background: var(--verde-700); }
+.parte-carboidrato { background: var(--verde-500); }
+.parte-lipidio     { background: #d9a441; }
+
+.distribuicao-legenda {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+    font-size: 0.84rem;
+    color: var(--tinta-500);
+}
+
+.distribuicao-legenda span {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.legenda-cor {
+    width: 11px;
+    height: 11px;
+    border-radius: 3px;
+    display: inline-block;
+}
+
+.detalhe-acoes {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 28px;
+    padding-top: 22px;
+    border-top: 1px solid var(--contorno);
+}
+
+@media (max-width: 640px) {
+    .alimento-detalhe { padding: 22px 18px; }
+    .tabela-dados { font-size: 0.84rem; }
+}
+
+/* ═══════════════════════════════════════════════════════
+   AÇÕES EM LINHA DE TABELA
+═══════════════════════════════════════════════════════ */
+
+.linha-acoes {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    flex-wrap: wrap;
+}
+
+.linha-acoes form {
+    display: inline-flex;
+    margin: 0;
+}
+
+.linha-acoes .btn {
+    padding: 7px 14px;
+    border-radius: var(--raio-pill);
+    font-size: 0.78rem;
+    font-weight: 700;
+    font-family: var(--fonte-corpo);
+    text-decoration: none;
+    border: 1px solid transparent;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background .18s, transform .18s, border-color .18s;
+}
+
+.linha-acoes .btn:hover {
+    transform: translateY(-1px);
+}
+
+.linha-acoes .btn-detalhes {
+    background: var(--verde-700);
+    color: #fff;
+}
+
+.linha-acoes .btn-detalhes:hover {
+    background: var(--verde-900);
+}
+
+.linha-acoes .btn-editar {
+    background: var(--verde-50);
+    color: var(--verde-700);
+    border-color: var(--verde-200);
+}
+
+.linha-acoes .btn-editar:hover {
+    background: var(--verde-200);
+}
+
+/* Arquivar é a ação preferida no dia a dia; excluir fica discreto ao lado */
+.linha-acoes .btn-arquivar,
+.linha-acoes .btn-desarquivar {
+    background: #eef1f4;
+    color: #4a5761;
+    border-color: #d5dce3;
+}
+
+.linha-acoes .btn-arquivar:hover,
+.linha-acoes .btn-desarquivar:hover {
+    background: #e2e7ec;
+}
+
+.linha-acoes .btn-desarquivar {
+    background: var(--verde-50);
+    color: var(--verde-700);
+    border-color: var(--verde-200);
+}
+
+.linha-acoes .btn-excluir {
+    background: transparent;
+    color: var(--perigo-600);
+    border-color: transparent;
+    padding: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.linha-acoes .btn-excluir svg {
+    width: 17px;
+    height: 17px;
+}
+
+.linha-acoes .btn-excluir:hover {
+    background: #fdecea;
+    border-color: #f5c4c0;
+}
+
+/* ═══════════════════════════════════════════════════════
+   GRADE DE ALIMENTOS — cartões no lugar da tabela.
+   Reflui de 1 a 4 colunas conforme a largura disponível,
+   sem rolagem horizontal em nenhum tamanho de tela.
+═══════════════════════════════════════════════════════ */
+
+.alimentos-grade {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(235px, 1fr));
+    gap: 16px;
+}
+
+.alimento-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 18px;
+    text-align: left;
+    width: 100%;
+    border: 1px solid var(--contorno);
+    border-radius: var(--raio-lg);
+    background: var(--superficie);
+    box-shadow: var(--sombra-card);
+    cursor: pointer;
+    font-family: var(--fonte-corpo);
+    transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+}
+
+.alimento-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--verde-200);
+    box-shadow: 0 14px 32px -14px rgba(15, 54, 37, 0.32);
+}
+
+.alimento-card:focus-visible {
+    outline: 2px solid var(--verde-500);
+    outline-offset: 3px;
+}
+
+.alimento-card .card-titulo {
+    font-size: 0.98rem;
+    font-weight: 700;
+    line-height: 1.35;
+    color: var(--verde-900);
+    /* nomes da TACO são longos; corta em 2 linhas para os cartões ficarem parelhos */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.alimento-card .card-topo {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.alimento-card .card-energia {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    padding-bottom: 12px;
+    border-bottom: 1px dashed var(--contorno);
+}
+
+.alimento-card .energia-valor {
+    font-family: var(--fonte-dado);
+    font-size: 1.7rem;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--verde-700);
+}
+
+.alimento-card .energia-unidade {
+    font-size: 0.74rem;
+    font-weight: 600;
+    color: var(--tinta-300);
+}
+
+/* Trio proteína / carboidrato / lipídio */
+.card-macros {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+
+.card-macro {
+    text-align: center;
+    padding: 8px 4px;
+    border-radius: var(--raio-sm);
+    background: var(--creme-50);
+}
+
+.card-macro .macro-sigla {
+    display: block;
+    font-size: 0.64rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--tinta-300);
+}
+
+.card-macro .macro-num {
+    display: block;
+    font-family: var(--fonte-dado);
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--tinta-900);
+    margin-top: 3px;
+}
+
+.alimento-card .card-autor {
+    font-size: 0.72rem;
+    color: var(--tinta-300);
+    margin-top: -6px;
+}
+
+@media (max-width: 480px) {
+    .alimentos-grade {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ═══════════════════════════════════════════════════════
+   POP-UP DE DETALHES DO ALIMENTO
+   Abre ao clicar no cartão; o conteúdo entra escalonado.
+═══════════════════════════════════════════════════════ */
+
+.pop-fundo {
+    position: fixed;
+    inset: 0;
+    z-index: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(15, 54, 37, 0.45);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .22s ease, visibility .22s;
+}
+
+.pop-fundo.aberto {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* display:flex acima venceria o atributo hidden; devolve o comportamento */
+.pop-fundo[hidden] {
+    display: none;
+}
+
+/* Foco programático ao abrir: não desenha anel, senão o pop-up nasce
+   contornado. Os botões dentro dele mantêm o próprio foco visível. */
+.pop-caixa:focus,
+.pop-caixa:focus-visible {
+    outline: none;
+}
+
+.pop-caixa {
+    position: relative;
+    width: 100%;
+    max-width: 560px;
+    max-height: 86vh;
+    overflow-y: auto;
+    padding: 30px 30px 26px;
+    border-radius: var(--raio-lg);
+    background: var(--superficie);
+    box-shadow: 0 30px 70px -20px rgba(15, 54, 37, 0.5);
+    transform: translateY(14px) scale(0.97);
+    opacity: 0;
+    transition: transform .28s cubic-bezier(0.22, 1, 0.36, 1), opacity .28s ease;
+}
+
+.pop-fundo.aberto .pop-caixa {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+}
+
+.pop-fechar {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--contorno);
+    border-radius: 50%;
+    background: var(--superficie);
+    color: var(--tinta-500);
+    cursor: pointer;
+    transition: background .18s, color .18s;
+}
+
+.pop-fechar svg {
+    width: 16px;
+    height: 16px;
+}
+
+.pop-fechar:hover {
+    background: var(--creme-50);
+    color: var(--verde-900);
+}
+
+.pop-cabecalho {
+    padding-right: 40px;
+    padding-bottom: 18px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--contorno);
+}
+
+.pop-cabecalho h2 {
+    font-family: var(--fonte-display);
+    font-size: 1.3rem;
+    line-height: 1.3;
+    color: var(--verde-900);
+    margin-bottom: 10px;
+}
+
+.pop-referencia {
+    font-size: 0.82rem;
+    color: var(--tinta-500);
+    margin-top: 10px;
+}
+
+/* ── Entrada escalonada dos elementos ────────────────── */
+@keyframes surgirItem {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.pop-fundo.aberto .surge {
+    animation: surgirItem .4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.pop-fundo.aberto .surge:nth-child(1) { animation-delay: .06s; }
+.pop-fundo.aberto .surge:nth-child(2) { animation-delay: .10s; }
+.pop-fundo.aberto .surge:nth-child(3) { animation-delay: .14s; }
+.pop-fundo.aberto .surge:nth-child(4) { animation-delay: .18s; }
+.pop-fundo.aberto .surge:nth-child(5) { animation-delay: .22s; }
+.pop-fundo.aberto .surge:nth-child(6) { animation-delay: .26s; }
+
+/* Blocos fora da grade recebem o atraso por variável */
+.pop-fundo.aberto .surge-tardio {
+    animation: surgirItem .4s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: var(--atraso, .3s);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .pop-caixa,
+    .pop-fundo.aberto .surge,
+    .pop-fundo.aberto .surge-tardio {
+        animation: none;
+        transition: none;
+    }
+}
+
+@media (max-width: 520px) {
+    .pop-caixa {
+        padding: 24px 20px 20px;
+        max-height: 88vh;
+    }
+}
+
+/* ═══════════════════════════════════════════════════════
+   PAGINAÇÃO "TRACK" — marcador que desliza sobre a trilha.
+   Adaptação do modelo: aqui os itens são links reais e a
+   posição do marcador vem pronta do servidor (style inline),
+   já que cada página é uma requisição.
+═══════════════════════════════════════════════════════ */
+
+.paginacao {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.7rem;
+    margin-top: 26px;
+    padding: 16px 20px;
+    border: 1px solid var(--contorno);
+    border-radius: var(--raio-lg);
+    background: var(--superficie);
+    box-shadow: var(--sombra-card);
+}
+
+/* ── Setas ───────────────────────────────────────────── */
+.pag-seta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.9rem;
+    height: 1.9rem;
+    flex-shrink: 0;
+    border: none;
+    border-radius: var(--raio-sm);
+    background: transparent;
+    color: var(--tinta-500);
+    text-decoration: none;
+    transition: color .25s ease, background .25s ease, transform .15s ease;
+}
+
+.pag-seta svg {
+    width: 15px;
+    height: 15px;
+}
+
+.pag-seta:hover {
+    color: var(--verde-900);
+    background: var(--verde-50);
+}
+
+.pag-seta:active {
+    transform: scale(0.9);
+}
+
+/* Ponta da lista: some do fluxo de foco, mas segura o espaço */
+.pag-seta--inativa {
+    opacity: 0.2;
+    pointer-events: none;
+}
+
+/* ── Trilha ──────────────────────────────────────────── */
+.pag-trilha {
+    position: relative;
+    width: 15rem;
+    max-width: 100%;
+    height: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.pag-trilha-linha {
+    position: relative;
+    width: 100%;
+    height: 2px;
+    margin-top: 1.15rem;
+    border-radius: 2px;
+    background: var(--contorno);
+}
+
+.pag-trilha-marcador {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 1.9rem;
+    height: 6px;
+    border-radius: var(--raio-pill);
+    background: linear-gradient(90deg, var(--verde-700), var(--verde-500));
+    transform: translateY(-50%);
+    box-shadow: 0 0 10px rgba(47, 122, 84, 0.35);
+    transition: left .5s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+.pag-trilha-itens {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.pag-numero {
+    display: block;
+    width: 1.9rem;
+    height: 1.3rem;
+    text-align: center;
+    line-height: 1.3rem;
+    font-family: var(--fonte-dado);
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--tinta-300);
+    text-decoration: none;
+    background: transparent;
+    transition: color .25s ease, transform .25s ease;
+}
+
+.pag-numero:hover {
+    color: var(--verde-500);
+}
+
+.pag-numero.atual {
+    color: var(--verde-700);
+    transform: translateY(-2px);
+}
+
+/* ── Contador ────────────────────────────────────────── */
+.pag-contador {
+    font-size: 0.78rem;
+    color: var(--tinta-500);
+    white-space: nowrap;
+}
+
+.pag-contador strong {
+    font-family: var(--fonte-dado);
+    color: var(--verde-700);
+}
+
+@media (max-width: 560px) {
+    .paginacao {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        padding: 14px;
+    }
+
+    .pag-trilha {
+        width: 11rem;
+    }
+
+    .pag-contador {
+        flex-basis: 100%;
+        text-align: center;
+        order: 3;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .pag-trilha-marcador {
+        transition: none;
+    }
+}
+
+/* ═══════════════════════════════════════════════════════
+   ATALHO "ADICIONAR A UMA FICHA" dentro do pop-up
+═══════════════════════════════════════════════════════ */
+
+.inserir-ficha {
+    margin-top: 24px;
+    padding-top: 22px;
+    border-top: 1px solid var(--contorno);
+}
+
+.inserir-ficha h3 {
+    font-family: var(--fonte-display);
+    font-size: 1.02rem;
+    color: var(--verde-900);
+    margin-bottom: 16px;
+    line-height: 1.35;
+}
+
+.inserir-campos {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 13px 14px;
+}
+
+/* Ficha e medida caseira ocupam a linha inteira */
+.inserir-largo {
+    grid-column: 1 / -1;
+}
+
+.inserir-nota {
+    margin-top: 14px;
+    font-size: 0.78rem;
+    line-height: 1.5;
+    color: var(--tinta-300);
+}
+
+.inserir-acoes {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 18px;
+}
+
+.inserir-ficha .aviso {
+    margin-bottom: 14px;
+}
+
+@media (max-width: 520px) {
+    .inserir-campos {
+        grid-template-columns: 1fr;
+    }
+}

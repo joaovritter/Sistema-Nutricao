@@ -16,10 +16,14 @@ public class IngredienteService {
     private final IngredienteRepository ingredienteRepository;
     private final UserRepository userRepository;
 
+    private final AtividadeService atividadeService;
+
     public IngredienteService(IngredienteRepository ingredienteRepository,
-                              UserRepository userRepository) {
+                              UserRepository userRepository,
+                              AtividadeService atividadeService) {
         this.ingredienteRepository = ingredienteRepository;
         this.userRepository = userRepository;
+        this.atividadeService = atividadeService;
     }
 
     // Lista todos os ingredientes (incluindo do sistema e de nutricionistas)
@@ -62,6 +66,9 @@ public class IngredienteService {
 
         // Salva o ingrediente (agora uma instância de Ingrediente, não IngredienteNutricionista)
         Ingrediente salvo = ingredienteRepository.save(ingrediente);
+
+        atividadeService.registrar(TipoAtividade.CRIACAO, AlvoAtividade.ALIMENTO,
+                "Alimento \"" + salvo.getNome() + "\" cadastrado", salvo.getId());
 
         // Converte o ingrediente salvo de volta para IngredienteUserDTO para o retorno
         return convertToUserDTO(salvo);

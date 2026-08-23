@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solicitação enviada — Nutra</title>
+    <link rel="stylesheet" href="/css/animacoes.css">
+    <link rel="stylesheet" href="/css/tema.css">
+    <link rel="stylesheet" href="/css/autenticacao.css">
+    <script src="/js/animacoes.js" defer></script>
+</head>
+<body>
+<div class="tela-centro">
+    <div class="cartao-mensagem hero-anim">
+
+        <div class="marca-sucesso">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M20 6 9 17l-5-5"/>
+            </svg>
+        </div>
+
+        <h1>Solicitação de registro enviada</h1>
+
+        <p>
+            Sua solicitação foi enviada ao sistema. Assim que sua conta estiver ativa,
+            você poderá fazer login normalmente.
+        </p>
+
+        <ol class="passos">
+            <li>Um administrador vai revisar o seu cadastro.</li>
+            <li>Ele define o seu cargo — nutricionista, estudante ou cozinha.</li>
+            <li>Com o cargo definido, o acesso é liberado e o login passa a funcionar.</li>
+        </ol>
+
+        <a th:href="@{/login}" class="botao-principal">Voltar para o login</a>
+    </div>
+</div>
+</body>
+</html>

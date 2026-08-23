@@ -1,0 +1,337 @@
+/* ═══════════════════════════════════════════════════════
+   NAVEGAÇÃO — barra superior com a marca + navbar flutuante
+   inferior no estilo "tubelight".
+
+   Substitui a antiga sidebar. Os seletores de layout
+   (.app-shell / .main-area) foram mantidos com os mesmos
+   nomes para as telas continuarem funcionando.
+═══════════════════════════════════════════════════════ */
+
+/* ═══════════════════════════════════════════════════════
+   TRANSIÇÃO ENTRE PÁGINAS
+   Cada item da navbar recarrega a página. Sem isto a lâmpada
+   apenas "pula" para o novo item; com a View Transition ela
+   desliza de um para o outro, como o layoutId do Framer Motion
+   faz na versão React. Navegadores sem suporte ignoram o bloco
+   e continuam com o salto instantâneo.
+═════════════════════════════════════════════════════ */
+
+@view-transition {
+    navigation: auto;
+}
+
+/* O conteúdo troca rápido; só a lâmpada merece um tempo maior */
+::view-transition-old(root),
+::view-transition-new(root) {
+    animation-duration: .18s;
+}
+
+.topo           { view-transition-name: topo-fixo; }
+.navbar-pilula  { view-transition-name: navbar-pilula; }
+.navbar-lampada { view-transition-name: navbar-lampada; }
+
+::view-transition-group(navbar-lampada) {
+    animation-duration: .42s;
+    animation-timing-function: cubic-bezier(0.34, 1.4, 0.5, 1);
+}
+
+/* ── Esqueleto da página ─────────────────────────────── */
+.app-shell {
+    display: block;
+    min-height: 100vh;
+    /* espaço para a navbar flutuante não cobrir o conteúdo */
+    padding-bottom: 118px;
+}
+
+.app-shell .main-area {
+    margin-left: 0;
+    padding: 84px 24px 24px;
+}
+
+.main-area > .container,
+.main-area > main.container {
+    margin: 0 auto;
+    max-width: 1180px;
+    padding: 0;
+}
+
+/* ═══════════════════════════════════════════════════════
+   BARRA SUPERIOR
+═══════════════════════════════════════════════════════ */
+
+.topo {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 190;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 0 22px;
+    background: rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--contorno, rgba(22, 78, 54, 0.15));
+}
+
+.topo-marca {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    border: none;
+}
+
+.topo-marca img {
+    height: 30px;
+    width: auto;
+    display: block;
+}
+
+.topo-conta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.topo-usuario {
+    font-family: var(--fonte-corpo, 'Raleway', sans-serif);
+    font-size: 0.84rem;
+    font-weight: 600;
+    color: var(--tinta-500, #5b6b63);
+}
+
+.topo-conta form {
+    display: flex;
+    margin: 0;
+}
+
+.topo-sair {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 16px;
+    border-radius: var(--raio-pill, 999px);
+    border: 1px solid var(--contorno, rgba(22, 78, 54, 0.15));
+    background: transparent;
+    color: var(--tinta-500, #5b6b63);
+    font-family: var(--fonte-corpo, 'Raleway', sans-serif);
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background .18s, color .18s, border-color .18s;
+}
+
+.topo-sair svg {
+    width: 16px;
+    height: 16px;
+}
+
+.topo-sair:hover {
+    background: #fdecea;
+    border-color: #f5c4c0;
+    color: var(--perigo-700, #8c1d17);
+}
+
+/* ═══════════════════════════════════════════════════════
+   NAVBAR TUBELIGHT
+═══════════════════════════════════════════════════════ */
+
+.navbar-tubo {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 200;
+    margin-bottom: 24px;
+    max-width: calc(100vw - 24px);
+}
+
+.navbar-pilula {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+    padding: 4px;
+    border-radius: var(--raio-pill, 999px);
+    border: 1px solid var(--contorno, rgba(22, 78, 54, 0.15));
+    background: rgba(255, 255, 255, 0.55);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 10px 30px -8px rgba(15, 54, 37, 0.28),
+                0 2px 6px rgba(15, 54, 37, 0.06);
+}
+
+/* ── Itens ───────────────────────────────────────────── */
+.navbar-item {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 9px 24px;
+    border-radius: var(--raio-pill, 999px);
+    text-decoration: none;
+    font-family: var(--fonte-corpo, 'Raleway', sans-serif);
+    font-size: 0.86rem;
+    font-weight: 600;
+    white-space: nowrap;
+    color: var(--tinta-500, #5b6b63);
+    transition: color .2s ease;
+}
+
+.navbar-item:hover {
+    color: var(--verde-700, #164e36);
+}
+
+.navbar-item.ativo {
+    color: var(--verde-700, #164e36);
+}
+
+.navbar-item:focus-visible {
+    outline: 2px solid var(--verde-500, #2f7a54);
+    outline-offset: 2px;
+}
+
+.item-icone {
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.item-icone svg {
+    width: 19px;
+    height: 19px;
+}
+
+/* ── A lâmpada ───────────────────────────────────────── */
+.navbar-lampada {
+    position: absolute;
+    top: 4px;
+    left: 0;
+    bottom: 4px;
+    width: 0;
+    z-index: 0;
+    opacity: 0;
+    border-radius: var(--raio-pill, 999px);
+    background: rgba(47, 122, 84, 0.10);
+    /* Sem transição por padrão. Ao carregar a página o script grava a
+       posição da lâmpada, e qualquer transição aqui faria ela percorrer a
+       barra desde a borda esquerda a cada troca de página. Entre seções
+       quem anima é a View Transition declarada acima. */
+    transition: none;
+}
+
+/* Ligada só quando a janela muda de tamanho, onde o movimento faz sentido */
+.navbar-lampada.lampada-suave {
+    transition: transform .25s ease, width .25s ease;
+}
+
+.navbar-tubo.pronta .navbar-lampada {
+    opacity: 1;
+}
+
+/* Barrinha acesa no topo do item ativo */
+.lampada-barra {
+    position: absolute;
+    top: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 32px;
+    height: 4px;
+    border-radius: 999px 999px 0 0;
+    background: var(--verde-500, #2f7a54);
+}
+
+/* As três camadas de brilho que se sobrepõem no original */
+.lampada-brilho {
+    position: absolute;
+    border-radius: 999px;
+    background: rgba(47, 122, 84, 0.28);
+}
+
+.brilho-largo {
+    width: 48px;
+    height: 24px;
+    top: -8px;
+    left: -8px;
+    filter: blur(12px);
+}
+
+.brilho-medio {
+    width: 32px;
+    height: 24px;
+    top: -4px;
+    left: 0;
+    filter: blur(12px);
+}
+
+.brilho-curto {
+    width: 16px;
+    height: 16px;
+    top: 0;
+    left: 8px;
+    filter: blur(6px);
+}
+
+/* ── Telas estreitas: só ícones, como no modelo ──────── */
+@media (max-width: 767px) {
+    .navbar-pilula {
+        gap: 4px;
+    }
+
+    .navbar-item {
+        padding: 10px 15px;
+    }
+
+    .item-rotulo {
+        display: none;
+    }
+
+    .item-icone {
+        display: inline-flex;
+    }
+
+    .lampada-barra {
+        width: 22px;
+    }
+
+    .app-shell .main-area {
+        padding: 78px 14px 18px;
+    }
+
+    .topo {
+        height: 58px;
+        padding: 0 14px;
+    }
+
+    .topo-usuario {
+        display: none;
+    }
+}
+
+/* Em telas muito estreitas a pílula pode rolar lateralmente */
+@media (max-width: 420px) {
+    .navbar-tubo {
+        overflow-x: auto;
+        scrollbar-width: none;
+    }
+
+    .navbar-tubo::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .navbar-lampada {
+        transition: none;
+    }
+
+    ::view-transition-group(*),
+    ::view-transition-old(*),
+    ::view-transition-new(*) {
+        animation: none !important;
+    }
+}

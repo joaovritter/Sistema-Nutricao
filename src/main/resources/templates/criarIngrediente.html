@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Criar Ingrediente - Nutra</title>
-  <link rel="stylesheet" href="/css/CriarIngrediente.css">
+  <title>Novo alimento — Nutra</title>
+  <link rel="stylesheet" href="/css/criarIngrediente.css">
   <link rel="stylesheet" href="/css/navbar.css">
-  <link rel="stylesheet" href="/css/sidebar.css">
+  <link rel="stylesheet" href="/css/navegacao.css">
   <link rel="stylesheet" href="/css/animacoes.css">
   <link rel="stylesheet" href="/css/tema.css">
   <script src="/js/animacoes.js" defer></script>
@@ -14,12 +14,12 @@
 <body>
 <div class="app-shell">
 
-<div th:replace="~{fragments/sidebar :: sidebar('ingredientes')}"></div>
+<div th:replace="~{fragments/navbar :: navbar('alimentos')}"></div>
 
 <div class="main-area">
 
 <div class="container page-anim">
-  <span class="titulo-formulario">Criar Novo Ingrediente</span>
+  <span class="titulo-formulario">Cadastrar novo alimento</span>
 
   <form id="ingredienteForm" th:action="@{/ingredientes/criar}" method="post">
     <section class="section">
@@ -27,7 +27,7 @@
       <div class="section-content">
         <div class="form-row">
           <div class="form-group">
-            <label for="nome">Nome do Ingrediente:</label>
+            <label for="nome">Nome do alimento:</label>
             <input type="text" id="nome" name="nome" required placeholder="Ex: Frango, Arroz, Batata...">
           </div>
         </div>
@@ -64,7 +64,7 @@
     <section class="section">
       <div class="section-content">
         <div class="form-actions">
-          <button type="submit" class="btn btn-primary">Criar Ingrediente</button>
+          <button type="submit" class="btn btn-primary">Cadastrar alimento</button>
           <button type="button" class="btn btn-secondary" onclick="limparFormulario()">Limpar Formulário</button>
         </div>
       </div>
@@ -92,7 +92,7 @@
 
     // **Validação básica no frontend**
     if (nome === '') {
-      alert('Por favor, preencha o nome do ingrediente.');
+      alert('Por favor, preencha o nome do alimento.');
       return;
     }
 
@@ -113,14 +113,6 @@
       }
     }
 
-    // **Obtenção do username do nutricionista**
-    // IMPORTANTE: Em um ambiente real, o username do nutricionista logado deve ser obtido
-    // de forma segura, por exemplo, do contexto de segurança do Spring (se estiver usando Thymeleaf)
-    // ou de um token JWT após o login.
-    // Para fins de demonstração, estou usando um valor fixo.
-    // Adapte esta parte conforme sua lógica de autenticação.
-    const nutricionistaUsername = "nutricionista"; // <<< Substitua pelo username real do nutricionista logado
-
     // **Prepara o objeto de dados para enviar ao backend**
     const dadosIngrediente = {
       nome: nome,
@@ -134,7 +126,8 @@
     };
 
     // **Faz a requisição POST para o backend usando a Fetch API**
-    fetch(`/api/ingredientes/nutricionista/${nutricionistaUsername}`, {
+    fetch('/api/ingredientes', {
+      credentials: 'include',
       method: 'POST', // Define o método HTTP como POST
       headers: {
         'Content-Type': 'application/json', // Indica que o corpo da requisição é JSON
@@ -150,20 +143,20 @@
               }
               // Se a resposta não foi OK, tenta ler o JSON de erro e lança uma exceção
               return response.json().then(errorData => {
-                throw new Error(errorData.message || 'Erro desconhecido ao criar ingrediente.');
+                throw new Error(errorData.message || 'Erro desconhecido ao cadastrar o alimento.');
               });
             })
             .then(data => {
               // Lida com a resposta de sucesso do backend
-              console.log('Ingrediente criado com sucesso:', data);
-              toast('Ingrediente criado com sucesso!', 'success');
+              console.log('Alimento cadastrado com sucesso:', data);
+              toast('Alimento cadastrado com sucesso!', 'success');
               // Redireciona para outra página após o sucesso
-              setTimeout(() => window.location.replace('/criarFichaTecnica'), 600);
+              setTimeout(() => window.location.replace('/alimentos'), 600);
             })
             .catch(error => {
               // Lida com erros na requisição ou na resposta
-              console.error('Erro ao enviar dados do ingrediente:', error);
-              toast('Erro ao criar ingrediente: ' + error.message, 'error');
+              console.error('Erro ao enviar dados do alimento:', error);
+              toast('Erro ao cadastrar o alimento: ' + error.message, 'error');
             });
   });
 </script>

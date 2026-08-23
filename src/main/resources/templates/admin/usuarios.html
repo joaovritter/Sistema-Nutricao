@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usuários — Nutra</title>
+    <link rel="stylesheet" href="/css/dashboard.css">
+    <link rel="stylesheet" href="/css/navbar.css">
+    <link rel="stylesheet" href="/css/navegacao.css">
+    <link rel="stylesheet" href="/css/animacoes.css">
+    <link rel="stylesheet" href="/css/tema.css">
+    <link rel="stylesheet" href="/css/filtros.css">
+    <link rel="stylesheet" href="/css/alimentos.css">
+    <link rel="stylesheet" href="/css/admin.css">
+    <script src="/js/animacoes.js" defer></script>
+</head>
+
+<body>
+<div class="app-shell">
+
+    <div th:replace="~{fragments/navbar :: navbar('admin')}"></div>
+
+    <div class="main-area">
+        <main class="container page-anim">
+
+            <div class="pagina-cabecalho">
+                <div>
+                    <h1>Usuários</h1>
+                    <p>Aprove novas solicitações e defina o cargo de cada pessoa no sistema.</p>
+                </div>
+            </div>
+
+            <div th:replace="~{fragments/abasAdmin :: abas('usuarios')}"></div>
+
+            <div class="aviso aviso--sucesso" th:if="${sucesso}" th:text="${sucesso}"></div>
+            <div class="aviso aviso--erro" th:if="${erro}" th:text="${erro}"></div>
+
+            <!-- ═══ Solicitações aguardando aprovação ═════════════════ -->
+            <section class="admin-secao admin-secao--pendentes card-anim">
+                <header>
+                    <h2>
+                        Solicitações de acesso
+                        <span class="contador-bolha" th:if="${!#lists.isEmpty(pendentes)}"
+                              th:text="${#lists.size(pendentes)}">0</span>
+                    </h2>
+                    <p>Escolher um cargo aprova a conta e libera o login imediatamente.</p>
+                </header>
+
+                <div class="admin-vazio" th:if="${#lists.isEmpty(pendentes)}">
+                    Nenhuma solicitação pendente no momento.
+                </div>
+
+                <div class="usuario-linha" th:each="u : ${pendentes}">
+                    <div class="usuario-identidade">
+                        <div class="usuario-nome">
+                            <span th:text="${u.nome}">Nome</span>
+                            <span class="selo selo--pendente">Aguardando</span>
+                        </div>
+                        <div class="usuario-meta">
+                            <span th:text="'@' + ${u.username}">@usuario</span>
+                            <span th:if="${u.criadoEm != null}"
+                                  th:text="' · solicitado em ' + ${#temporals.format(u.criadoEm, 'dd/MM/yyyy HH:mm')}"></span>
+                        </div>
+                    </div>
+
+                    <div class="usuario-acoes">
+                        <form th:action="@{/admin/usuarios/{id}/cargo(id=${u.id})}" method="post">
+                            <select name="cargo" required>
+                                <option value="" disabled selected>Definir cargo…</option>
+                                <option th:each="c : ${cargos}" th:value="${c}" th:text="${c.descricao}">Cargo</option>
+                            </select>
+                            <button type="submit" class="btn-mini btn-mini--solido">Aprovar</button>
+                        </form>
+
+                        <form th:action="@{/admin/usuarios/{id}/recusar(id=${u.id})}" method="post"
+                              onsubmit="return confirm('Recusar esta solicitação? O cadastro será apagado.')">
+                            <button type="submit" class="btn-mini btn-mini--perigo">Recusar</button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ═══ Usuários com cargo definido ═══════════════════════ -->
+            <section class="admin-secao card-anim">
+                <header>
+                    <h2>Usuários do sistema</h2>
+                    <p>Alterar o cargo muda na hora o que a pessoa enxerga. Suspender o acesso mantém o cadastro e o histórico.</p>
+                </header>
+
+                <div class="admin-vazio" th:if="${#lists.isEmpty(usuarios)}">
+                    Nenhum usuário cadastrado.
+                </div>
+
+                <div class="usuario-linha" th:each="u : ${usuarios}">
+                    <div class="usuario-identidade">
+                        <div class="usuario-nome">
+                            <span th:text="${u.nome}">Nome</span>
+                            <span class="selo" th:classappend="${u.ativo} ? 'selo--ativo' : 'selo--inativo'"
+                                  th:text="${u.ativo} ? 'Ativo' : 'Suspenso'">Ativo</span>
+                        </div>
+                        <div class="usuario-meta">
+                            <span th:text="'@' + ${u.username}">@usuario</span>
+                            <span th:text="' · ' + ${u.roleDescricao}"> · Cargo</span>
+                            <span th:if="${u.totalFichas > 0}"
+                                  th:text="' · ' + ${u.totalFichas} + ' ficha(s)'"></span>
+                        </div>
+                    </div>
+
+                    <div class="usuario-acoes">
+                        <form th:action="@{/admin/usuarios/{id}/cargo(id=${u.id})}" method="post">
+                            <select name="cargo" onchange="this.form.submit()">
+                                <option th:each="c : ${cargos}" th:value="${c}" th:text="${c.descricao}"
+                                        th:selected="${c == u.role}">Cargo</option>
+                            </select>
+                            <noscript><button type="submit" class="btn-mini">Salvar</button></noscript>
+                        </form>
+
+                        <form th:action="@{/admin/usuarios/{id}/ativacao(id=${u.id})}" method="post">
+                            <input type="hidden" name="ativo" th:value="${!u.ativo}">
+                            <button type="submit" class="btn-mini"
+                                    th:classappend="${u.ativo} ? ' btn-mini--perigo' : ' btn-mini--solido'"
+                                    th:text="${u.ativo} ? 'Suspender' : 'Reativar'">Suspender</button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+</div>
+</body>
+</html>

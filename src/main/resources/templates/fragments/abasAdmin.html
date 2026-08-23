@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<!-- Abas do painel administrativo. `atual` = usuarios | logs -->
+<nav class="abas-admin" th:fragment="abas(atual)" aria-label="Seções do painel">
+    <a href="/admin/usuarios" class="aba" th:classappend="${atual == 'usuarios'} ? ' ativa'">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M19 8v6M22 11h-6"/>
+        </svg>
+        Usuários
+    </a>
+    <a href="/admin/logs" class="aba" th:classappend="${atual == 'logs'} ? ' ativa'">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 8v4l3 2"/>
+            <circle cx="12" cy="12" r="9"/>
+        </svg>
+        Registro de atividade
+    </a>
+</nav>
+
+</body>
+</html>

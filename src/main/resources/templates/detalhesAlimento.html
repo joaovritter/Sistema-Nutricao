@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+      lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${alimento.nome} + ' — Nutra'">Alimento — Nutra</title>
+    <link rel="stylesheet" href="/css/dashboard.css">
+    <link rel="stylesheet" href="/css/navbar.css">
+    <link rel="stylesheet" href="/css/navegacao.css">
+    <link rel="stylesheet" href="/css/animacoes.css">
+    <link rel="stylesheet" href="/css/tema.css">
+    <link rel="stylesheet" href="/css/filtros.css">
+    <link rel="stylesheet" href="/css/alimentos.css">
+    <script src="/js/animacoes.js" defer></script>
+</head>
+
+<body>
+<div class="app-shell">
+
+    <div th:replace="~{fragments/navbar :: navbar('alimentos')}"></div>
+
+    <div class="main-area">
+        <main class="container page-anim">
+
+            <article class="alimento-detalhe card-anim"
+                     th:with="kcalProteina=${alimento.proteina * 4},
+                              kcalCarboidrato=${alimento.carboidrato * 4},
+                              kcalLipidio=${alimento.lipidio * 9}">
+
+                <header>
+                    <h1 th:text="${alimento.nome}">Nome do alimento</h1>
+                    <span class="selo" th:classappend="${alimento.personalizado} ? 'selo--personalizado' : 'selo--taco'"
+                          th:text="${alimento.personalizado} ? 'Personalizado' : 'Tabela TACO'">TACO</span>
+                    <p class="base-referencia">
+                        Valores por <strong>100 g</strong> do alimento.
+                        <span th:if="${alimento.autor != null}" th:text="'Cadastrado por ' + ${alimento.autor} + '.'"></span>
+                    </p>
+                </header>
+
+                <div class="macro-grade">
+                    <div class="macro-card destaque">
+                        <div class="macro-rotulo">Energia</div>
+                        <div class="macro-valor">
+                            <span th:text="${#numbers.formatDecimal(alimento.kcal, 1, 'POINT', 0, 'COMMA')}">0</span><span class="macro-unidade">kcal</span>
+                        </div>
+                    </div>
+                    <div class="macro-card">
+                        <div class="macro-rotulo">Proteína</div>
+                        <div class="macro-valor">
+                            <span th:text="${#numbers.formatDecimal(alimento.proteina, 1, 'POINT', 2, 'COMMA')}">0</span><span class="macro-unidade">g</span>
+                        </div>
+                    </div>
+                    <div class="macro-card">
+                        <div class="macro-rotulo">Carboidrato</div>
+                        <div class="macro-valor">
+                            <span th:text="${#numbers.formatDecimal(alimento.carboidrato, 1, 'POINT', 2, 'COMMA')}">0</span><span class="macro-unidade">g</span>
+                        </div>
+                    </div>
+                    <div class="macro-card">
+                        <div class="macro-rotulo">Lipídio</div>
+                        <div class="macro-valor">
+                            <span th:text="${#numbers.formatDecimal(alimento.lipidio, 1, 'POINT', 2, 'COMMA')}">0</span><span class="macro-unidade">g</span>
+                        </div>
+                    </div>
+                    <div class="macro-card">
+                        <div class="macro-rotulo">Gordura saturada</div>
+                        <div class="macro-valor">
+                            <span th:text="${#numbers.formatDecimal(alimento.gorduraSaturada, 1, 'POINT', 2, 'COMMA')}">0</span><span class="macro-unidade">g</span>
+                        </div>
+                    </div>
+                    <div class="macro-card">
+                        <div class="macro-rotulo">Sódio</div>
+                        <div class="macro-valor">
+                            <span th:text="${#numbers.formatDecimal(alimento.sodio, 1, 'POINT', 1, 'COMMA')}">0</span><span class="macro-unidade">mg</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quanto de cada macro contribui para a energia total -->
+                <section class="distribuicao" th:if="${alimento.kcal > 0}">
+                    <h2>Distribuição da energia</h2>
+                    <div class="distribuicao-trilho">
+                        <div class="distribuicao-parte parte-proteina"
+                             th:style="'width:' + ${#numbers.formatDecimal(kcalProteina * 100 / alimento.kcal, 1, 'POINT', 2, 'POINT')} + '%'"></div>
+                        <div class="distribuicao-parte parte-carboidrato"
+                             th:style="'width:' + ${#numbers.formatDecimal(kcalCarboidrato * 100 / alimento.kcal, 1, 'POINT', 2, 'POINT')} + '%'"></div>
+                        <div class="distribuicao-parte parte-lipidio"
+                             th:style="'width:' + ${#numbers.formatDecimal(kcalLipidio * 100 / alimento.kcal, 1, 'POINT', 2, 'POINT')} + '%'"></div>
+                    </div>
+                    <div class="distribuicao-legenda">
+                        <span>
+                            <i class="legenda-cor parte-proteina"></i>
+                            Proteína
+                            <strong th:text="${#numbers.formatDecimal(kcalProteina * 100 / alimento.kcal, 1, 'POINT', 0, 'COMMA')} + '%'">0%</strong>
+                        </span>
+                        <span>
+                            <i class="legenda-cor parte-carboidrato"></i>
+                            Carboidrato
+                            <strong th:text="${#numbers.formatDecimal(kcalCarboidrato * 100 / alimento.kcal, 1, 'POINT', 0, 'COMMA')} + '%'">0%</strong>
+                        </span>
+                        <span>
+                            <i class="legenda-cor parte-lipidio"></i>
+                            Lipídio
+                            <strong th:text="${#numbers.formatDecimal(kcalLipidio * 100 / alimento.kcal, 1, 'POINT', 0, 'COMMA')} + '%'">0%</strong>
+                        </span>
+                    </div>
+                </section>
+
+                <div class="detalhe-acoes">
+                    <a th:href="@{/alimentos}" class="btn-filtro btn-filtro--neutro">Voltar para a lista</a>
+                    <a th:href="@{/alimentos(termo=${alimento.nome})}" class="btn-filtro btn-filtro--neutro">
+                        Buscar alimentos parecidos
+                    </a>
+                </div>
+            </article>
+
+        </main>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,394 @@
+/* ═══════════════════════════════════════════════════════
+   FILTROS E BUSCA — painel compartilhado
+   Usado por Alimentos, Fichas técnicas e Refeições.
+   Depende dos tokens de tema.css (carregue tema.css antes).
+═══════════════════════════════════════════════════════ */
+
+.busca-painel {
+    background: var(--superficie);
+    border: 1px solid var(--contorno);
+    border-radius: var(--raio-lg);
+    box-shadow: var(--sombra-card);
+    padding: 20px 22px;
+    margin-bottom: 22px;
+}
+
+/* ── Linha principal: campo de busca + ações ─────────── */
+.busca-linha {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.busca-campo {
+    position: relative;
+    flex: 1 1 280px;
+    min-width: 0;
+}
+
+.busca-campo svg {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    color: var(--tinta-300);
+    pointer-events: none;
+}
+
+.busca-campo input {
+    width: 100%;
+    padding: 12px 16px 12px 42px;
+    border: 1px solid var(--contorno);
+    border-radius: var(--raio-pill);
+    background: var(--creme-50);
+    font-family: var(--fonte-corpo);
+    font-size: 0.95rem;
+    color: var(--tinta-900);
+    transition: border-color .2s, box-shadow .2s, background .2s;
+}
+
+.busca-campo input:focus {
+    outline: none;
+    background: var(--superficie);
+    border-color: var(--verde-500);
+    box-shadow: 0 0 0 4px var(--emerald-ring);
+}
+
+/* ── Botões ──────────────────────────────────────────── */
+.btn-filtro {
+    padding: 11px 22px;
+    border-radius: var(--raio-pill);
+    border: none;
+    cursor: pointer;
+    font-family: var(--fonte-corpo);
+    font-weight: 700;
+    font-size: 0.86rem;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    transition: transform .18s, box-shadow .18s, background .18s;
+}
+
+.btn-filtro--primario {
+    background: var(--verde-700);
+    color: #fff;
+}
+
+.btn-filtro--primario:hover {
+    background: var(--verde-900);
+    transform: translateY(-1px);
+}
+
+.btn-filtro--neutro {
+    background: var(--verde-50);
+    color: var(--verde-700);
+    border: 1px solid var(--contorno);
+}
+
+.btn-filtro--neutro:hover {
+    background: var(--verde-200);
+}
+
+/* ── Bloco expansível de filtros avançados ───────────── */
+.filtros-avancados {
+    margin-top: 16px;
+    border-top: 1px dashed var(--contorno);
+    padding-top: 4px;
+}
+
+.filtros-avancados > summary {
+    cursor: pointer;
+    list-style: none;
+    padding: 12px 2px 4px;
+    font-weight: 700;
+    font-size: 0.86rem;
+    color: var(--verde-700);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    user-select: none;
+}
+
+.filtros-avancados > summary::-webkit-details-marker { display: none; }
+
+.filtros-avancados > summary::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: rotate(-45deg);
+    transition: transform .2s;
+}
+
+.filtros-avancados[open] > summary::before {
+    transform: rotate(45deg);
+}
+
+.filtros-grade {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 16px 18px;
+    padding: 16px 2px 6px;
+}
+
+.filtro-grupo {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.filtro-grupo > label,
+.filtro-rotulo {
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--tinta-500);
+}
+
+.filtro-grupo select,
+.filtro-grupo input {
+    width: 100%;
+    padding: 9px 12px;
+    border: 1px solid var(--contorno);
+    border-radius: var(--raio-sm);
+    background: var(--creme-50);
+    font-family: var(--fonte-corpo);
+    font-size: 0.9rem;
+    color: var(--tinta-900);
+}
+
+.filtro-grupo select:focus,
+.filtro-grupo input:focus {
+    outline: none;
+    border-color: var(--verde-500);
+    box-shadow: 0 0 0 3px var(--emerald-ring);
+}
+
+/* Par de campos min/max */
+.filtro-faixa {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.filtro-faixa input {
+    min-width: 0;
+    font-family: var(--fonte-dado);
+    font-size: 0.86rem;
+}
+
+.filtro-faixa span {
+    color: var(--tinta-300);
+    font-size: 0.8rem;
+    flex-shrink: 0;
+}
+
+/* Caixa de seleção alinhada com o resto */
+.filtro-check {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--tinta-500);
+    cursor: pointer;
+    padding-top: 6px;
+}
+
+.filtro-check input[type="checkbox"] {
+    width: 17px;
+    height: 17px;
+    accent-color: var(--verde-500);
+    cursor: pointer;
+}
+
+.filtros-acoes {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding: 10px 2px 4px;
+    border-top: 1px solid var(--contorno);
+    margin-top: 8px;
+}
+
+/* ── Barra de resultado ──────────────────────────────── */
+.resultado-barra {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+}
+
+.resultado-contagem {
+    font-size: 0.9rem;
+    color: var(--tinta-500);
+}
+
+.resultado-contagem strong {
+    font-family: var(--fonte-dado);
+    color: var(--verde-700);
+    font-size: 1.05rem;
+}
+
+/* ── Selos ───────────────────────────────────────────── */
+.selo {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: var(--raio-pill);
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.selo--taco {
+    background: var(--verde-50);
+    color: var(--verde-700);
+    border: 1px solid var(--verde-200);
+}
+
+.selo--personalizado {
+    background: #fff4e5;
+    color: #92400e;
+    border: 1px solid #fcd9a4;
+}
+
+.selo--arquivado {
+    background: #eef1f4;
+    color: #55636e;
+    border: 1px solid #d5dce3;
+}
+
+.selo--pendente {
+    background: #fff4e5;
+    color: #92400e;
+    border: 1px solid #fcd9a4;
+}
+
+.selo--ativo {
+    background: var(--verde-50);
+    color: var(--verde-700);
+    border: 1px solid var(--verde-200);
+}
+
+.selo--inativo {
+    background: #fdecea;
+    color: var(--perigo-700);
+    border: 1px solid #f5c4c0;
+}
+
+/* ── Estado vazio e sugestões ────────────────────────── */
+.estado-vazio {
+    text-align: center;
+    padding: 44px 24px;
+    color: var(--tinta-500);
+}
+
+.estado-vazio h3 {
+    font-family: var(--fonte-display);
+    font-size: 1.15rem;
+    color: var(--verde-900);
+    margin-bottom: 8px;
+}
+
+.estado-vazio p {
+    font-size: 0.92rem;
+}
+
+.sugestoes {
+    margin-top: 22px;
+    padding-top: 20px;
+    border-top: 1px dashed var(--contorno);
+    text-align: left;
+}
+
+.sugestoes h4 {
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--tinta-500);
+    margin-bottom: 12px;
+}
+
+.sugestoes-lista {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+}
+
+.sugestao-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 15px;
+    border-radius: var(--raio-pill);
+    border: 1px solid var(--contorno);
+    background: var(--creme-50);
+    color: var(--verde-900);
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 600;
+    transition: background .18s, border-color .18s, transform .18s;
+}
+
+.sugestao-item:hover {
+    background: var(--verde-50);
+    border-color: var(--verde-500);
+    transform: translateY(-1px);
+}
+
+.sugestao-item .sugestao-valor {
+    font-family: var(--fonte-dado);
+    font-size: 0.78rem;
+    color: var(--tinta-500);
+}
+
+/* ── Avisos de ação ──────────────────────────────────── */
+.aviso {
+    padding: 13px 18px;
+    border-radius: var(--raio-md);
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 18px;
+    border: 1px solid transparent;
+}
+
+.aviso--sucesso {
+    background: var(--verde-50);
+    color: var(--verde-700);
+    border-color: var(--verde-200);
+}
+
+.aviso--erro {
+    background: #fdecea;
+    color: var(--perigo-700);
+    border-color: #f5c4c0;
+}
+
+@media (max-width: 640px) {
+    .busca-painel { padding: 16px; }
+    .filtros-grade { grid-template-columns: 1fr; }
+}
+
+/* Cartões de resumo do dashboard viraram atalhos clicáveis */
+a.stat-card {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    transition: transform .18s, box-shadow .18s;
+}
+
+a.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--sombra-card);
+}

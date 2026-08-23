@@ -1,7 +1,11 @@
 package com.mjwsolucoes.sistemanutricao.configuration;
 
+import com.mjwsolucoes.sistemanutricao.model.AlvoAtividade;
+import com.mjwsolucoes.sistemanutricao.model.TipoAtividade;
+import com.mjwsolucoes.sistemanutricao.service.AtividadeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.*;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -10,72 +14,95 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
     private final CustomUserDetailsService userDetailsService;
+    private final AtividadeService atividadeService;
+
+    /** Cargos que podem criar e editar conteúdo próprio. */
+    private static final String[] AUTORES = {"ADMIN", "NUTRICIONISTA", "ESTUDANTE"};
+    /** Cargos que podem arquivar/desarquivar fichas e refeições. */
+    private static final String[] CURADORES = {"ADMIN", "NUTRICIONISTA"};
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        // 1. ROTAS PÚBLICAS (acesso sem autenticação)
-                        // Inclua todas as páginas de "entrada", recursos estáticos e suporte.
+                        // ─── 1. Rotas públicas ────────────────────────────────────────────
                         .requestMatchers(
-                                "/",                // A raiz, que retorna 'index.html' (página de login)
-                                "/home",            // /home, que também retorna 'index.html'
-                                "/login",           // A página de login explicitamente
-                                "/registro",        // A página de registro
-                                "/css/**",          // Todos os arquivos CSS
-                                "/js/**",           // Todos os arquivos JavaScript
-                                "/images/**",       // Todas as imagens
-                                "/support"          // Sua rota de suporte, se houver
+                                "/",
+                                "/home",
+                                "/login",
+                                "/registro",
+                                "/registro/**",
+                                "/css/**",
+                                "/js/**",
+                                "/images/**",
+                                "/support"
                         ).permitAll()
 
-                        // 2. ROTAS PROTEGIDAS POR AUTORIDADE ESPECÍFICA (precisam estar logado E ter a role)
+                        // ─── 2. Painel administrativo ─────────────────────────────────────
                         .requestMatchers("/admin/**").hasAuthority("ADMIN")
-                        // Ajustado para incluir o endpoint EXATO /fichatecnica, além do padrão /**
-                        .requestMatchers("/fichatecnica", "/fichatecnica/**").hasAnyAuthority("NUTRICIONISTA", "ADMIN", "USER")
-                        // Se você tiver mais endpoints como /criarFichaTecnica que são separados,
-                        // mas devem ter as mesmas roles, adicione-os aqui, ex:
-                        // .requestMatchers("/criarFichaTecnica").hasAnyAuthority("NUTRICIONISTA", "ADMIN")
 
+                        // ─── 3. Exclusão definitiva: só o admin ───────────────────────────
+                        .requestMatchers("/receita/excluir/**").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/**").hasAuthority("ADMIN")
 
-                        // 3. ROTAS PROTEGIDAS POR AUTENTICAÇÃO (apenas precisa estar logado, qualquer role)
-                        // O dashboard é um exemplo típico de página que qualquer usuário logado deve ver
-                        .requestMatchers("/dashboard").authenticated() // Protege explicitamente o dashboard
+                        // ─── 4. Arquivar/desarquivar: nutricionista e admin ───────────────
+                        .requestMatchers("/receita/arquivar/**", "/receita/desarquivar/**",
+                                         "/refeicao/arquivar/**", "/refeicao/desarquivar/**")
+                            .hasAnyAuthority(CURADORES)
 
-                        // 4. CATCH-ALL: Qualquer outra requisição que não foi explicitamente permitida acima, DEVE ser autenticada.
-                        // Esta é a regra de "default deny" (negar por padrão).
+                        // ─── 5. Criação e edição de conteúdo ──────────────────────────────
+                        .requestMatchers("/fichatecnica", "/fichatecnica/**",
+                                         "/receita/editar/**",
+                                         "/criarIngrediente", "/alimentos/novo")
+                            .hasAnyAuthority(AUTORES)
+                        .requestMatchers(HttpMethod.POST, "/api/**").hasAnyAuthority(AUTORES)
+                        .requestMatchers(HttpMethod.PUT, "/api/**").hasAnyAuthority(AUTORES)
+
+                        // ─── 6. Consulta: qualquer usuário aprovado (inclui COZINHA) ──────
+                        .requestMatchers("/dashboard", "/visualizar", "/alimentos", "/alimentos/**",
+                                         "/refeicoes", "/receita/detalhes/**")
+                            .authenticated()
+
+                        // ─── 7. Default deny ──────────────────────────────────────────────
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
-                        .loginPage("/login") // O GET para exibir o formulário de login
-                        .loginProcessingUrl("/login") // O POST para processar o login
+                        .loginPage("/login")
+                        .loginProcessingUrl("/login")
                         .failureHandler((request, response, exception) -> {
-                            // Handler para erros de login
-                            if (exception.getClass().getSimpleName().equals("DisabledException")) {
+                            // Conta ainda não aprovada pelo admin recebe uma mensagem própria
+                            if (exception instanceof org.springframework.security.authentication.DisabledException) {
                                 response.sendRedirect("/login?disabled");
                             } else {
                                 response.sendRedirect("/login?error");
                             }
                         })
-                        .defaultSuccessUrl("/dashboard", true) // Redireciona após login bem-sucedido
-                        .permitAll() // Permite acesso a todo o fluxo de login (GET e POST)
+                        .defaultSuccessUrl("/dashboard", true)
+                        .permitAll()
                 )
                 .logout(logout -> logout
-                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "POST")) // Mude para POST, é mais seguro
-                        // OU use .logoutUrl("/logout") se não quiser um matcher específico e quer o padrão POST
-                        .logoutSuccessUrl("/login?logout") // Redireciona para /login com um parâmetro de sucesso
-                        .invalidateHttpSession(true) // Garante que a sessão seja invalidada
-                        .deleteCookies("JSESSIONID") // Garante que o cookie de sessão seja removido
-                        .permitAll() // Permite que a URL de logout seja acessada
+                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "POST"))
+                        // Anota a saída antes da sessão ser invalidada
+                        .addLogoutHandler((request, response, authentication) -> {
+                            if (authentication != null) {
+                                atividadeService.registrarComo(authentication.getName(),
+                                        TipoAtividade.LOGOUT, AlvoAtividade.SESSAO,
+                                        "Saiu do sistema", null);
+                            }
+                        })
+                        .logoutSuccessUrl("/login?logout")
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
+                        .permitAll()
                 )
                 .csrf(csrf -> csrf.disable()) // Desabilitado para dev, ATIVAR em produção!
-                .cors(cors -> cors.disable()); // Desabilitado para dev, CONFIGURAR em produção!
+                .cors(cors -> cors.disable());
 
         return http.build();
     }

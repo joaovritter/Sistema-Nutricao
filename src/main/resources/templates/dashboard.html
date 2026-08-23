@@ -7,35 +7,52 @@
     <title>Nutra</title>
     <link rel="stylesheet" href="/css/dashboard.css">
     <link rel="stylesheet" href="/css/navbar.css">
-    <link rel="stylesheet" href="/css/sidebar.css">
+    <link rel="stylesheet" href="/css/navegacao.css">
     <link rel="stylesheet" href="/css/animacoes.css">
     <link rel="stylesheet" href="/css/tema.css">
+    <link rel="stylesheet" href="/css/filtros.css">
     <script src="/js/animacoes.js" defer></script>
 </head>
 <body>
 <div class="app-shell">
 
-    <div th:replace="~{fragments/sidebar :: sidebar('inicio')}"></div>
+    <div th:replace="~{fragments/navbar :: navbar('inicio')}"></div>
 
     <div class="main-area">
         <main class="container page-anim" data-stagger>
 
-            <div class="stat-grid">
-                <div class="stat-card card-anim">
-                    <div class="stat-numero" th:text="${totalFichas}">0</div>
-                    <div class="stat-label">Fichas técnicas</div>
-                </div>
-                <div class="stat-card card-anim">
-                    <div class="stat-numero" th:text="${totalRefeicoes}">0</div>
-                    <div class="stat-label">Refeições</div>
-                </div>
-                <div class="stat-card card-anim" sec:authorize="hasAnyAuthority('NUTRICIONISTA', 'ADMIN')">
-                    <div class="stat-numero" th:text="${totalIngredientes}">0</div>
-                    <div class="stat-label">Ingredientes</div>
-                </div>
+            <!-- Fila de aprovação em destaque para quem pode resolvê-la -->
+            <div class="aviso aviso--erro" sec:authorize="hasAuthority('ADMIN')"
+                 th:if="${solicitacoesPendentes > 0}"
+                 style="display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap;">
+                <span th:text="${solicitacoesPendentes} + ' solicitação(ões) de acesso aguardando aprovação.'">
+                    Solicitações aguardando
+                </span>
+                <a th:href="@{/admin/usuarios}" class="btn-filtro btn-filtro--primario">Revisar agora</a>
             </div>
 
-            <div class="painel card-anim" sec:authorize="hasAnyAuthority('NUTRICIONISTA', 'ADMIN')">
+            <div class="stat-grid">
+                <a class="stat-card card-anim" th:href="@{/visualizar}">
+                    <div class="stat-numero" th:text="${totalFichas}">0</div>
+                    <div class="stat-label">Fichas técnicas</div>
+                </a>
+                <a class="stat-card card-anim" th:href="@{/refeicoes}">
+                    <div class="stat-numero" th:text="${totalRefeicoes}">0</div>
+                    <div class="stat-label">Refeições</div>
+                </a>
+                <a class="stat-card card-anim" th:href="@{/alimentos}">
+                    <div class="stat-numero" th:text="${totalAlimentos}">0</div>
+                    <div class="stat-label">Alimentos</div>
+                </a>
+                <a class="stat-card card-anim" th:href="@{/visualizar(somenteArquivadas=true)}"
+                   th:if="${totalArquivadas > 0}"
+                   sec:authorize="hasAnyAuthority('NUTRICIONISTA', 'ADMIN')">
+                    <div class="stat-numero" th:text="${totalArquivadas}">0</div>
+                    <div class="stat-label">Fichas arquivadas</div>
+                </a>
+            </div>
+
+            <div class="painel card-anim" sec:authorize="hasAnyAuthority('NUTRICIONISTA', 'ADMIN', 'ESTUDANTE')">
                 <h2>Fichas por categoria</h2>
 
                 <div th:if="${#lists.isEmpty(categorias)}" class="painel-vazio">

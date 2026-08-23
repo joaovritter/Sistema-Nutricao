@@ -9,6 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -56,6 +57,21 @@ public class ReceitaController {
 
         ReceitaDTO receitaCriada = receitaService.criarReceita(receitaDTO, usernameNutricionista);
         return ResponseEntity.ok(receitaCriada);
+    }
+
+    /** Fichas em que o usuario logado pode inserir alimentos (atalho da tela de Alimentos). */
+    @GetMapping("/minhas")
+    public ResponseEntity<List<ReceitaResumoDTO>> listarMinhas(Principal principal) {
+        return ResponseEntity.ok(receitaService.listarEditaveis(principal.getName()));
+    }
+
+    /** Insere um alimento numa ficha existente, sem abrir a tela de edicao. */
+    @PostMapping("/{id}/ingredientes")
+    public ResponseEntity<Void> adicionarIngrediente(@PathVariable Long id,
+                                                     @RequestBody ReceitaIngredienteInputDTO dto,
+                                                     Principal principal) {
+        receitaService.adicionarIngrediente(id, dto, principal.getName());
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping

@@ -54,6 +54,10 @@ public class Receita {
     @Column(nullable = false)
     private String medidaCaseira;
 
+    /** Ficha arquivada some das listas e buscas, mas continua no banco. */
+    @Column(nullable = false)
+    private boolean arquivada;
+
     @ManyToOne
     @JoinColumn(name = "nutricionista_id", nullable = false)
     private User nutricionista;

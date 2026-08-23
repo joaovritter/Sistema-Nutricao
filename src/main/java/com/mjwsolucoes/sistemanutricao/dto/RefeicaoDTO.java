@@ -6,6 +6,7 @@ public class RefeicaoDTO {
     private Long id;
     private String nome;
     private List<ReceitaResumoDTO> receitas;
+    private boolean arquivada;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -13,4 +14,6 @@ public class RefeicaoDTO {
     public void setNome(String nome) { this.nome = nome; }
     public List<ReceitaResumoDTO> getReceitas() { return receitas; }
     public void setReceitas(List<ReceitaResumoDTO> receitas) { this.receitas = receitas; }
+    public boolean isArquivada() { return arquivada; }
+    public void setArquivada(boolean arquivada) { this.arquivada = arquivada; }
 }

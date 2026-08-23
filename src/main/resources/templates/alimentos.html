@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+      lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alimentos — Nutra</title>
+    <link rel="stylesheet" href="/css/dashboard.css">
+    <link rel="stylesheet" href="/css/navbar.css">
+    <link rel="stylesheet" href="/css/navegacao.css">
+    <link rel="stylesheet" href="/css/animacoes.css">
+    <link rel="stylesheet" href="/css/tema.css">
+    <link rel="stylesheet" href="/css/filtros.css">
+    <link rel="stylesheet" href="/css/alimentos.css">
+    <script src="/js/animacoes.js" defer></script>
+</head>
+
+<body>
+<div class="app-shell">
+
+    <div th:replace="~{fragments/navbar :: navbar('alimentos')}"></div>
+
+    <div class="main-area">
+        <main class="container page-anim">
+
+            <div class="pagina-cabecalho">
+                <div>
+                    <h1>Alimentos</h1>
+                    <p>Tabela TACO e alimentos cadastrados no sistema. Clique em um alimento para ver os macronutrientes.</p>
+                </div>
+                <a th:href="@{/alimentos/novo}" class="btn-filtro btn-filtro--primario"
+                   sec:authorize="hasAnyAuthority('NUTRICIONISTA', 'ADMIN', 'ESTUDANTE')">
+                    + Novo alimento
+                </a>
+            </div>
+
+            <!-- ═══ Busca e filtros ═══════════════════════════════════ -->
+            <form class="busca-painel" method="get" th:action="@{/alimentos}" th:object="${filtro}" id="formFiltros">
+
+                <div class="busca-linha">
+                    <div class="busca-campo">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                            <circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>
+                        </svg>
+                        <input type="text" th:field="*{termo}" placeholder="Buscar alimento pelo nome (ex.: arroz integral)">
+                    </div>
+                    <button type="submit" class="btn-filtro btn-filtro--primario">Buscar</button>
+                    <a th:href="@{/alimentos}" class="btn-filtro btn-filtro--neutro">Limpar</a>
+                </div>
+
+                <details class="filtros-avancados" th:attr="open=${filtro.temFiltroAtivo()} ? 'open' : null">
+                    <summary>Filtros por macronutriente</summary>
+
+                    <div class="filtros-grade">
+                        <div class="filtro-grupo">
+                            <label for="origem">Origem</label>
+                            <select id="origem" th:field="*{origem}">
+                                <option value="TODOS">Todos os alimentos</option>
+                                <option value="TACO">Somente tabela TACO</option>
+                                <option value="PERSONALIZADO">Somente personalizados</option>
+                            </select>
+                        </div>
+
+                        <div class="filtro-grupo">
+                            <span class="filtro-rotulo">Proteína (g/100g)</span>
+                            <div class="filtro-faixa">
+                                <input type="number" step="0.1" min="0" th:field="*{proteinaMin}" placeholder="mín">
+                                <span>até</span>
+                                <input type="number" step="0.1" min="0" th:field="*{proteinaMax}" placeholder="máx">
+                            </div>
+                        </div>
+
+                        <div class="filtro-grupo">
+                            <span class="filtro-rotulo">Carboidrato (g/100g)</span>
+                            <div class="filtro-faixa">
+                                <input type="number" step="0.1" min="0" th:field="*{carboidratoMin}" placeholder="mín">
+                                <span>até</span>
+                                <input type="number" step="0.1" min="0" th:field="*{carboidratoMax}" placeholder="máx">
+                            </div>
+                        </div>
+
+                        <div class="filtro-grupo">
+                            <span class="filtro-rotulo">Lipídio (g/100g)</span>
+                            <div class="filtro-faixa">
+                                <input type="number" step="0.1" min="0" th:field="*{lipidioMin}" placeholder="mín">
+                                <span>até</span>
+                                <input type="number" step="0.1" min="0" th:field="*{lipidioMax}" placeholder="máx">
+                            </div>
+                        </div>
+
+                        <div class="filtro-grupo">
+                            <span class="filtro-rotulo">Gordura saturada (g/100g)</span>
+                            <div class="filtro-faixa">
+                                <input type="number" step="0.1" min="0" th:field="*{gorduraSaturadaMin}" placeholder="mín">
+                                <span>até</span>
+                                <input type="number" step="0.1" min="0" th:field="*{gorduraSaturadaMax}" placeholder="máx">
+                            </div>
+                        </div>
+
+                        <div class="filtro-grupo">
+                            <span class="filtro-rotulo">Sódio (mg/100g)</span>
+                            <div class="filtro-faixa">
+                                <input type="number" step="1" min="0" th:field="*{sodioMin}" placeholder="mín">
+                                <span>até</span>
+                                <input type="number" step="1" min="0" th:field="*{sodioMax}" placeholder="máx">
+                            </div>
+                        </div>
+
+                        <div class="filtro-grupo">
+                            <span class="filtro-rotulo">Energia (kcal/100g)</span>
+                            <div class="filtro-faixa">
+                                <input type="number" step="1" min="0" th:field="*{kcalMin}" placeholder="mín">
+                                <span>até</span>
+                                <input type="number" step="1" min="0" th:field="*{kcalMax}" placeholder="máx">
+                            </div>
+                        </div>
+
+                        <div class="filtro-grupo">
+                            <label for="ordenarPor">Ordenar por</label>
+                            <select id="ordenarPor" th:field="*{ordenarPor}">
+                                <option value="nome">Nome</option>
+                                <option value="proteina">Proteína</option>
+                                <option value="carboidrato">Carboidrato</option>
+                                <option value="lipidio">Lipídio</option>
+                                <option value="gorduraSaturada">Gordura saturada</option>
+                                <option value="sodio">Sódio</option>
+                                <option value="kcal">Energia</option>
+                            </select>
+                        </div>
+
+                        <div class="filtro-grupo">
+                            <label for="direcao">Sentido</label>
+                            <select id="direcao" th:field="*{direcao}">
+                                <option value="asc">Crescente</option>
+                                <option value="desc">Decrescente</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="filtros-acoes">
+                        <button type="submit" class="btn-filtro btn-filtro--primario">Aplicar filtros</button>
+                        <a th:href="@{/alimentos}" class="btn-filtro btn-filtro--neutro">Limpar tudo</a>
+                    </div>
+                </details>
+            </form>
+
+            <!-- ═══ Resultado ═════════════════════════════════════════ -->
+            <div class="resultado-barra">
+                <span class="resultado-contagem">
+                    <strong th:text="${resultado.total}">0</strong>
+                    <span th:text="${resultado.total == 1} ? 'alimento encontrado' : 'alimentos encontrados'">alimentos encontrados</span>
+                    <span th:if="${!#strings.isEmpty(resultado.termo)}"
+                          th:text="'para \'' + ${resultado.termo} + '\''"></span>
+                    <span th:if="${resultado.paginacao.necessaria}"
+                          th:text="'· mostrando ' + ${resultado.paginacao.primeiroItem} + '–' + ${resultado.paginacao.ultimoItem}"></span>
+                </span>
+            </div>
+
+            <!-- Nada encontrado: oferece os nomes mais parecidos -->
+            <div th:if="${#lists.isEmpty(alimentos)}" class="tabela-cartao card-anim">
+                <div class="estado-vazio">
+                    <h3>Nenhum alimento encontrado</h3>
+                    <p th:if="${#lists.isEmpty(resultado.relacionados)}">
+                        Tente outro termo ou afrouxe os filtros de macronutriente.
+                    </p>
+                    <p th:if="${!#lists.isEmpty(resultado.relacionados)}">
+                        Não achamos esse nome exato. Talvez seja um destes:
+                    </p>
+
+                    <div class="sugestoes" th:if="${!#lists.isEmpty(resultado.relacionados)}">
+                        <h4>Alimentos relacionados</h4>
+                        <div class="sugestoes-lista">
+                            <a th:each="sug : ${resultado.relacionados}"
+                               th:href="@{/alimentos/{id}(id=${sug.id})}"
+                               th:attr="data-alimento=${sug.id}"
+                               class="sugestao-item">
+                                <span th:text="${sug.nome}">Nome</span>
+                                <span class="sugestao-valor"
+                                      th:text="${#numbers.formatDecimal(sug.kcal, 1, 'POINT', 0, 'COMMA')} + ' kcal'">0 kcal</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grade de cartões: cada um abre o pop-up com os macronutrientes -->
+            <div class="alimentos-grade" th:if="${!#lists.isEmpty(alimentos)}">
+                <button type="button" class="alimento-card card-anim"
+                        th:each="a : ${alimentos}"
+                        th:attr="data-alimento=${a.id}"
+                        th:aria-label="'Ver macronutrientes de ' + ${a.nome}">
+
+                    <div class="card-topo">
+                        <span class="card-titulo" th:text="${a.nome}">Nome do alimento</span>
+                        <span class="selo" th:classappend="${a.personalizado} ? 'selo--personalizado' : 'selo--taco'"
+                              th:text="${a.personalizado} ? 'Próprio' : 'TACO'">TACO</span>
+                    </div>
+
+                    <span class="card-autor" th:if="${a.autor != null}"
+                          th:text="'por ' + ${a.autor}">por</span>
+
+                    <div class="card-energia">
+                        <span class="energia-valor"
+                              th:text="${#numbers.formatDecimal(a.kcal, 1, 'POINT', 0, 'COMMA')}">0</span>
+                        <span class="energia-unidade">kcal / 100 g</span>
+                    </div>
+
+                    <div class="card-macros">
+                        <span class="card-macro">
+                            <span class="macro-sigla">Prot</span>
+                            <span class="macro-num"
+                                  th:text="${#numbers.formatDecimal(a.proteina, 1, 'POINT', 1, 'COMMA')} + ' g'">0 g</span>
+                        </span>
+                        <span class="card-macro">
+                            <span class="macro-sigla">Carb</span>
+                            <span class="macro-num"
+                                  th:text="${#numbers.formatDecimal(a.carboidrato, 1, 'POINT', 1, 'COMMA')} + ' g'">0 g</span>
+                        </span>
+                        <span class="card-macro">
+                            <span class="macro-sigla">Lip</span>
+                            <span class="macro-num"
+                                  th:text="${#numbers.formatDecimal(a.lipidio, 1, 'POINT', 1, 'COMMA')} + ' g'">0 g</span>
+                        </span>
+                    </div>
+                </button>
+            </div>
+
+            <div th:replace="~{fragments/paginacao :: trilha(${resultado.paginacao})}"></div>
+
+        </main>
+    </div>
+</div>
+
+<!-- ═══ Pop-up com os macronutrientes do alimento ═══════════════ -->
+<div class="pop-fundo" id="popAlimento" role="dialog" aria-modal="true" aria-labelledby="popTitulo" hidden>
+    <div class="pop-caixa" tabindex="-1">
+        <button type="button" class="pop-fechar" id="popFechar" aria-label="Fechar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+                <path d="M18 6 6 18M6 6l12 12"/>
+            </svg>
+        </button>
+
+        <div class="pop-cabecalho">
+            <h2 id="popTitulo">Carregando…</h2>
+            <span class="selo" id="popSelo">TACO</span>
+            <p class="pop-referencia" id="popReferencia">Valores por <strong>100 g</strong> do alimento.</p>
+        </div>
+
+        <div class="macro-grade" id="popMacros"></div>
+
+        <section class="distribuicao surge-tardio" id="popDistribuicao" style="--atraso:.30s;">
+            <h2>Distribuição da energia</h2>
+            <div class="distribuicao-trilho">
+                <div class="distribuicao-parte parte-proteina" id="popBarraProteina"></div>
+                <div class="distribuicao-parte parte-carboidrato" id="popBarraCarboidrato"></div>
+                <div class="distribuicao-parte parte-lipidio" id="popBarraLipidio"></div>
+            </div>
+            <div class="distribuicao-legenda" id="popLegenda"></div>
+        </section>
+
+        <div class="detalhe-acoes surge-tardio" style="--atraso:.36s;">
+            <button type="button" class="btn-filtro btn-filtro--primario" id="popAdicionar"
+                    hidden>Adicionar a uma ficha</button>
+            <a href="#" class="btn-filtro btn-filtro--neutro" id="popParecidos">Buscar parecidos</a>
+        </div>
+
+        <!-- Atalho de inserção: escolhe a ficha e preenche a linha do alimento -->
+        <section class="inserir-ficha" id="popInserir" hidden>
+            <h3>Adicionar <span id="inserirNome">este alimento</span> a uma ficha</h3>
+
+            <div class="aviso aviso--erro" id="inserirErro" hidden></div>
+            <div class="aviso aviso--sucesso" id="inserirSucesso" hidden></div>
+
+            <div class="inserir-campos">
+                <div class="filtro-grupo inserir-largo">
+                    <label for="inserirFicha">Ficha técnica</label>
+                    <select id="inserirFicha"></select>
+                </div>
+
+                <div class="filtro-grupo inserir-largo">
+                    <label for="inserirMedida">Medida caseira</label>
+                    <input type="text" id="inserirMedida" placeholder="ex.: 2 colheres de sopa">
+                </div>
+
+                <div class="filtro-grupo">
+                    <label for="inserirPesoBruto">Peso bruto (g)</label>
+                    <input type="number" id="inserirPesoBruto" step="0.01" min="0" placeholder="0,00">
+                </div>
+
+                <div class="filtro-grupo">
+                    <label for="inserirPesoLiquido">Peso líquido (g)</label>
+                    <input type="number" id="inserirPesoLiquido" step="0.01" min="0" placeholder="0,00">
+                </div>
+
+                <div class="filtro-grupo">
+                    <label for="inserirFator">Fator de correção</label>
+                    <input type="number" id="inserirFator" step="0.01" min="0" placeholder="1,00">
+                </div>
+
+                <div class="filtro-grupo">
+                    <label for="inserirCustoCompra">Custo de compra (R$)</label>
+                    <input type="number" id="inserirCustoCompra" step="0.01" min="0" placeholder="0,00">
+                </div>
+
+                <div class="filtro-grupo">
+                    <label for="inserirPesoCompra">Peso da compra (g)</label>
+                    <input type="number" id="inserirPesoCompra" step="0.01" min="0" placeholder="0,00">
+                </div>
+
+                <div class="filtro-grupo">
+                    <label for="inserirCustoUtilizado">Custo utilizado (R$)</label>
+                    <input type="number" id="inserirCustoUtilizado" step="0.01" min="0" placeholder="0,00">
+                </div>
+            </div>
+
+            <p class="inserir-nota">
+                O fator de correção e o custo utilizado são calculados a partir dos pesos e do
+                custo de compra, mas você pode ajustar qualquer campo antes de confirmar.
+            </p>
+
+            <div class="inserir-acoes">
+                <button type="button" class="btn-filtro btn-filtro--primario" id="inserirConfirmar">Adicionar à ficha</button>
+                <button type="button" class="btn-filtro btn-filtro--neutro" id="inserirCancelar">Cancelar</button>
+            </div>
+        </section>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    // Só quem pode editar fichas enxerga o atalho de inserção
+    window.PODE_EDITAR_FICHA = /*[[${#authorization.expression("hasAnyAuthority('NUTRICIONISTA','ADMIN','ESTUDANTE')")}]]*/ false;
+    /*]]>*/
+</script>
+<script src="/js/alimentos-pop.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,268 @@
+/* ═══════════════════════════════════════════════════════
+   PAINEL DO ADMINISTRADOR — gestão de usuários e cargos
+═══════════════════════════════════════════════════════ */
+
+.admin-secao {
+    background: var(--superficie);
+    border: 1px solid var(--contorno);
+    border-radius: var(--raio-lg);
+    box-shadow: var(--sombra-card);
+    margin-bottom: 24px;
+    overflow: hidden;
+}
+
+.admin-secao > header {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--contorno);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+
+.admin-secao h2 {
+    font-family: var(--fonte-display);
+    font-size: 1.15rem;
+    color: var(--verde-900);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.admin-secao header p {
+    font-size: 0.87rem;
+    color: var(--tinta-500);
+    margin-top: 4px;
+    flex-basis: 100%;
+}
+
+/* Destaque para a fila de solicitações novas */
+.admin-secao--pendentes {
+    border-color: #fcd9a4;
+}
+
+.admin-secao--pendentes > header {
+    background: #fffaf2;
+    border-bottom-color: #fcd9a4;
+}
+
+.contador-bolha {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 24px;
+    padding: 0 8px;
+    border-radius: var(--raio-pill);
+    background: #92400e;
+    color: #fff;
+    font-family: var(--fonte-dado);
+    font-size: 0.78rem;
+    font-weight: 700;
+}
+
+/* ── Lista de usuários ───────────────────────────────── */
+.usuario-linha {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--contorno);
+    flex-wrap: wrap;
+}
+
+.usuario-linha:last-child {
+    border-bottom: none;
+}
+
+.usuario-identidade {
+    flex: 1 1 220px;
+    min-width: 0;
+}
+
+.usuario-nome {
+    font-weight: 700;
+    color: var(--verde-900);
+    font-size: 0.98rem;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    flex-wrap: wrap;
+}
+
+.usuario-meta {
+    font-size: 0.8rem;
+    color: var(--tinta-300);
+    margin-top: 3px;
+}
+
+.usuario-acoes {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.usuario-acoes form {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.usuario-acoes select {
+    padding: 8px 12px;
+    border: 1px solid var(--contorno);
+    border-radius: var(--raio-sm);
+    background: var(--creme-50);
+    font-family: var(--fonte-corpo);
+    font-size: 0.88rem;
+    color: var(--tinta-900);
+    cursor: pointer;
+}
+
+.usuario-acoes select:focus {
+    outline: none;
+    border-color: var(--verde-500);
+    box-shadow: 0 0 0 3px var(--emerald-ring);
+}
+
+.btn-mini {
+    padding: 8px 16px;
+    border-radius: var(--raio-pill);
+    border: 1px solid var(--contorno);
+    background: var(--verde-50);
+    color: var(--verde-700);
+    font-family: var(--fonte-corpo);
+    font-weight: 700;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: background .18s, transform .18s;
+}
+
+.btn-mini:hover {
+    background: var(--verde-200);
+    transform: translateY(-1px);
+}
+
+.btn-mini--solido {
+    background: var(--verde-700);
+    border-color: var(--verde-700);
+    color: #fff;
+}
+
+.btn-mini--solido:hover {
+    background: var(--verde-900);
+}
+
+.btn-mini--perigo {
+    background: #fdecea;
+    border-color: #f5c4c0;
+    color: var(--perigo-700);
+}
+
+.btn-mini--perigo:hover {
+    background: #f9d7d3;
+}
+
+.admin-vazio {
+    padding: 34px 24px;
+    text-align: center;
+    color: var(--tinta-500);
+    font-size: 0.92rem;
+}
+
+@media (max-width: 720px) {
+    .usuario-linha { align-items: flex-start; }
+    .usuario-acoes { width: 100%; }
+}
+
+/* ═══════════════════════════════════════════════════════
+   ABAS DO PAINEL ADMINISTRATIVO
+═══════════════════════════════════════════════════════ */
+
+.abas-admin {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 22px;
+    padding: 5px;
+    border: 1px solid var(--contorno);
+    border-radius: var(--raio-pill);
+    background: var(--superficie);
+    box-shadow: var(--sombra-card);
+    width: fit-content;
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+.abas-admin .aba {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 20px;
+    border-radius: var(--raio-pill);
+    font-family: var(--fonte-corpo);
+    font-size: 0.86rem;
+    font-weight: 700;
+    color: var(--tinta-500);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background .2s ease, color .2s ease;
+}
+
+.abas-admin .aba svg {
+    width: 17px;
+    height: 17px;
+}
+
+.abas-admin .aba:hover {
+    color: var(--verde-700);
+    background: var(--verde-50);
+}
+
+.abas-admin .aba.ativa {
+    background: var(--verde-700);
+    color: #fff;
+}
+
+/* ═══════════════════════════════════════════════════════
+   REGISTRO DE ATIVIDADE
+═══════════════════════════════════════════════════════ */
+
+.log-momento {
+    font-family: var(--fonte-dado);
+    font-size: 0.8rem;
+    color: var(--tinta-500);
+    white-space: nowrap;
+}
+
+/* Um tom por tipo de alvo, para varrer a lista com o olho */
+.selo--alvo-sessao {
+    background: #eef1f4;
+    color: #4a5761;
+    border: 1px solid #d5dce3;
+}
+
+.selo--alvo-ficha {
+    background: var(--verde-50);
+    color: var(--verde-700);
+    border: 1px solid var(--verde-200);
+}
+
+.selo--alvo-refeicao {
+    background: #eef6ff;
+    color: #1f4b7a;
+    border: 1px solid #c9defa;
+}
+
+.selo--alvo-alimento {
+    background: #fff4e5;
+    color: #92400e;
+    border: 1px solid #fcd9a4;
+}
+
+.selo--alvo-usuario {
+    background: #f4eefb;
+    color: #5b2d86;
+    border: 1px solid #ddc9f2;
+}

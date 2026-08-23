@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<!-- Trilha de paginação. Recebe um PaginacaoDTO já montado pelo serviço:
+     a posição do marcador vem calculada de lá, porque cada página é uma
+     requisição nova e não há estado no cliente para animar. -->
+<nav class="paginacao" th:fragment="trilha(p)" th:if="${p != null and p.necessaria}"
+     aria-label="Navegação entre páginas">
+
+    <a th:if="${p.temAnterior}" th:href="${p.linkDaPagina(p.anterior)}"
+       class="pag-seta" rel="prev" aria-label="Página anterior">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+             stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+    </a>
+    <span th:unless="${p.temAnterior}" class="pag-seta pag-seta--inativa" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+             stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+    </span>
+
+    <div class="pag-trilha">
+        <div class="pag-trilha-itens">
+            <a th:each="numero : ${p.paginas}"
+               th:href="${p.linkDaPagina(numero)}"
+               class="pag-numero"
+               th:classappend="${numero == p.paginaAtual} ? ' atual'"
+               th:text="${numero}"
+               th:attr="aria-current=${numero == p.paginaAtual} ? 'page' : null">1</a>
+        </div>
+        <div class="pag-trilha-linha">
+            <!-- Marcador parado sobre a página atual: divide o vão entre o
+                 primeiro e o último número da janela em passos iguais -->
+            <div class="pag-trilha-marcador"
+                 th:style="${#lists.size(p.paginas) &lt;= 1}
+                           ? 'left:0'
+                           : 'left: calc((100% - 1.9rem) * ' + ${p.posicaoNaJanela} + ' / ' + ${#lists.size(p.paginas) - 1} + ')'"></div>
+        </div>
+    </div>
+
+    <a th:if="${p.temProxima}" th:href="${p.linkDaPagina(p.proxima)}"
+       class="pag-seta" rel="next" aria-label="Próxima página">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+             stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+    </a>
+    <span th:unless="${p.temProxima}" class="pag-seta pag-seta--inativa" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+             stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+    </span>
+
+    <span class="pag-contador">
+        página <strong th:text="${p.paginaAtual}">1</strong> de <strong th:text="${p.totalPaginas}">1</strong>
+    </span>
+</nav>
+
+</body>
+</html>

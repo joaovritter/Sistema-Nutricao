@@ -1,12 +1,14 @@
 package com.mjwsolucoes.sistemanutricao.controller;
 
 import com.mjwsolucoes.sistemanutricao.dto.CategoriaResumoDTO;
+import com.mjwsolucoes.sistemanutricao.dto.FichaBuscaDTO;
+import com.mjwsolucoes.sistemanutricao.dto.FichaFiltroDTO;
 import com.mjwsolucoes.sistemanutricao.model.CategoriaReceita;
-import com.mjwsolucoes.sistemanutricao.model.Receita;
 import com.mjwsolucoes.sistemanutricao.repository.IngredienteRepository;
 import com.mjwsolucoes.sistemanutricao.repository.ReceitaRepository;
 import com.mjwsolucoes.sistemanutricao.repository.RefeicaoRepository;
-import com.mjwsolucoes.sistemanutricao.service.ReceitaService;
+import com.mjwsolucoes.sistemanutricao.service.AdminUserService;
+import com.mjwsolucoes.sistemanutricao.service.BuscaService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -16,17 +18,20 @@ import java.util.List;
 
 @Controller
 public class HomeController {
-    private ReceitaRepository receitaRepository;
-    private ReceitaService receitaService;
-    private RefeicaoRepository refeicaoRepository;
-    private IngredienteRepository ingredienteRepository;
+    private final ReceitaRepository receitaRepository;
+    private final RefeicaoRepository refeicaoRepository;
+    private final IngredienteRepository ingredienteRepository;
+    private final BuscaService buscaService;
+    private final AdminUserService adminUserService;
 
-    public HomeController(ReceitaRepository receitaRepository, ReceitaService receitaService,
-                           RefeicaoRepository refeicaoRepository, IngredienteRepository ingredienteRepository) {
+    public HomeController(ReceitaRepository receitaRepository,
+                          RefeicaoRepository refeicaoRepository, IngredienteRepository ingredienteRepository,
+                          BuscaService buscaService, AdminUserService adminUserService) {
         this.receitaRepository = receitaRepository;
-        this.receitaService = receitaService;
         this.refeicaoRepository = refeicaoRepository;
         this.ingredienteRepository = ingredienteRepository;
+        this.buscaService = buscaService;
+        this.adminUserService = adminUserService;
     }
 
     @GetMapping("/")
@@ -40,10 +45,12 @@ public class HomeController {
     }
 
     @GetMapping("/dashboard")
-    public String login(Model model) {
-        model.addAttribute("totalFichas", receitaRepository.count());
-        model.addAttribute("totalRefeicoes", refeicaoRepository.count());
-        model.addAttribute("totalIngredientes", ingredienteRepository.count());
+    public String dashboard(Model model) {
+        model.addAttribute("totalFichas", receitaRepository.countByArquivadaFalse());
+        model.addAttribute("totalRefeicoes", refeicaoRepository.countByArquivadaFalse());
+        model.addAttribute("totalAlimentos", ingredienteRepository.count());
+        model.addAttribute("totalArquivadas", receitaRepository.countByArquivadaTrue());
+        model.addAttribute("solicitacoesPendentes", adminUserService.contarPendentes());
         model.addAttribute("categorias", resumoPorCategoria());
         return "dashboard";
     }
@@ -73,21 +80,28 @@ public class HomeController {
     }
 
     @GetMapping("/criarIngrediente")
-    public String criarIngrediente() {
+    public String criarAlimento() {
         return "criarIngrediente";
     }
 
-    @GetMapping("/visualizar") // <-- URL ajustada para /visualizarFichaTecnica
-    public String visualizarFichas(Model model) { // <-- Adicionado 'Model model'
-        List<Receita> receitas = receitaRepository.findAll(); // <-- Busca as receitas
-        model.addAttribute("receitas", receitas); // <-- Adiciona a lista ao Model
+    /** Listagem de fichas técnicas com busca e filtros por macronutriente. */
+    @GetMapping("/visualizar")
+    public String visualizarFichas(@ModelAttribute("filtro") FichaFiltroDTO filtro, Model model) {
+        List<FichaBuscaDTO> fichas = buscaService.buscarFichas(filtro);
+        model.addAttribute("fichas", fichas);
 
+        // Nome digitado sem resultado: mostra fichas de nome parecido
+        if (fichas.isEmpty() && filtro.getTermo() != null && !filtro.getTermo().isBlank()) {
+            model.addAttribute("relacionadas", buscaService.fichasRelacionadas(filtro.getTermo(), filtro));
+        }
+
+        model.addAttribute("categorias", CategoriaReceita.values());
+        model.addAttribute("totalArquivadas", receitaRepository.countByArquivadaTrue());
         return "visualizarFichaTecnica";
     }
 
     @GetMapping("/receita/editar/{id}")
     public String editarReceita(@PathVariable Long id, Model model) {
-        // Adicionar o ID da receita ao modelo para que o JavaScript possa carregar os dados
         model.addAttribute("receitaId", id);
         return "criarFichaTecnica";
     }

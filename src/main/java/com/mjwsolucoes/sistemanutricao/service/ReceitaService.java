@@ -20,17 +20,20 @@ public class ReceitaService {
     private final PerfilNutricionalRepository perfilNutricionalRepository;
     private final ReceitaIngredienteRepository receitaIngredienteRepository;
     private final IngredienteRepository ingredienteRepository;
+    private final AtividadeService atividadeService;
 
     public ReceitaService(ReceitaRepository receitaRepository,
                           UserRepository userRepository,
                           PerfilNutricionalRepository perfilNutricionalRepository,
                           ReceitaIngredienteRepository receitaIngredienteRepository,
-                          IngredienteRepository ingredienteRepository) {
+                          IngredienteRepository ingredienteRepository,
+                          AtividadeService atividadeService) {
         this.receitaRepository = receitaRepository;
         this.userRepository = userRepository;
         this.perfilNutricionalRepository = perfilNutricionalRepository;
         this.receitaIngredienteRepository = receitaIngredienteRepository;
         this.ingredienteRepository = ingredienteRepository;
+        this.atividadeService = atividadeService;
     }
 
     @Transactional
@@ -69,7 +72,73 @@ public class ReceitaService {
             salvarIngredientesReceita(receitaDTO.getIngredientes(), receitaSalva);
         }
 
+        atividadeService.registrar(TipoAtividade.CRIACAO, AlvoAtividade.FICHA,
+                "Ficha \"" + receitaSalva.getNome() + "\" criada", receitaSalva.getId());
+
         return convertToDTO(receitaSalva);
+    }
+
+    /**
+     * Fichas em que o usuário pode inserir alimentos: as próprias, ou todas
+     * quando ele é administrador. Arquivadas ficam de fora.
+     */
+    public List<ReceitaResumoDTO> listarEditaveis(String username) {
+        User usuario = userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
+
+        List<Receita> fichas = usuario.getRole() == Role.ADMIN
+                ? receitaRepository.findByArquivadaFalse()
+                : receitaRepository.findByNutricionistaId(usuario.getId()).stream()
+                        .filter(r -> !r.isArquivada())
+                        .collect(Collectors.toList());
+
+        return fichas.stream()
+                .map(this::convertToResumoDTO)
+                .sorted((a, b) -> a.getNome().compareToIgnoreCase(b.getNome()))
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Atalho da tela de Alimentos: insere um alimento numa ficha já existente.
+     *
+     * Não recalcula o perfil nutricional da ficha — é uma inserção de linha; os
+     * totais continuam sendo responsabilidade da tela de edição da ficha.
+     */
+    @Transactional
+    public void adicionarIngrediente(Long receitaId, ReceitaIngredienteInputDTO dto, String username) {
+        Receita receita = receitaRepository.findById(receitaId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Ficha não encontrada"));
+
+        User usuario = userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
+
+        boolean dono = receita.getNutricionista() != null
+                && receita.getNutricionista().getId().equals(usuario.getId());
+        if (!dono && usuario.getRole() != Role.ADMIN) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                    "Você só pode adicionar alimentos às suas próprias fichas.");
+        }
+        if (receita.isArquivada()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Esta ficha está arquivada. Desarquive antes de editá-la.");
+        }
+
+        Ingrediente ingrediente = ingredienteRepository.findById(dto.getIngredienteId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Alimento não encontrado"));
+
+        // A chave da tabela é (receita, ingrediente): o mesmo alimento não entra duas vezes
+        boolean jaEstaNaFicha = receitaIngredienteRepository.findByReceitaId(receitaId).stream()
+                .anyMatch(ri -> dto.getIngredienteId().equals(ri.getIngredienteId()));
+        if (jaEstaNaFicha) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT,
+                    "\"" + ingrediente.getNome() + "\" já faz parte desta ficha.");
+        }
+
+        salvarIngredientesReceita(List.of(dto), receita);
+
+        atividadeService.registrar(TipoAtividade.EDICAO, AlvoAtividade.FICHA,
+                "Alimento \"" + ingrediente.getNome() + "\" adicionado à ficha \""
+                        + receita.getNome() + "\"", receita.getId());
     }
 
     public List<ReceitaResumoDTO> listarTodas() {
@@ -158,6 +227,9 @@ public class ReceitaService {
         if (receitaDTO.getPerfilNutricional() != null) {
             salvarPerfilNutricional(receitaDTO.getPerfilNutricional(), receitaAtualizada);
         }
+
+        atividadeService.registrar(TipoAtividade.EDICAO, AlvoAtividade.FICHA,
+                "Ficha \"" + receitaAtualizada.getNome() + "\" editada", receitaAtualizada.getId());
 
         return convertToDTO(receitaAtualizada);
     }

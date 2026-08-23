@@ -1,26 +1,53 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar conta — Nutra</title>
     <link rel="stylesheet" href="/css/registro.css">
     <link rel="stylesheet" href="/css/animacoes.css">
     <link rel="stylesheet" href="/css/tema.css">
+    <link rel="stylesheet" href="/css/autenticacao.css">
     <script src="/js/animacoes.js" defer></script>
 </head>
 <body>
 <div class="content-right">
     <div class="login-box hero-anim">
-        <form th:action="@{/registro}" method="post">
+
+        <div class="auth-cabecalho">
+            <img src="/images/logoNutra.png" alt="Nutra" class="auth-logo">
+            <h1>Criar conta</h1>
+            <p>Preencha seus dados. Um administrador vai revisar a solicitação e definir seu cargo.</p>
+        </div>
+
+        <div class="aviso aviso--erro" th:if="${erro}" th:text="${erro}"></div>
+
+        <form th:action="@{/registro}" method="post" th:object="${registro}" id="formRegistro">
             <div class="form-group">
-                <label for="username">Username</label>
-                <input type="text" id="username" name="username" placeholder="username" required>
+                <label for="nome">Nome completo</label>
+                <input type="text" id="nome" th:field="*{nome}" placeholder="Seu nome" required minlength="3" maxlength="80">
             </div>
+
+            <div class="form-group">
+                <label for="username">Usuário</label>
+                <input type="text" id="username" th:field="*{username}" placeholder="usuário para login"
+                       required minlength="3" maxlength="20" autocomplete="username">
+            </div>
+
             <div class="form-group">
                 <label for="password">Senha</label>
-                <input type="password" id="password" name="password" placeholder="senha" required>
+                <input type="password" id="password" th:field="*{password}" placeholder="mínimo 6 caracteres"
+                       required minlength="6" autocomplete="new-password">
             </div>
-            <button type="submit" class="login-btn">Confirmar</button>
+
+            <div class="form-group">
+                <label for="confirmarPassword">Confirmar senha</label>
+                <input type="password" id="confirmarPassword" th:field="*{confirmarPassword}" placeholder="digite a senha novamente"
+                       required minlength="6" autocomplete="new-password">
+                <span class="campo-dica" id="dicaSenha"></span>
+            </div>
+
+            <button type="submit" class="login-btn">Enviar solicitação</button>
 
             <div class="register">
                 <a th:href="@{/login}" class="register-link">Já tem uma conta? Faça login</a>
@@ -28,6 +55,37 @@
         </form>
     </div>
 </div>
-</div>
+
+<script>
+    // Confere as duas senhas antes de enviar, para o usuário não descobrir o erro só depois.
+    (function () {
+        var form = document.getElementById('formRegistro');
+        var senha = document.getElementById('password');
+        var confirmacao = document.getElementById('confirmarPassword');
+        var dica = document.getElementById('dicaSenha');
+
+        function conferir() {
+            if (!confirmacao.value) {
+                dica.textContent = '';
+                dica.className = 'campo-dica';
+                confirmacao.setCustomValidity('');
+                return;
+            }
+            if (senha.value === confirmacao.value) {
+                dica.textContent = 'As senhas conferem.';
+                dica.className = 'campo-dica campo-dica--ok';
+                confirmacao.setCustomValidity('');
+            } else {
+                dica.textContent = 'As senhas não conferem.';
+                dica.className = 'campo-dica campo-dica--erro';
+                confirmacao.setCustomValidity('As senhas não conferem.');
+            }
+        }
+
+        senha.addEventListener('input', conferir);
+        confirmacao.addEventListener('input', conferir);
+        form.addEventListener('submit', conferir);
+    })();
+</script>
 </body>
 </html>

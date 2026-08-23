@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nutra</title>
     <link rel="stylesheet" href="/css/index.css">
     <link rel="stylesheet" href="/css/animacoes.css">
+    <link rel="stylesheet" href="/css/tema.css">
+    <link rel="stylesheet" href="/css/autenticacao.css">
     <script src="/js/animacoes.js" defer></script>
 </head>
 <body>
@@ -26,11 +28,16 @@
     </div>
 
     <div class="content-right">
-        <div class="error-message" th:if="${param.error}">
+        <div class="aviso aviso--erro" th:if="${param.error}">
             Usuário ou senha inválidos.
         </div>
-        <div class="error-message" th:if="${param.disabled}">
-            Usuário desativado.
+        <div class="aviso aviso--info" th:if="${param.disabled}">
+            Sua conta ainda não está ativa. A solicitação de registro foi enviada ao sistema e um
+            administrador precisa aprovar o acesso e definir o seu cargo. Assim que isso acontecer,
+            você poderá entrar normalmente.
+        </div>
+        <div class="aviso aviso--sucesso" th:if="${param.logout}">
+            Sessão encerrada. Até logo!
         </div>
         <div class="login-box hero-anim">
             <form th:action="@{/login}" method="post">

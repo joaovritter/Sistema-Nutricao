@@ -5,91 +5,274 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Visualizar Fichas Técnicas</title>
+    <title>Fichas técnicas — Nutra</title>
     <link rel="stylesheet" href="/css/dashboard.css">
     <link rel="stylesheet" href="/css/visualizarFichaTecnica.css">
     <link rel="stylesheet" href="/css/navbar.css">
-    <link rel="stylesheet" href="/css/sidebar.css">
+    <link rel="stylesheet" href="/css/navegacao.css">
     <link rel="stylesheet" href="/css/animacoes.css">
     <link rel="stylesheet" href="/css/tema.css">
+    <link rel="stylesheet" href="/css/filtros.css">
+    <link rel="stylesheet" href="/css/alimentos.css">
     <script src="/js/animacoes.js" defer></script>
 </head>
 
 <body>
 <div class="app-shell">
 
-<div th:replace="~{fragments/sidebar :: sidebar('visualizar')}"></div>
+    <div th:replace="~{fragments/navbar :: navbar('visualizar')}"></div>
 
-<div class="main-area">
-<main class="container page-anim">
-    <div class="receita-list-section">
-        <h2>Receitas Cadastradas</h2>
+    <div class="main-area">
+        <main class="container page-anim"
+              th:with="retorno=${filtro.somenteArquivadas} ? '/visualizar?somenteArquivadas=true' : '/visualizar'">
 
-        <!-- Tabela sempre visível — mensagem embutida quando vazia -->
-        <div class="receitas-table-container">
-            <table>
-                <thead>
-                <tr>
-                    <th>Nome da Receita</th>
-                    <th>Categoria</th>
-                    <th>Nutricionista</th>
-                    <th>Tempo de Preparo (min)</th>
-                    <th>Porções</th>
-                    <th>Ações</th>
-                </tr>
-                </thead>
-                <tbody>
-                <!-- Linha de aviso quando não há receitas -->
-                <tr th:if="${receitas == null or receitas.isEmpty()}">
-                    <td colspan="6" style="text-align:center; padding:24px; color:#6b7280;">
-                        Nenhuma ficha técnica cadastrada ainda.
-                        <a th:href="@{/fichatecnica}"
-                           sec:authorize="hasAnyAuthority('NUTRICIONISTA', 'ADMIN')"
-                           style="color:#059669; font-weight:600;">Crie uma agora!</a>
-                    </td>
-                </tr>
-                <!-- Linhas das receitas -->
-                <tr th:each="receita : ${receitas}">
-                    <td th:text="${receita.nome}">Nome</td>
-                    <td th:text="${receita.categoria}">Categoria</td>
-                    <td th:text="${receita.nutricionista != null ? receita.nutricionista.username : 'N/A'}">Nutricionista</td>
-                    <td th:text="${receita.tempoPreparo != null ? receita.tempoPreparo + ' min' : '—'}">—</td>
-                    <td th:text="${receita.numeroPorcoes != null ? receita.numeroPorcoes : '—'}">—</td>
-                    <td>
-                        <!-- Botão VISUALIZAR — abre detalhesReceita.html -->
-                        <a th:href="@{/receita/detalhes/{id}(id=${receita.id})}"
-                           class="btn btn-detalhes">Visualizar</a>
+            <div class="pagina-cabecalho">
+                <div>
+                    <h1 th:text="${filtro.somenteArquivadas} ? 'Fichas arquivadas' : 'Fichas técnicas'">Fichas técnicas</h1>
+                    <p>Busque por nome, categoria ou faixa de macronutriente. Os valores mostrados são por porção.</p>
+                </div>
+                <a th:href="@{/fichatecnica}" class="btn-filtro btn-filtro--primario"
+                   sec:authorize="hasAnyAuthority('NUTRICIONISTA', 'ADMIN', 'ESTUDANTE')">
+                    + Nova ficha
+                </a>
+            </div>
 
-                        <!-- Botão EDITAR — só para nutricionista/admin -->
-                        <a th:href="@{/receita/editar/{id}(id=${receita.id})}"
-                           class="btn btn-editar"
-                           sec:authorize="hasAnyAuthority('NUTRICIONISTA', 'ADMIN')">Editar</a>
+            <div class="aviso aviso--sucesso" th:if="${sucesso}" th:text="${sucesso}"></div>
+            <div class="aviso aviso--erro" th:if="${erro}" th:text="${erro}"></div>
 
-                        <!-- Botão EXCLUIR — só para admin -->
-                        <form th:action="@{/receita/excluir/{id}(id=${receita.id})}"
-                              method="post" style="display:inline;"
-                              sec:authorize="hasAnyAuthority('ADMIN')">
-                            <button type="submit" class="btn btn-excluir"
-                                    title="Excluir ficha" aria-label="Excluir ficha"
-                                    onclick="return confirm('Tem certeza que deseja excluir esta ficha?')">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"
-                                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                    <path d="M3 6h18"/>
-                                    <path d="M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2"/>
-                                    <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
-                                    <path d="M10 11v6M14 11v6"/>
-                                </svg>
-                            </button>
-                        </form>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
+            <!-- ═══ Busca e filtros ═══════════════════════════════════ -->
+            <form class="busca-painel" method="get" th:action="@{/visualizar}" th:object="${filtro}">
+
+                <div class="busca-linha">
+                    <div class="busca-campo">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                            <circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>
+                        </svg>
+                        <input type="text" th:field="*{termo}" placeholder="Buscar ficha pelo nome">
+                    </div>
+                    <button type="submit" class="btn-filtro btn-filtro--primario">Buscar</button>
+                    <a th:href="@{/visualizar}" class="btn-filtro btn-filtro--neutro">Limpar</a>
+                </div>
+
+                <details class="filtros-avancados" th:attr="open=${filtro.temFiltroAtivo()} ? 'open' : null">
+                    <summary>Filtros por macronutriente e categoria</summary>
+
+                    <div class="filtros-grade">
+                        <div class="filtro-grupo">
+                            <label for="categoria">Categoria</label>
+                            <select id="categoria" th:field="*{categoria}">
+                                <option value="">Todas as categorias</option>
+                                <option th:each="c : ${categorias}" th:value="${c.name()}" th:text="${c.descricao}">Categoria</option>
+                            </select>
+                        </div>
+
+                        <div class="filtro-grupo">
+                            <label for="nutricionista">Responsável</label>
+                            <input type="text" id="nutricionista" th:field="*{nutricionista}" placeholder="nome do nutricionista">
+                        </div>
+
+                        <div class="filtro-grupo">
+                            <span class="filtro-rotulo">Proteína por porção (g)</span>
+                            <div class="filtro-faixa">
+                                <input type="number" step="0.1" min="0" th:field="*{proteinaMin}" placeholder="mín">
+                                <span>até</span>
+                                <input type="number" step="0.1" min="0" th:field="*{proteinaMax}" placeholder="máx">
+                            </div>
+                        </div>
+
+                        <div class="filtro-grupo">
+                            <span class="filtro-rotulo">Carboidrato por porção (g)</span>
+                            <div class="filtro-faixa">
+                                <input type="number" step="0.1" min="0" th:field="*{carboidratoMin}" placeholder="mín">
+                                <span>até</span>
+                                <input type="number" step="0.1" min="0" th:field="*{carboidratoMax}" placeholder="máx">
+                            </div>
+                        </div>
+
+                        <div class="filtro-grupo">
+                            <span class="filtro-rotulo">Lipídio por porção (g)</span>
+                            <div class="filtro-faixa">
+                                <input type="number" step="0.1" min="0" th:field="*{lipidioMin}" placeholder="mín">
+                                <span>até</span>
+                                <input type="number" step="0.1" min="0" th:field="*{lipidioMax}" placeholder="máx">
+                            </div>
+                        </div>
+
+                        <div class="filtro-grupo">
+                            <span class="filtro-rotulo">Energia por porção (kcal)</span>
+                            <div class="filtro-faixa">
+                                <input type="number" step="1" min="0" th:field="*{kcalMin}" placeholder="mín">
+                                <span>até</span>
+                                <input type="number" step="1" min="0" th:field="*{kcalMax}" placeholder="máx">
+                            </div>
+                        </div>
+
+                        <div class="filtro-grupo">
+                            <span class="filtro-rotulo">Sódio por porção (mg)</span>
+                            <div class="filtro-faixa">
+                                <input type="number" step="1" min="0" th:field="*{sodioMin}" placeholder="mín">
+                                <span>até</span>
+                                <input type="number" step="1" min="0" th:field="*{sodioMax}" placeholder="máx">
+                            </div>
+                        </div>
+
+                        <div class="filtro-grupo">
+                            <label for="ordenarPor">Ordenar por</label>
+                            <select id="ordenarPor" th:field="*{ordenarPor}">
+                                <option value="nome">Nome</option>
+                                <option value="categoria">Categoria</option>
+                                <option value="proteina">Proteína</option>
+                                <option value="carboidrato">Carboidrato</option>
+                                <option value="lipidio">Lipídio</option>
+                                <option value="kcal">Energia</option>
+                                <option value="porcoes">Porções</option>
+                            </select>
+                        </div>
+
+                        <div class="filtro-grupo">
+                            <label for="direcao">Sentido</label>
+                            <select id="direcao" th:field="*{direcao}">
+                                <option value="asc">Crescente</option>
+                                <option value="desc">Decrescente</option>
+                            </select>
+                        </div>
+
+                        <div class="filtro-grupo">
+                            <span class="filtro-rotulo">Arquivadas</span>
+                            <label class="filtro-check">
+                                <input type="checkbox" th:field="*{incluirArquivadas}">
+                                Mostrar também as arquivadas
+                            </label>
+                            <label class="filtro-check">
+                                <input type="checkbox" th:field="*{somenteArquivadas}">
+                                Somente arquivadas
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="filtros-acoes">
+                        <button type="submit" class="btn-filtro btn-filtro--primario">Aplicar filtros</button>
+                        <a th:href="@{/visualizar}" class="btn-filtro btn-filtro--neutro">Limpar tudo</a>
+                    </div>
+                </details>
+            </form>
+
+            <!-- ═══ Resultado ═════════════════════════════════════════ -->
+            <div class="resultado-barra">
+                <span class="resultado-contagem">
+                    <strong th:text="${#lists.size(fichas)}">0</strong>
+                    <span th:text="${#lists.size(fichas) == 1} ? 'ficha encontrada' : 'fichas encontradas'">fichas encontradas</span>
+                </span>
+                <a class="btn-filtro btn-filtro--neutro"
+                   th:if="${totalArquivadas > 0 and !filtro.somenteArquivadas}"
+                   th:href="@{/visualizar(somenteArquivadas=true)}"
+                   th:text="'Ver arquivadas (' + ${totalArquivadas} + ')'">Ver arquivadas</a>
+            </div>
+
+            <div class="tabela-cartao card-anim">
+
+                <div th:if="${#lists.isEmpty(fichas)}" class="estado-vazio">
+                    <h3>Nenhuma ficha encontrada</h3>
+                    <p th:if="${#lists.isEmpty(relacionadas)}">
+                        Ajuste a busca ou afrouxe os filtros.
+                        <a th:href="@{/fichatecnica}" sec:authorize="hasAnyAuthority('NUTRICIONISTA', 'ADMIN', 'ESTUDANTE')">Criar uma ficha</a>
+                    </p>
+                    <p th:if="${!#lists.isEmpty(relacionadas)}">Talvez você esteja procurando por:</p>
+
+                    <div class="sugestoes" th:if="${!#lists.isEmpty(relacionadas)}">
+                        <h4>Fichas com nome parecido</h4>
+                        <div class="sugestoes-lista">
+                            <a th:each="sug : ${relacionadas}"
+                               th:href="@{/receita/detalhes/{id}(id=${sug.id})}"
+                               class="sugestao-item">
+                                <span th:text="${sug.nome}">Nome</span>
+                                <span class="sugestao-valor" th:text="${sug.categoriaDescricao}">Categoria</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tabela-rolagem" th:if="${!#lists.isEmpty(fichas)}">
+                    <table class="tabela-dados">
+                        <thead>
+                        <tr>
+                            <th>Ficha</th>
+                            <th>Categoria</th>
+                            <th>Responsável</th>
+                            <th class="num">Porções</th>
+                            <th class="num">Energia<br><small>kcal/porção</small></th>
+                            <th class="num">Proteína<br><small>g/porção</small></th>
+                            <th class="num">Carb.<br><small>g/porção</small></th>
+                            <th class="num">Lip.<br><small>g/porção</small></th>
+                            <th>Ações</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="f : ${fichas}">
+                            <td>
+                                <div class="alimento-nome">
+                                    <a th:href="@{/receita/detalhes/{id}(id=${f.id})}" th:text="${f.nome}">Nome</a>
+                                    <span class="selo selo--arquivado" th:if="${f.arquivada}">Arquivada</span>
+                                </div>
+                                <span class="alimento-autor" th:if="${f.tempoPreparo != null}"
+                                      th:text="${f.tempoPreparo} + ' min de preparo'"></span>
+                            </td>
+                            <td th:text="${f.categoriaDescricao}">Categoria</td>
+                            <td th:text="${f.nutricionista}">Responsável</td>
+                            <td class="num" th:text="${f.numeroPorcoes != null} ? ${f.numeroPorcoes} : '—'">0</td>
+                            <td class="num" th:text="${#numbers.formatDecimal(f.kcalPorcao, 1, 'POINT', 0, 'COMMA')}">0</td>
+                            <td class="num" th:text="${#numbers.formatDecimal(f.proteinaPorcao, 1, 'POINT', 1, 'COMMA')}">0</td>
+                            <td class="num" th:text="${#numbers.formatDecimal(f.carboidratoPorcao, 1, 'POINT', 1, 'COMMA')}">0</td>
+                            <td class="num" th:text="${#numbers.formatDecimal(f.lipidioPorcao, 1, 'POINT', 1, 'COMMA')}">0</td>
+                            <td>
+                                <div class="linha-acoes">
+                                    <a th:href="@{/receita/detalhes/{id}(id=${f.id})}" class="btn btn-detalhes">Visualizar</a>
+
+                                    <a th:href="@{/receita/editar/{id}(id=${f.id})}" class="btn btn-editar"
+                                       sec:authorize="hasAnyAuthority('NUTRICIONISTA', 'ADMIN', 'ESTUDANTE')">Editar</a>
+
+                                    <!-- Arquivar tira das listas sem apagar -->
+                                    <form th:if="${!f.arquivada}" method="post"
+                                          th:action="@{/receita/arquivar/{id}(id=${f.id})}"
+                                          sec:authorize="hasAnyAuthority('NUTRICIONISTA', 'ADMIN')">
+                                        <input type="hidden" name="retorno" th:value="${retorno}">
+                                        <button type="submit" class="btn btn-arquivar"
+                                                onclick="return confirm('Arquivar esta ficha? Ela sai das listas, mas continua guardada.')">
+                                            Arquivar
+                                        </button>
+                                    </form>
+
+                                    <form th:if="${f.arquivada}" method="post"
+                                          th:action="@{/receita/desarquivar/{id}(id=${f.id})}"
+                                          sec:authorize="hasAnyAuthority('NUTRICIONISTA', 'ADMIN')">
+                                        <input type="hidden" name="retorno" th:value="${retorno}">
+                                        <button type="submit" class="btn btn-desarquivar">Desarquivar</button>
+                                    </form>
+
+                                    <form th:action="@{/receita/excluir/{id}(id=${f.id})}" method="post"
+                                          sec:authorize="hasAuthority('ADMIN')">
+                                        <button type="submit" class="btn btn-excluir"
+                                                title="Excluir ficha" aria-label="Excluir ficha"
+                                                onclick="return confirm('Excluir esta ficha DEFINITIVAMENTE? Considere arquivar no lugar.')">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"
+                                                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                                <path d="M3 6h18"/>
+                                                <path d="M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2"/>
+                                                <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                                                <path d="M10 11v6M14 11v6"/>
+                                            </svg>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </main>
     </div>
-</main>
-</div>
-
 </div>
 </body>
 </html>

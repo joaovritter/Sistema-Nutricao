@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de atividade — Nutra</title>
+    <link rel="stylesheet" href="/css/dashboard.css">
+    <link rel="stylesheet" href="/css/navbar.css">
+    <link rel="stylesheet" href="/css/navegacao.css">
+    <link rel="stylesheet" href="/css/animacoes.css">
+    <link rel="stylesheet" href="/css/tema.css">
+    <link rel="stylesheet" href="/css/filtros.css">
+    <link rel="stylesheet" href="/css/alimentos.css">
+    <link rel="stylesheet" href="/css/admin.css">
+    <script src="/js/animacoes.js" defer></script>
+</head>
+
+<body>
+<div class="app-shell">
+
+    <div th:replace="~{fragments/navbar :: navbar('admin')}"></div>
+
+    <div class="main-area">
+        <main class="container page-anim">
+
+            <div class="pagina-cabecalho">
+                <div>
+                    <h1>Registro de atividade</h1>
+                    <p>Entradas no sistema e operações feitas em fichas técnicas, refeições e alimentos.</p>
+                </div>
+            </div>
+
+            <div th:replace="~{fragments/abasAdmin :: abas('logs')}"></div>
+
+            <!-- ═══ Filtros ═══════════════════════════════════════════ -->
+            <form class="busca-painel" method="get" th:action="@{/admin/logs}" th:object="${filtro}">
+
+                <div class="busca-linha">
+                    <div class="busca-campo">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                            <circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>
+                        </svg>
+                        <input type="text" th:field="*{termo}" placeholder="Buscar na descrição (ex.: nome de uma ficha)">
+                    </div>
+                    <button type="submit" class="btn-filtro btn-filtro--primario">Buscar</button>
+                    <a th:href="@{/admin/logs}" class="btn-filtro btn-filtro--neutro">Limpar</a>
+                </div>
+
+                <details class="filtros-avancados" th:attr="open=${filtro.temFiltroAtivo()} ? 'open' : null">
+                    <summary>Filtrar por usuário, tipo e período</summary>
+
+                    <div class="filtros-grade">
+                        <div class="filtro-grupo">
+                            <label for="usuario">Usuário</label>
+                            <select id="usuario" th:field="*{usuario}">
+                                <option value="">Todos</option>
+                                <option th:each="u : ${resultado.usuarios}" th:value="${u}" th:text="${u}">usuário</option>
+                            </select>
+                        </div>
+
+                        <div class="filtro-grupo">
+                            <label for="alvo">Sobre o quê</label>
+                            <select id="alvo" th:field="*{alvo}">
+                                <option value="">Tudo</option>
+                                <option th:each="a : ${alvos}" th:value="${a}" th:text="${a.descricao}">alvo</option>
+                            </select>
+                        </div>
+
+                        <div class="filtro-grupo">
+                            <label for="tipo">Operação</label>
+                            <select id="tipo" th:field="*{tipo}">
+                                <option value="">Todas</option>
+                                <option th:each="t : ${tipos}" th:value="${t}" th:text="${t.descricao}">tipo</option>
+                            </select>
+                        </div>
+
+                        <div class="filtro-grupo">
+                            <label for="de">De</label>
+                            <input type="date" id="de" th:field="*{de}">
+                        </div>
+
+                        <div class="filtro-grupo">
+                            <label for="ate">Até</label>
+                            <input type="date" id="ate" th:field="*{ate}">
+                        </div>
+                    </div>
+
+                    <div class="filtros-acoes">
+                        <button type="submit" class="btn-filtro btn-filtro--primario">Aplicar filtros</button>
+                        <a th:href="@{/admin/logs}" class="btn-filtro btn-filtro--neutro">Limpar tudo</a>
+                    </div>
+                </details>
+            </form>
+
+            <!-- ═══ Resultado ═════════════════════════════════════════ -->
+            <div class="resultado-barra">
+                <span class="resultado-contagem">
+                    <strong th:text="${resultado.total}">0</strong>
+                    <span th:text="${resultado.total == 1} ? 'registro' : 'registros'">registros</span>
+                    <span th:if="${resultado.paginacao.necessaria}"
+                          th:text="'· mostrando ' + ${resultado.paginacao.primeiroItem} + '–' + ${resultado.paginacao.ultimoItem}"></span>
+                </span>
+            </div>
+
+            <div class="tabela-cartao card-anim">
+
+                <div th:if="${#lists.isEmpty(registros)}" class="estado-vazio">
+                    <h3>Nenhum registro encontrado</h3>
+                    <p>Ajuste os filtros ou aguarde novas operações no sistema.</p>
+                </div>
+
+                <div class="tabela-rolagem" th:if="${!#lists.isEmpty(registros)}">
+                    <table class="tabela-dados">
+                        <thead>
+                        <tr>
+                            <th>Quando</th>
+                            <th>Usuário</th>
+                            <th>Sobre</th>
+                            <th>Operação</th>
+                            <th>Descrição</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="r : ${registros}">
+                            <td class="log-momento"
+                                th:text="${#temporals.format(r.momento, 'dd/MM/yyyy HH:mm:ss')}">—</td>
+                            <td><strong th:text="${r.usuario}">usuário</strong></td>
+                            <td>
+                                <span class="selo"
+                                      th:classappend="'selo--alvo-' + ${#strings.toLowerCase(r.alvo)}"
+                                      th:text="${r.alvo.descricao}">Alvo</span>
+                            </td>
+                            <td th:text="${r.tipo.descricao}">Operação</td>
+                            <td th:text="${r.descricao}">Descrição</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div th:replace="~{fragments/paginacao :: trilha(${resultado.paginacao})}"></div>
+
+        </main>
+    </div>
+</div>
+</body>
+</html>

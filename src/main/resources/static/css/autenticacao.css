@@ -1,0 +1,162 @@
+/* ═══════════════════════════════════════════════════════
+   AUTENTICAÇÃO — complementos das telas de login e registro
+   Carregue depois de registro.css / index.css.
+═══════════════════════════════════════════════════════ */
+
+.auth-cabecalho {
+    text-align: center;
+    margin-bottom: 22px;
+}
+
+.auth-logo {
+    height: 42px;
+    width: auto;
+    margin-bottom: 14px;
+}
+
+.auth-cabecalho h1 {
+    font-family: var(--fonte-display, 'Lora', serif);
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--verde-900, #0f3625);
+    margin-bottom: 8px;
+}
+
+.auth-cabecalho p {
+    font-size: 0.88rem;
+    line-height: 1.5;
+    color: var(--tinta-500, #5b6b63);
+}
+
+/* ── Dica sob o campo de confirmação de senha ────────── */
+.campo-dica {
+    display: block;
+    margin-top: 6px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    min-height: 1em;
+}
+
+.campo-dica--ok   { color: var(--verde-500, #2f7a54); }
+.campo-dica--erro { color: var(--perigo-600, #b3261e); }
+
+/* ── Mensagens ───────────────────────────────────────── */
+.aviso {
+    padding: 12px 16px;
+    border-radius: var(--raio-md, 14px);
+    font-size: 0.86rem;
+    font-weight: 600;
+    line-height: 1.45;
+    margin-bottom: 18px;
+    border: 1px solid transparent;
+}
+
+.aviso--sucesso {
+    background: var(--verde-50, #eef6f1);
+    color: var(--verde-700, #164e36);
+    border-color: var(--verde-200, #cfe8da);
+}
+
+.aviso--erro {
+    background: #fdecea;
+    color: var(--perigo-700, #8c1d17);
+    border-color: #f5c4c0;
+}
+
+.aviso--info {
+    background: #fffaf2;
+    color: #92400e;
+    border-color: #fcd9a4;
+}
+
+/* ═══════════════════════════════════════════════════════
+   CONFIRMAÇÃO DE SOLICITAÇÃO ENVIADA
+═══════════════════════════════════════════════════════ */
+
+.tela-centro {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+}
+
+.cartao-mensagem {
+    background: var(--superficie, #fff);
+    border: 1px solid var(--contorno, rgba(22, 78, 54, 0.15));
+    border-radius: var(--raio-lg, 20px);
+    box-shadow: var(--sombra-card, 0 12px 28px -14px rgba(15, 54, 37, 0.18));
+    padding: 44px 40px;
+    max-width: 480px;
+    width: 100%;
+    text-align: center;
+}
+
+.cartao-mensagem .marca-sucesso {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 22px;
+    border-radius: 50%;
+    background: var(--verde-50, #eef6f1);
+    border: 1px solid var(--verde-200, #cfe8da);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--verde-500, #2f7a54);
+}
+
+.cartao-mensagem .marca-sucesso svg {
+    width: 30px;
+    height: 30px;
+}
+
+.cartao-mensagem h1 {
+    font-family: var(--fonte-display, 'Lora', serif);
+    font-size: 1.45rem;
+    color: var(--verde-900, #0f3625);
+    margin-bottom: 14px;
+}
+
+.cartao-mensagem p {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--tinta-500, #5b6b63);
+    margin-bottom: 12px;
+}
+
+.cartao-mensagem .passos {
+    text-align: left;
+    background: var(--creme-50, #f7faf7);
+    border: 1px solid var(--contorno, rgba(22, 78, 54, 0.15));
+    border-radius: var(--raio-md, 14px);
+    padding: 18px 20px 18px 38px;
+    margin: 22px 0 26px;
+}
+
+.cartao-mensagem .passos li {
+    font-size: 0.88rem;
+    line-height: 1.55;
+    color: var(--tinta-500, #5b6b63);
+    margin-bottom: 8px;
+}
+
+.cartao-mensagem .passos li:last-child {
+    margin-bottom: 0;
+}
+
+.botao-principal {
+    display: inline-block;
+    padding: 12px 30px;
+    border-radius: var(--raio-pill, 999px);
+    background: var(--verde-700, #164e36);
+    color: #fff;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.9rem;
+    transition: background .18s, transform .18s;
+}
+
+.botao-principal:hover {
+    background: var(--verde-900, #0f3625);
+    transform: translateY(-1px);
+}

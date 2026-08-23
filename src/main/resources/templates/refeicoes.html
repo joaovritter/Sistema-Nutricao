@@ -1,15 +1,19 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+      lang="pt-br">
 
 <head>
     <meta charset="UTF-8">
-    <title>Refeições</title>
+    <title>Refeições — Nutra</title>
     <link rel="stylesheet" href="/css/dashboard.css">
     <link rel="stylesheet" href="/css/navbar.css">
-    <link rel="stylesheet" href="/css/sidebar.css">
+    <link rel="stylesheet" href="/css/navegacao.css">
     <link rel="stylesheet" href="/css/refeicoes.css">
     <link rel="stylesheet" href="/css/animacoes.css">
     <link rel="stylesheet" href="/css/tema.css">
+    <link rel="stylesheet" href="/css/filtros.css">
+    <link rel="stylesheet" href="/css/alimentos.css">
     <script src="/js/animacoes.js" defer></script>
     <style>
         /* ── Modal overlay ──────────────────────────────── */
@@ -92,9 +96,7 @@
         }
 
         /* ── Fichas incluídas ───────────────────────────── */
-        .fichas-incluidas {
-            margin-top: 20px;
-        }
+        .fichas-incluidas { margin-top: 20px; }
 
         .fichas-incluidas h4 {
             font-size: 0.9rem;
@@ -130,56 +132,180 @@
             color: var(--verde-700, #164e36);
             border: 1px solid var(--contorno, rgba(22, 78, 54, 0.15));
             border-radius: var(--raio-pill, 999px);
-            padding: 6px 14px;
+            padding: 7px 14px;
             font-size: 0.78rem;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
             transition: background 0.2s ease;
         }
         .btn-perfil:hover { background: var(--verde-200, #cfe8da); }
+
+        /* Lista de fichas dentro da célula da tabela */
+        .fichas-resumo {
+            font-size: 0.84rem;
+            color: var(--tinta-500, #5b6b63);
+            line-height: 1.45;
+        }
     </style>
 </head>
 
 <body>
 <div class="app-shell">
 
-    <div th:replace="~{fragments/sidebar :: sidebar('refeicoes')}"></div>
+    <div th:replace="~{fragments/navbar :: navbar('refeicoes')}"></div>
 
     <div class="main-area">
+        <main class="container page-anim">
 
-    <div class="container page-anim">
+            <div class="pagina-cabecalho">
+                <div>
+                    <h1>Refeições</h1>
+                    <p>Combinações de fichas técnicas. Os macros somam uma porção de cada ficha da refeição.</p>
+                </div>
+                <button onclick="mostrarFormulario()" class="btn-filtro btn-filtro--primario"
+                        sec:authorize="hasAnyAuthority('NUTRICIONISTA', 'ADMIN', 'ESTUDANTE')">
+                    + Nova refeição
+                </button>
+            </div>
 
-        <!-- ── Lista de refeições ──────────────────────── -->
-        <div class="refeicao-list card">
-            <h2>Refeições Cadastradas</h2>
-            <table id="tabelaRefeicoes">
-                <thead>
-                    <tr>
-                        <th>Nome</th>
-                        <th>Fichas Técnicas</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- preenchido via JS -->
-                </tbody>
-            </table>
-            <button onclick="mostrarFormulario()" class="btn btn-icon" style="margin-top:16px;">Criar Nova Refeição</button>
-        </div>
+            <!-- ═══ Busca e filtros ═══════════════════════════════ -->
+            <form class="busca-painel" id="formFiltros" onsubmit="aplicarFiltros(event)">
+                <div class="busca-linha">
+                    <div class="busca-campo">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                            <circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>
+                        </svg>
+                        <input type="text" id="fTermo" name="termo" placeholder="Buscar refeição pelo nome">
+                    </div>
+                    <button type="submit" class="btn-filtro btn-filtro--primario">Buscar</button>
+                    <button type="button" class="btn-filtro btn-filtro--neutro" onclick="limparFiltros()">Limpar</button>
+                </div>
 
-        <!-- ── Formulário criar/editar ─────────────────── -->
-        <div class="refeicao-form card" id="formRefeicao" style="display:none;">
-            <h2 id="tituloForm">Criar Refeição</h2>
-            <form onsubmit="salvarRefeicao(event)">
-                <input type="hidden" id="refeicaoId">
-                <label>Nome da Refeição:</label><br>
-                <input type="text" id="nomeRefeicao" required style="margin-bottom:14px;"><br>
-                <label>Selecione as Fichas Técnicas:</label><br>
-                <div id="checkboxReceitas" style="margin-bottom:14px; max-height:300px; overflow-y:auto;"></div>
-                <button type="submit" class="btn btn-icon">Salvar</button>
-                <button type="button" class="btn btn-secondary" onclick="cancelarFormulario()">Cancelar</button>
+                <details class="filtros-avancados">
+                    <summary>Filtros por macronutriente e conteúdo</summary>
+
+                    <div class="filtros-grade">
+                        <div class="filtro-grupo">
+                            <label for="fContemFicha">Contém a ficha</label>
+                            <input type="text" id="fContemFicha" name="contemFicha" placeholder="nome de uma ficha técnica">
+                        </div>
+
+                        <div class="filtro-grupo">
+                            <span class="filtro-rotulo">Proteína (g)</span>
+                            <div class="filtro-faixa">
+                                <input type="number" step="0.1" min="0" id="fProteinaMin" placeholder="mín">
+                                <span>até</span>
+                                <input type="number" step="0.1" min="0" id="fProteinaMax" placeholder="máx">
+                            </div>
+                        </div>
+
+                        <div class="filtro-grupo">
+                            <span class="filtro-rotulo">Carboidrato (g)</span>
+                            <div class="filtro-faixa">
+                                <input type="number" step="0.1" min="0" id="fCarboidratoMin" placeholder="mín">
+                                <span>até</span>
+                                <input type="number" step="0.1" min="0" id="fCarboidratoMax" placeholder="máx">
+                            </div>
+                        </div>
+
+                        <div class="filtro-grupo">
+                            <span class="filtro-rotulo">Lipídio (g)</span>
+                            <div class="filtro-faixa">
+                                <input type="number" step="0.1" min="0" id="fLipidioMin" placeholder="mín">
+                                <span>até</span>
+                                <input type="number" step="0.1" min="0" id="fLipidioMax" placeholder="máx">
+                            </div>
+                        </div>
+
+                        <div class="filtro-grupo">
+                            <span class="filtro-rotulo">Energia (kcal)</span>
+                            <div class="filtro-faixa">
+                                <input type="number" step="1" min="0" id="fKcalMin" placeholder="mín">
+                                <span>até</span>
+                                <input type="number" step="1" min="0" id="fKcalMax" placeholder="máx">
+                            </div>
+                        </div>
+
+                        <div class="filtro-grupo">
+                            <label for="fOrdenarPor">Ordenar por</label>
+                            <select id="fOrdenarPor">
+                                <option value="nome">Nome</option>
+                                <option value="fichas">Nº de fichas</option>
+                                <option value="proteina">Proteína</option>
+                                <option value="carboidrato">Carboidrato</option>
+                                <option value="lipidio">Lipídio</option>
+                                <option value="kcal">Energia</option>
+                            </select>
+                        </div>
+
+                        <div class="filtro-grupo">
+                            <label for="fDirecao">Sentido</label>
+                            <select id="fDirecao">
+                                <option value="asc">Crescente</option>
+                                <option value="desc">Decrescente</option>
+                            </select>
+                        </div>
+
+                        <div class="filtro-grupo">
+                            <span class="filtro-rotulo">Arquivadas</span>
+                            <label class="filtro-check">
+                                <input type="checkbox" id="fIncluirArquivadas"> Mostrar também as arquivadas
+                            </label>
+                            <label class="filtro-check">
+                                <input type="checkbox" id="fSomenteArquivadas"> Somente arquivadas
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="filtros-acoes">
+                        <button type="submit" class="btn-filtro btn-filtro--primario">Aplicar filtros</button>
+                        <button type="button" class="btn-filtro btn-filtro--neutro" onclick="limparFiltros()">Limpar tudo</button>
+                    </div>
+                </details>
             </form>
-        </div>
+
+            <!-- ═══ Resultado ═════════════════════════════════════ -->
+            <div class="resultado-barra">
+                <span class="resultado-contagem">
+                    <strong id="contadorRefeicoes">0</strong>
+                    <span id="rotuloContador">refeições encontradas</span>
+                </span>
+            </div>
+
+            <div class="tabela-cartao card-anim">
+                <div class="tabela-rolagem">
+                    <table class="tabela-dados" id="tabelaRefeicoes">
+                        <thead>
+                        <tr>
+                            <th>Refeição</th>
+                            <th>Fichas técnicas</th>
+                            <th class="num">Energia<br><small>kcal</small></th>
+                            <th class="num">Prot.<br><small>g</small></th>
+                            <th class="num">Carb.<br><small>g</small></th>
+                            <th class="num">Lip.<br><small>g</small></th>
+                            <th>Ações</th>
+                        </tr>
+                        </thead>
+                        <tbody><!-- preenchido via JS --></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ── Formulário criar/editar ─────────────────── -->
+            <div class="refeicao-form card" id="formRefeicao" style="display:none; margin-top:24px;">
+                <h2 id="tituloForm">Criar Refeição</h2>
+                <form onsubmit="salvarRefeicao(event)">
+                    <input type="hidden" id="refeicaoId">
+                    <label>Nome da Refeição:</label><br>
+                    <input type="text" id="nomeRefeicao" required style="margin-bottom:14px;"><br>
+                    <label>Selecione as Fichas Técnicas:</label><br>
+                    <div id="checkboxReceitas" style="margin-bottom:14px; max-height:300px; overflow-y:auto;"></div>
+                    <button type="submit" class="btn btn-icon">Salvar</button>
+                    <button type="button" class="btn btn-secondary" onclick="cancelarFormulario()">Cancelar</button>
+                </form>
+            </div>
+
+        </main>
     </div>
 
     <!-- ── Modal perfil nutricional ───────────────────── -->
@@ -188,7 +314,6 @@
             <button class="modal-close" onclick="fecharModal()" title="Fechar">✕</button>
             <h3 id="modalTitulo">Perfil Nutricional — <span id="modalNomeRefeicao"></span></h3>
 
-            <!-- Resumo em cards -->
             <div class="nutri-summary">
                 <div class="nutri-card">
                     <div class="nutri-label">Kcal Total</div>
@@ -217,248 +342,329 @@
                 </div>
             </div>
 
-            <!-- Detalhamento por ficha -->
             <div class="fichas-incluidas">
-                <h4>📋 Fichas incluídas nesta refeição:</h4>
+                <h4>Fichas incluídas nesta refeição</h4>
                 <table>
                     <thead>
-                        <tr>
-                            <th>Ficha Técnica</th>
-                            <th>Categoria</th>
-                            <th>Porções</th>
-                            <th>Kcal (total)</th>
-                            <th>Ações</th>
-                        </tr>
+                    <tr>
+                        <th>Ficha Técnica</th>
+                        <th>Categoria</th>
+                        <th>Porções</th>
+                        <th>Kcal (total)</th>
+                        <th>Ações</th>
+                    </tr>
                     </thead>
                     <tbody id="modalFichasBody"></tbody>
                 </table>
             </div>
         </div>
     </div>
+</div>
 
-    <script>
-        let receitas = [];
+<script th:inline="javascript">
+    // Permissões vindas do servidor — controlam quais botões aparecem em cada linha.
+    const PODE_EDITAR = /*[[${#authorization.expression("hasAnyAuthority('NUTRICIONISTA','ADMIN','ESTUDANTE')")}]]*/ false;
+    const PODE_ARQUIVAR = /*[[${#authorization.expression("hasAnyAuthority('NUTRICIONISTA','ADMIN')")}]]*/ false;
+    const PODE_EXCLUIR = /*[[${#authorization.expression("hasAuthority('ADMIN')")}]]*/ false;
 
-        // ─── Carregar receitas para os checkboxes ─────────
-        function carregarReceitas() {
-            return fetch('/api/receitas', { credentials: 'include' })
-                .then(r => r.json())
-                .then(data => {
-                    receitas = data;
-                    const div = document.getElementById('checkboxReceitas');
-                    div.innerHTML = '';
-                    receitas.forEach(r => {
-                        div.innerHTML += `
-                            <div class="checkbox-card">
-                                <label>
-                                    <input type="checkbox" value="${r.id}" name="receitas">
-                                    <b>${r.nome}</b>
-                                    <span class="descricao-ingredientes">${r.descricao || ''}</span>
-                                </label>
-                            </div>`;
-                    });
-                });
-        }
+    let receitas = [];
 
-        // ─── Carregar lista de refeições ──────────────────
-        function carregarRefeicoes() {
-            fetch('/api/refeicoes', { credentials: 'include' })
-                .then(r => r.json())
-                .then(refeicoes => {
-                    const tbody = document.querySelector('#tabelaRefeicoes tbody');
-                    tbody.innerHTML = '';
-                    if (refeicoes.length === 0) {
-                        tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:#9ca3af;">Nenhuma refeição cadastrada ainda.</td></tr>';
-                        return;
-                    }
-                    refeicoes.forEach(refeicao => {
-                        const receitasNomes = refeicao.receitas.map(r => r.nome).join(', ');
-                        // Escapar o JSON para uso seguro no onclick
-                        const refeicaoJson = JSON.stringify(refeicao).replace(/'/g, "\\'").replace(/"/g, '&quot;');
-                        tbody.innerHTML += `
-                            <tr>
-                                <td>${refeicao.nome}</td>
-                                <td>${receitasNomes}</td>
-                                <td class="actions">
-                                    <button class="btn-perfil" onclick='verPerfilNutricional(${refeicao.id}, "${refeicao.nome.replace(/"/g, '\\"')}")'>Ver Perfil</button>
-                                    <button class="btn btn-editar" onclick='editarRefeicao(${refeicao.id})'>Editar</button>
-                                    <button class="btn btn-excluir" title="Excluir refeição" aria-label="Excluir refeição" onclick='excluirRefeicao(${refeicao.id})'>
-                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                            <path d="M3 6h18"/>
-                                            <path d="M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2"/>
-                                            <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
-                                            <path d="M10 11v6M14 11v6"/>
-                                        </svg>
-                                    </button>
-                                </td>
-                            </tr>`;
-                    });
-                })
-                .catch(() => console.error('Erro ao carregar refeições'));
-        }
+    function escaparHtml(texto) {
+        return String(texto == null ? '' : texto)
+            .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
 
-        // ─── Mostrar formulário ───────────────────────────
-        function mostrarFormulario(refeicao = null) {
-            document.getElementById('formRefeicao').style.display = 'block';
-            document.getElementById('tituloForm').innerText = refeicao ? 'Editar Refeição' : 'Criar Refeição';
-            document.getElementById('refeicaoId').value = refeicao ? refeicao.id : '';
-            document.getElementById('nomeRefeicao').value = refeicao ? refeicao.nome : '';
-            carregarReceitas().then(() => {
-                if (refeicao) {
-                    refeicao.receitas.forEach(r => {
-                        const cb = document.querySelector(`#checkboxReceitas input[value='${r.id}']`);
-                        if (cb) cb.checked = true;
-                    });
-                }
-            });
-            document.getElementById('formRefeicao').scrollIntoView({ behavior: 'smooth' });
-        }
+    function numero(valor, casas) {
+        return (valor == null ? 0 : valor).toLocaleString('pt-BR', {
+            minimumFractionDigits: casas, maximumFractionDigits: casas
+        });
+    }
 
-        function cancelarFormulario() {
-            document.getElementById('formRefeicao').style.display = 'none';
-            document.getElementById('refeicaoId').value = '';
-            document.getElementById('nomeRefeicao').value = '';
-        }
-
-        // ─── Salvar refeição ──────────────────────────────
-        function salvarRefeicao(event) {
-            event.preventDefault();
-            const id = document.getElementById('refeicaoId').value;
-            const nome = document.getElementById('nomeRefeicao').value;
-            const receitasIds = Array.from(
-                document.querySelectorAll("#checkboxReceitas input[name='receitas']:checked")
-            ).map(cb => parseInt(cb.value));
-
-            if (receitasIds.length === 0) {
-                alert('Selecione ao menos uma ficha técnica para a refeição.');
-                return;
-            }
-
-            const body = JSON.stringify({ nome, receitasIds });
-            const url = id ? `/api/refeicoes/${id}` : '/api/refeicoes';
-            const method = id ? 'PUT' : 'POST';
-
-            fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body, credentials: 'include' })
-                .then(r => { if (!r.ok) throw new Error('Erro ao salvar'); return r.json(); })
-                .then(() => { cancelarFormulario(); carregarRefeicoes(); toast(id ? 'Refeição atualizada com sucesso!' : 'Refeição criada com sucesso!', 'success'); })
-                .catch(() => toast('Erro ao salvar a refeição.', 'error'));
-        }
-
-        // ─── Editar refeição ──────────────────────────────
-        function editarRefeicao(id) {
-            fetch(`/api/refeicoes/${id}`, { credentials: 'include' })
-                .then(r => r.json())
-                .then(refeicao => mostrarFormulario(refeicao))
-                .catch(() => alert('Erro ao carregar refeição para edição.'));
-        }
-
-        // ─── Excluir refeição ─────────────────────────────
-        function excluirRefeicao(id) {
-            if (!confirm('Tem certeza que deseja excluir esta refeição?')) return;
-            fetch(`/api/refeicoes/${id}`, { method: 'DELETE', credentials: 'include' })
-                .then(() => { carregarRefeicoes(); toast('Refeição excluída com sucesso!', 'success'); })
-                .catch(() => toast('Erro ao excluir.', 'error'));
-        }
-
-        // ─── Ver Perfil Nutricional da Refeição ───────────
-        async function verPerfilNutricional(refeicaoId, nomeRefeicao) {
-            document.getElementById('modalNomeRefeicao').textContent = nomeRefeicao;
-            // Resetar valores
-            ['mKcal','mPtn','mCho','mLip','mVct'].forEach(id => document.getElementById(id).textContent = '…');
-            document.getElementById('modalFichasBody').innerHTML = '<tr><td colspan="5" style="text-align:center;">Carregando...</td></tr>';
-            document.getElementById('modalPerfil').classList.add('open');
-
-            try {
-                // Buscar a refeição para obter os IDs das fichas
-                const refeicaoRes = await fetch(`/api/refeicoes/${refeicaoId}`, { credentials: 'include' });
-                if (!refeicaoRes.ok) throw new Error('Refeição não encontrada');
-                const refeicao = await refeicaoRes.json();
-
-                // Buscar o perfil nutricional detalhado de cada ficha
-                let totalKcal = 0, totalPtn = 0, totalCho = 0, totalLip = 0, totalVct = 0;
-                const fichasDetalhes = [];
-
-                for (const receita of refeicao.receitas) {
-                    const detalheRes = await fetch(`/api/receitas/${receita.id}`, { credentials: 'include' });
-                    if (!detalheRes.ok) continue;
-                    const detalhe = await detalheRes.json();
-
-                    const perfil = detalhe.perfilNutricional;
-                    const fichaKcal = perfil ? (perfil.totalKcal || 0) : 0;
-                    const fichaVct  = perfil ? (perfil.vct || 0) : 0;
-
-                    // Calcular PTN, CHO, LIP somando dos ingredientes
-                    let fichaPtn = 0, fichaCho = 0, fichaLip = 0;
-                    if (detalhe.receita && detalhe.receita.ingredientes) {
-                        detalhe.receita.ingredientes.forEach(ing => {
-                            const pl = ing.pesoLiquido || 0;
-                            fichaPtn += (ing.proteina || 0) * (pl / 100);
-                            fichaCho += (ing.carboidrato || 0) * (pl / 100);
-                            fichaLip += (ing.lipidio || 0) * (pl / 100);
-                        });
-                    }
-
-                    totalKcal += fichaKcal;
-                    totalPtn  += fichaPtn;
-                    totalCho  += fichaCho;
-                    totalLip  += fichaLip;
-                    totalVct  += fichaVct;
-
-                    fichasDetalhes.push({
-                        nome: detalhe.receita ? detalhe.receita.nome : receita.nome,
-                        categoria: detalhe.receita ? detalhe.receita.categoria : '—',
-                        porcoes: detalhe.receita ? detalhe.receita.numeroPorcoes : '—',
-                        kcal: fichaKcal.toFixed(1),
-                        id: receita.id
-                    });
-                }
-
-                // Preencher os cards de resumo
-                document.getElementById('mKcal').textContent = totalKcal.toFixed(1);
-                document.getElementById('mPtn').textContent  = totalPtn.toFixed(1);
-                document.getElementById('mCho').textContent  = totalCho.toFixed(1);
-                document.getElementById('mLip').textContent  = totalLip.toFixed(1);
-                document.getElementById('mVct').textContent  = totalVct.toFixed(1);
-
-                // Preencher tabela de fichas
-                const tbody = document.getElementById('modalFichasBody');
-                tbody.innerHTML = '';
-                if (fichasDetalhes.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#9ca3af;">Nenhuma ficha encontrada.</td></tr>';
-                } else {
-                    fichasDetalhes.forEach(f => {
-                        tbody.innerHTML += `
-                            <tr>
-                                <td>${f.nome}</td>
-                                <td>${f.categoria}</td>
-                                <td>${f.porcoes}</td>
-                                <td>${f.kcal} kcal</td>
-                                <td><a href="/receita/detalhes/${f.id}" target="_blank" style="color:#059669;font-weight:600;text-decoration:none;">Visualizar ↗</a></td>
-                            </tr>`;
-                    });
-                }
-
-            } catch (err) {
-                console.error('Erro ao buscar perfil nutricional:', err);
-                document.getElementById('modalFichasBody').innerHTML =
-                    '<tr><td colspan="5" style="color:red;text-align:center;">Erro ao carregar dados.</td></tr>';
-            }
-        }
-
-        function fecharModal() {
-            document.getElementById('modalPerfil').classList.remove('open');
-        }
-
-        // Fechar ao clicar fora do modal
-        document.getElementById('modalPerfil').addEventListener('click', function(e) {
-            if (e.target === this) fecharModal();
+    // ─── Monta a query da busca a partir dos campos preenchidos ───
+    function montarParametros() {
+        const params = new URLSearchParams();
+        const texto = {
+            termo: 'fTermo',
+            contemFicha: 'fContemFicha'
+        };
+        Object.entries(texto).forEach(([chave, id]) => {
+            const valor = document.getElementById(id).value.trim();
+            if (valor) params.set(chave, valor);
         });
 
-        // ─── Init ─────────────────────────────────────────
-        window.onload = () => { carregarRefeicoes(); };
-    </script>
-    </div>
-</div>
+        const numeros = {
+            proteinaMin: 'fProteinaMin', proteinaMax: 'fProteinaMax',
+            carboidratoMin: 'fCarboidratoMin', carboidratoMax: 'fCarboidratoMax',
+            lipidioMin: 'fLipidioMin', lipidioMax: 'fLipidioMax',
+            kcalMin: 'fKcalMin', kcalMax: 'fKcalMax'
+        };
+        Object.entries(numeros).forEach(([chave, id]) => {
+            const valor = document.getElementById(id).value;
+            if (valor !== '') params.set(chave, valor);
+        });
+
+        params.set('ordenarPor', document.getElementById('fOrdenarPor').value);
+        params.set('direcao', document.getElementById('fDirecao').value);
+        if (document.getElementById('fIncluirArquivadas').checked) params.set('incluirArquivadas', 'true');
+        if (document.getElementById('fSomenteArquivadas').checked) params.set('somenteArquivadas', 'true');
+        return params;
+    }
+
+    function aplicarFiltros(evento) {
+        if (evento) evento.preventDefault();
+        carregarRefeicoes();
+    }
+
+    function limparFiltros() {
+        document.getElementById('formFiltros').reset();
+        carregarRefeicoes();
+    }
+
+    // ─── Carregar lista de refeições ──────────────────
+    function carregarRefeicoes() {
+        fetch('/api/busca/refeicoes?' + montarParametros().toString(), { credentials: 'include' })
+            .then(r => r.json())
+            .then(refeicoes => {
+                const tbody = document.querySelector('#tabelaRefeicoes tbody');
+                document.getElementById('contadorRefeicoes').textContent = refeicoes.length;
+                document.getElementById('rotuloContador').textContent =
+                    refeicoes.length === 1 ? 'refeição encontrada' : 'refeições encontradas';
+
+                tbody.innerHTML = '';
+                if (refeicoes.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="7"><div class="estado-vazio">' +
+                        '<h3>Nenhuma refeição encontrada</h3><p>Ajuste a busca ou afrouxe os filtros.</p>' +
+                        '</div></td></tr>';
+                    return;
+                }
+
+                refeicoes.forEach(refeicao => {
+                    const nome = escaparHtml(refeicao.nome);
+                    const fichas = refeicao.fichas.length
+                        ? refeicao.fichas.map(escaparHtml).join(', ')
+                        : '<em>sem fichas</em>';
+                    const selo = refeicao.arquivada
+                        ? ' <span class="selo selo--arquivado">Arquivada</span>' : '';
+
+                    let acoes = `<button class="btn-perfil" onclick="verPerfilNutricional(${refeicao.id}, '${nome.replace(/'/g, "\\'")}')">Ver perfil</button>`;
+                    if (PODE_EDITAR) {
+                        acoes += `<button class="btn btn-editar" onclick="editarRefeicao(${refeicao.id})">Editar</button>`;
+                    }
+                    if (PODE_ARQUIVAR) {
+                        acoes += refeicao.arquivada
+                            ? `<button class="btn btn-desarquivar" onclick="alterarArquivamento(${refeicao.id}, false)">Desarquivar</button>`
+                            : `<button class="btn btn-arquivar" onclick="alterarArquivamento(${refeicao.id}, true)">Arquivar</button>`;
+                    }
+                    if (PODE_EXCLUIR) {
+                        acoes += `<button class="btn btn-excluir" title="Excluir refeição" onclick="excluirRefeicao(${refeicao.id})">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <path d="M3 6h18"/><path d="M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2"/>
+                                    <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/>
+                                </svg></button>`;
+                    }
+
+                    tbody.innerHTML += `
+                        <tr>
+                            <td><div class="alimento-nome"><strong>${nome}</strong>${selo}</div>
+                                <span class="alimento-autor">${refeicao.totalFichas} ficha(s)</span></td>
+                            <td class="fichas-resumo">${fichas}</td>
+                            <td class="num">${numero(refeicao.kcal, 0)}</td>
+                            <td class="num">${numero(refeicao.proteina, 1)}</td>
+                            <td class="num">${numero(refeicao.carboidrato, 1)}</td>
+                            <td class="num">${numero(refeicao.lipidio, 1)}</td>
+                            <td><div class="linha-acoes">${acoes}</div></td>
+                        </tr>`;
+                });
+            })
+            .catch(() => console.error('Erro ao carregar refeições'));
+    }
+
+    // ─── Arquivar / desarquivar ───────────────────────
+    function alterarArquivamento(id, arquivar) {
+        if (arquivar && !confirm('Arquivar esta refeição? Ela sai das listas, mas continua guardada.')) return;
+        const rota = arquivar ? `/refeicao/arquivar/${id}` : `/refeicao/desarquivar/${id}`;
+        fetch(rota, { method: 'POST', credentials: 'include' })
+            .then(r => {
+                if (!r.ok) throw new Error('falhou');
+                carregarRefeicoes();
+            })
+            .catch(() => alert('Não foi possível alterar o arquivamento desta refeição.'));
+    }
+
+    // ─── Carregar receitas para os checkboxes ─────────
+    function carregarReceitas() {
+        return fetch('/api/receitas', { credentials: 'include' })
+            .then(r => r.json())
+            .then(data => {
+                receitas = data;
+                const div = document.getElementById('checkboxReceitas');
+                div.innerHTML = '';
+                receitas.forEach(r => {
+                    div.innerHTML += `
+                        <div class="checkbox-card">
+                            <label>
+                                <input type="checkbox" value="${r.id}" name="receitas">
+                                <b>${escaparHtml(r.nome)}</b>
+                                <span class="descricao-ingredientes">${escaparHtml(r.descricao || '')}</span>
+                            </label>
+                        </div>`;
+                });
+            });
+    }
+
+    // ─── Mostrar formulário ───────────────────────────
+    function mostrarFormulario(refeicao = null) {
+        document.getElementById('formRefeicao').style.display = 'block';
+        document.getElementById('tituloForm').innerText = refeicao ? 'Editar Refeição' : 'Criar Refeição';
+        document.getElementById('refeicaoId').value = refeicao ? refeicao.id : '';
+        document.getElementById('nomeRefeicao').value = refeicao ? refeicao.nome : '';
+        carregarReceitas().then(() => {
+            if (refeicao) {
+                refeicao.receitas.forEach(r => {
+                    const cb = document.querySelector(`#checkboxReceitas input[value='${r.id}']`);
+                    if (cb) cb.checked = true;
+                });
+            }
+        });
+        document.getElementById('formRefeicao').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function cancelarFormulario() {
+        document.getElementById('formRefeicao').style.display = 'none';
+        document.getElementById('refeicaoId').value = '';
+        document.getElementById('nomeRefeicao').value = '';
+    }
+
+    // ─── Salvar refeição ──────────────────────────────
+    function salvarRefeicao(event) {
+        event.preventDefault();
+        const id = document.getElementById('refeicaoId').value;
+        const nome = document.getElementById('nomeRefeicao').value;
+        const receitasIds = Array.from(
+            document.querySelectorAll("#checkboxReceitas input[name='receitas']:checked")
+        ).map(cb => parseInt(cb.value));
+
+        if (receitasIds.length === 0) {
+            alert('Selecione ao menos uma ficha técnica para a refeição.');
+            return;
+        }
+
+        const body = JSON.stringify({ nome, receitasIds });
+        const url = id ? `/api/refeicoes/${id}` : '/api/refeicoes';
+        const method = id ? 'PUT' : 'POST';
+
+        fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body, credentials: 'include' })
+            .then(r => { if (!r.ok) throw new Error('Erro ao salvar'); return r.json(); })
+            .then(() => { cancelarFormulario(); carregarRefeicoes(); })
+            .catch(() => alert('Erro ao salvar a refeição.'));
+    }
+
+    // ─── Editar refeição ──────────────────────────────
+    function editarRefeicao(id) {
+        fetch(`/api/refeicoes/${id}`, { credentials: 'include' })
+            .then(r => r.json())
+            .then(refeicao => mostrarFormulario(refeicao))
+            .catch(() => alert('Erro ao carregar refeição para edição.'));
+    }
+
+    // ─── Excluir refeição ─────────────────────────────
+    function excluirRefeicao(id) {
+        if (!confirm('Excluir esta refeição DEFINITIVAMENTE? Considere arquivar no lugar.')) return;
+        fetch(`/api/refeicoes/${id}`, { method: 'DELETE', credentials: 'include' })
+            .then(() => carregarRefeicoes())
+            .catch(() => alert('Erro ao excluir.'));
+    }
+
+    // ─── Ver Perfil Nutricional da Refeição ───────────
+    async function verPerfilNutricional(refeicaoId, nomeRefeicao) {
+        document.getElementById('modalNomeRefeicao').textContent = nomeRefeicao;
+        ['mKcal','mPtn','mCho','mLip','mVct'].forEach(id => document.getElementById(id).textContent = '…');
+        document.getElementById('modalFichasBody').innerHTML = '<tr><td colspan="5" style="text-align:center;">Carregando...</td></tr>';
+        document.getElementById('modalPerfil').classList.add('open');
+
+        try {
+            const refeicaoRes = await fetch(`/api/refeicoes/${refeicaoId}`, { credentials: 'include' });
+            if (!refeicaoRes.ok) throw new Error('Refeição não encontrada');
+            const refeicao = await refeicaoRes.json();
+
+            let totalKcal = 0, totalPtn = 0, totalCho = 0, totalLip = 0, totalVct = 0;
+            const fichasDetalhes = [];
+
+            for (const receita of refeicao.receitas) {
+                const detalheRes = await fetch(`/api/receitas/${receita.id}`, { credentials: 'include' });
+                if (!detalheRes.ok) continue;
+                const detalhe = await detalheRes.json();
+
+                const perfil = detalhe.perfilNutricional;
+                const fichaKcal = perfil ? (perfil.totalKcal || 0) : 0;
+                const fichaVct  = perfil ? (perfil.vct || 0) : 0;
+
+                let fichaPtn = 0, fichaCho = 0, fichaLip = 0;
+                if (detalhe.receita && detalhe.receita.ingredientes) {
+                    detalhe.receita.ingredientes.forEach(ing => {
+                        const pl = ing.pesoLiquido || 0;
+                        fichaPtn += (ing.proteina || 0) * (pl / 100);
+                        fichaCho += (ing.carboidrato || 0) * (pl / 100);
+                        fichaLip += (ing.lipidio || 0) * (pl / 100);
+                    });
+                }
+
+                totalKcal += fichaKcal;
+                totalPtn  += fichaPtn;
+                totalCho  += fichaCho;
+                totalLip  += fichaLip;
+                totalVct  += fichaVct;
+
+                fichasDetalhes.push({
+                    nome: detalhe.receita ? detalhe.receita.nome : receita.nome,
+                    categoria: detalhe.receita ? detalhe.receita.categoria : '—',
+                    porcoes: detalhe.receita ? detalhe.receita.numeroPorcoes : '—',
+                    kcal: fichaKcal.toFixed(1),
+                    id: receita.id
+                });
+            }
+
+            document.getElementById('mKcal').textContent = totalKcal.toFixed(1);
+            document.getElementById('mPtn').textContent  = totalPtn.toFixed(1);
+            document.getElementById('mCho').textContent  = totalCho.toFixed(1);
+            document.getElementById('mLip').textContent  = totalLip.toFixed(1);
+            document.getElementById('mVct').textContent  = totalVct.toFixed(1);
+
+            const tbody = document.getElementById('modalFichasBody');
+            tbody.innerHTML = '';
+            if (fichasDetalhes.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#9ca3af;">Nenhuma ficha encontrada.</td></tr>';
+            } else {
+                fichasDetalhes.forEach(f => {
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${escaparHtml(f.nome)}</td>
+                            <td>${escaparHtml(f.categoria)}</td>
+                            <td>${f.porcoes}</td>
+                            <td>${f.kcal} kcal</td>
+                            <td><a href="/receita/detalhes/${f.id}" target="_blank" style="color:#059669;font-weight:600;text-decoration:none;">Visualizar</a></td>
+                        </tr>`;
+                });
+            }
+
+        } catch (err) {
+            console.error('Erro ao buscar perfil nutricional:', err);
+            document.getElementById('modalFichasBody').innerHTML =
+                '<tr><td colspan="5" style="color:red;text-align:center;">Erro ao carregar dados.</td></tr>';
+        }
+    }
+
+    function fecharModal() {
+        document.getElementById('modalPerfil').classList.remove('open');
+    }
+
+    document.getElementById('modalPerfil').addEventListener('click', function (e) {
+        if (e.target === this) fecharModal();
+    });
+
+    window.onload = () => { carregarRefeicoes(); };
+</script>
 </body>
 
 </html>

@@ -3,7 +3,9 @@ package com.mjwsolucoes.sistemanutricao.service;
 import com.mjwsolucoes.sistemanutricao.dto.RefeicaoDTO;
 import com.mjwsolucoes.sistemanutricao.dto.RefeicaoInputDTO;
 import com.mjwsolucoes.sistemanutricao.dto.ReceitaResumoDTO;
+import com.mjwsolucoes.sistemanutricao.model.AlvoAtividade;
 import com.mjwsolucoes.sistemanutricao.model.Refeicao;
+import com.mjwsolucoes.sistemanutricao.model.TipoAtividade;
 import com.mjwsolucoes.sistemanutricao.model.Receita;
 import com.mjwsolucoes.sistemanutricao.repository.RefeicaoRepository;
 import com.mjwsolucoes.sistemanutricao.repository.ReceitaRepository;
@@ -21,9 +23,12 @@ public class RefeicaoService {
     private RefeicaoRepository refeicaoRepository;
     @Autowired
     private ReceitaRepository receitaRepository;
+    @Autowired
+    private AtividadeService atividadeService;
 
+    /** Somente as refeicoes em uso; as arquivadas ficam fora das listas. */
     public List<RefeicaoDTO> listarTodas() {
-        return refeicaoRepository.findAll().stream().map(this::toDTO).collect(Collectors.toList());
+        return refeicaoRepository.findByArquivadaFalse().stream().map(this::toDTO).collect(Collectors.toList());
     }
 
     @Transactional
@@ -33,6 +38,8 @@ public class RefeicaoService {
         List<Receita> receitas = receitaRepository.findAllById(dto.getReceitasIds());
         refeicao.setReceitas(receitas);
         refeicao = refeicaoRepository.save(refeicao);
+        atividadeService.registrar(TipoAtividade.CRIACAO, AlvoAtividade.REFEICAO,
+                "Refeicao \"" + refeicao.getNome() + "\" criada", refeicao.getId());
         return toDTO(refeicao);
     }
 
@@ -45,12 +52,17 @@ public class RefeicaoService {
         List<Receita> receitas = receitaRepository.findAllById(dto.getReceitasIds());
         refeicao.setReceitas(receitas);
         refeicao = refeicaoRepository.save(refeicao);
+        atividadeService.registrar(TipoAtividade.EDICAO, AlvoAtividade.REFEICAO,
+                "Refeicao \"" + refeicao.getNome() + "\" editada", refeicao.getId());
         return toDTO(refeicao);
     }
 
     @Transactional
     public void excluir(Long id) {
+        String nome = refeicaoRepository.findById(id).map(Refeicao::getNome).orElse("?");
         refeicaoRepository.deleteById(id);
+        atividadeService.registrar(TipoAtividade.EXCLUSAO, AlvoAtividade.REFEICAO,
+                "Refeicao \"" + nome + "\" excluida", id);
     }
 
     public RefeicaoDTO buscarPorId(Long id) {
@@ -68,6 +80,7 @@ public class RefeicaoService {
             return resumo;
         }).collect(Collectors.toList());
         dto.setReceitas(receitas);
+        dto.setArquivada(refeicao.isArquivada());
         return dto;
     }
 }
