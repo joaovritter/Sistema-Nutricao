@@ -285,15 +285,15 @@
                 const tableBody = document.querySelector('#ingredientes-table tbody');
                 const newRow = tableBody.insertRow();
                 newRow.innerHTML = `
-                <td><input type="text" class="ingrediente-nome" placeholder="Ingrediente"></td>
-                <td><input type="text" class="medida-caseira-ingrediente" placeholder="Medida"></td>
-                <td><input type="number" step="0.01" class="pb-ingrediente" placeholder="0.00"></td>
-                <td><input type="number" step="0.01" class="pl-ingrediente" placeholder="0.00"></td>
-                <td><input type="number" step="0.01" class="fc-ingrediente" placeholder="0.00" readonly></td>
-                <td><input type="number" step="0.01" class="custo-compra-ingrediente" placeholder="R$ 0,00"></td>
-                <td><input type="number" step="0.01" class="peso-compra-ingrediente" placeholder="0.00"></td>
-                <td><input type="number" step="0.01" class="custo-utilizado-ingrediente" placeholder="R$ 0,00" readonly></td>
-                <td><button type="button" class="btn-excluir" title="Remover ingrediente" aria-label="Remover ingrediente" onclick="removerLinha(this)">
+                <td data-label="Ingrediente"><input type="text" class="ingrediente-nome" placeholder="Ingrediente"></td>
+                <td data-label="Medida caseira"><input type="text" class="medida-caseira-ingrediente" placeholder="Medida"></td>
+                <td data-label="Peso bruto (g)"><input type="number" step="0.01" class="pb-ingrediente" placeholder="0.00"></td>
+                <td data-label="Peso líquido (g)"><input type="number" step="0.01" class="pl-ingrediente" placeholder="0.00"></td>
+                <td data-label="Fator de correção"><input type="number" step="0.01" class="fc-ingrediente" placeholder="0.00" readonly></td>
+                <td data-label="Custo (forma de compra)"><input type="number" step="0.01" class="custo-compra-ingrediente" placeholder="R$ 0,00"></td>
+                <td data-label="Peso da compra (g)"><input type="number" step="0.01" class="peso-compra-ingrediente" placeholder="0.00"></td>
+                <td data-label="Custo (qtd. utilizada)"><input type="number" step="0.01" class="custo-utilizado-ingrediente" placeholder="R$ 0,00" readonly></td>
+                <td data-label="Ações" class="col-acoes-linha"><button type="button" class="btn-excluir" title="Remover ingrediente" aria-label="Remover ingrediente" onclick="removerLinha(this)">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                         <path d="M3 6h18"/>
                         <path d="M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2"/>
@@ -891,14 +891,14 @@
                 const gorduraSaturadaPorPorcao = gorduraSaturadaProporcional / numeroPorcoes;
 
                 newNutriRow.innerHTML = `
-                <td>${ingredienteNome}</td>
-                <td>${plPorPorcao.toFixed(2)}</td>
-                <td>${proteinaPorPorcao.toFixed(2)}</td>
-                <td>${carboidratoPorPorcao.toFixed(2)}</td>
-                <td>${lipidioPorPorcao.toFixed(2)}</td>
-                <td>${sodioPorPorcao.toFixed(2)}</td>
-                <td>${gorduraSaturadaPorPorcao.toFixed(2)}</td>
-                <td></td> `;
+                <td data-label="Ingrediente">${ingredienteNome}</td>
+                <td data-label="Per capita (PL)">${plPorPorcao.toFixed(2)}</td>
+                <td data-label="PTN">${proteinaPorPorcao.toFixed(2)}</td>
+                <td data-label="CHO">${carboidratoPorPorcao.toFixed(2)}</td>
+                <td data-label="LIP">${lipidioPorPorcao.toFixed(2)}</td>
+                <td data-label="Sódio">${sodioPorPorcao.toFixed(2)}</td>
+                <td data-label="Gordura Saturada">${gorduraSaturadaPorPorcao.toFixed(2)}</td>
+                <td data-label="Ações"></td> `;
             });
 
             console.log("[DEBUG - CALC] Totais brutos antes de exibir:", {

@@ -193,7 +193,7 @@
                 </div>
 
                 <div class="tabela-rolagem" th:if="${!#lists.isEmpty(fichas)}">
-                    <table class="tabela-dados">
+                    <table class="tabela-dados tabela-fichas">
                         <thead>
                         <tr>
                             <th>Ficha</th>
@@ -208,24 +208,30 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="f : ${fichas}">
-                            <td>
+                        <tr th:each="f : ${fichas}" class="linha-ficha" onclick="alternarLinhaFicha(event, this)">
+                            <td class="col-nome">
                                 <div class="alimento-nome">
-                                    <a th:href="@{/receita/detalhes/{id}(id=${f.id})}" th:text="${f.nome}">Nome</a>
+                                    <a th:href="@{/receita/detalhes/{id}(id=${f.id})}" th:text="${f.nome}"
+                                       onclick="event.stopPropagation()">Nome</a>
                                     <span class="selo selo--arquivado" th:if="${f.arquivada}">Arquivada</span>
                                 </div>
                                 <span class="alimento-autor" th:if="${f.tempoPreparo != null}"
                                       th:text="${f.tempoPreparo} + ' min de preparo'"></span>
+                                <button type="button" class="toggle-macros" aria-label="Ver macros da ficha" title="Ver macros">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="6 9 12 15 18 9"/>
+                                    </svg>
+                                </button>
                             </td>
-                            <td th:text="${f.categoriaDescricao}">Categoria</td>
-                            <td th:text="${f.nutricionista}">Responsável</td>
-                            <td class="num" th:text="${f.numeroPorcoes != null} ? ${f.numeroPorcoes} : '—'">0</td>
-                            <td class="num" th:text="${#numbers.formatDecimal(f.kcalPorcao, 1, 'POINT', 0, 'COMMA')}">0</td>
-                            <td class="num" th:text="${#numbers.formatDecimal(f.proteinaPorcao, 1, 'POINT', 1, 'COMMA')}">0</td>
-                            <td class="num" th:text="${#numbers.formatDecimal(f.carboidratoPorcao, 1, 'POINT', 1, 'COMMA')}">0</td>
-                            <td class="num" th:text="${#numbers.formatDecimal(f.lipidioPorcao, 1, 'POINT', 1, 'COMMA')}">0</td>
-                            <td>
-                                <div class="linha-acoes">
+                            <td class="col-expansivel" data-label="Categoria" th:text="${f.categoriaDescricao}">Categoria</td>
+                            <td class="col-expansivel" data-label="Responsável" th:text="${f.nutricionista}">Responsável</td>
+                            <td class="num col-expansivel" data-label="Porções" th:text="${f.numeroPorcoes != null} ? ${f.numeroPorcoes} : '—'">0</td>
+                            <td class="num col-expansivel" data-label="Energia (kcal/porção)" th:text="${#numbers.formatDecimal(f.kcalPorcao, 1, 'POINT', 0, 'COMMA')}">0</td>
+                            <td class="num col-expansivel" data-label="Proteína (g/porção)" th:text="${#numbers.formatDecimal(f.proteinaPorcao, 1, 'POINT', 1, 'COMMA')}">0</td>
+                            <td class="num col-expansivel" data-label="Carboidrato (g/porção)" th:text="${#numbers.formatDecimal(f.carboidratoPorcao, 1, 'POINT', 1, 'COMMA')}">0</td>
+                            <td class="num col-expansivel" data-label="Lipídio (g/porção)" th:text="${#numbers.formatDecimal(f.lipidioPorcao, 1, 'POINT', 1, 'COMMA')}">0</td>
+                            <td class="col-acoes col-expansivel" data-label="Ações">
+                                <div class="linha-acoes" onclick="event.stopPropagation()">
                                     <a th:href="@{/receita/detalhes/{id}(id=${f.id})}" class="btn btn-detalhes">Visualizar</a>
 
                                     <a th:href="@{/receita/editar/{id}(id=${f.id})}" class="btn btn-editar"
@@ -274,5 +280,14 @@
         </main>
     </div>
 </div>
+
+<script>
+    // Só faz sentido em mobile (a tabela vira cartão só ali via CSS);
+    // em telas largas o clique na linha simplesmente não tem efeito visual.
+    function alternarLinhaFicha(event, linha) {
+        if (event.target.closest('a, button:not(.toggle-macros), form, input')) return;
+        linha.classList.toggle('linha-aberta');
+    }
+</script>
 </body>
 </html>

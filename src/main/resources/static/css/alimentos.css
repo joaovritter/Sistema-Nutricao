@@ -267,6 +267,182 @@
     .tabela-dados { font-size: 0.84rem; }
 }
 
+/* Só existe no layout mobile em cartão; escondido no resto */
+.toggle-macros {
+    display: none;
+}
+
+/* ═══════════════════════════════════════════════════════
+   TABELA → CARTÃO no mobile
+   Usada pela listagem de Fichas Técnicas e pela de Refeições.
+   Cada <td> precisa de data-label="..." para virar o rótulo.
+═══════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+    .tabela-rolagem {
+        overflow-x: hidden;
+    }
+
+    .tabela-dados thead {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+    }
+
+    .tabela-dados,
+    .tabela-dados tbody,
+    .tabela-dados tr,
+    .tabela-dados td {
+        display: block;
+        width: 100%;
+    }
+
+    .tabela-dados tr {
+        margin-bottom: 12px;
+        border: 1px solid var(--contorno);
+        border-radius: var(--raio-md);
+        overflow: hidden;
+        background: var(--superficie);
+        box-shadow: var(--sombra-card);
+    }
+
+    .tabela-dados tr:last-child {
+        margin-bottom: 0;
+    }
+
+    .tabela-dados td {
+        padding: 10px 14px 10px 44%;
+        border: none;
+        border-bottom: 1px solid var(--contorno);
+        text-align: right;
+        position: relative;
+        min-height: 38px;
+    }
+
+    .tabela-dados td:last-child {
+        border-bottom: none;
+    }
+
+    .tabela-dados td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 14px;
+        top: 10px;
+        width: 40%;
+        text-align: left;
+        font-weight: 700;
+        font-size: 0.66rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--verde-700);
+    }
+
+    .tabela-dados td.num {
+        font-family: var(--fonte-dado);
+    }
+
+    .tabela-dados .alimento-nome,
+    .tabela-dados .linha-acoes {
+        justify-content: flex-end;
+    }
+
+    /* Lista de nomes (várias fichas), não um valor curto: o layout
+       rótulo-à-esquerda/valor-à-direita do resto da tabela espreme
+       e sobrepõe o texto aqui. Empilha rótulo em cima do valor. */
+    .tabela-dados td.fichas-resumo {
+        padding-left: 14px;
+        text-align: left;
+    }
+
+    .tabela-dados td.fichas-resumo::before {
+        position: static;
+        display: block;
+        width: auto;
+        margin-bottom: 4px;
+    }
+
+    .tabela-dados .fichas-resumo {
+        text-align: left;
+    }
+
+    /* ── Fichas técnicas: nome sempre visível, macros por trás
+       de um toque. Só nesta tabela (.tabela-fichas). ────────── */
+    .tabela-fichas td.col-expansivel {
+        display: none;
+    }
+
+    .tabela-fichas tr.linha-aberta td.col-expansivel {
+        display: block;
+    }
+
+    .tabela-fichas td.col-nome {
+        position: relative;
+        padding: 12px 44px 12px 14px;
+        text-align: left;
+        cursor: pointer;
+    }
+
+    .tabela-fichas td.col-nome::before {
+        content: none;
+    }
+
+    /* A regra genérica de .tabela-dados empurra o conteúdo pra
+       direita (flex-end); aqui o nome precisa nascer da esquerda
+       e quebrar linha em vez de passar por baixo do botão. */
+    .tabela-fichas td.col-nome .alimento-nome {
+        justify-content: flex-start;
+        padding-right: 6px;
+    }
+
+    .tabela-fichas td.col-nome .alimento-nome a {
+        white-space: normal;
+        word-break: break-word;
+    }
+
+    .tabela-fichas .toggle-macros {
+        display: flex;
+        position: absolute;
+        top: 50%;
+        right: 12px;
+        transform: translateY(-50%);
+        width: 26px;
+        height: 26px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        border-radius: 50%;
+        background: var(--verde-50);
+        color: var(--verde-700);
+        cursor: pointer;
+        transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .tabela-fichas .toggle-macros svg {
+        width: 14px;
+        height: 14px;
+        transition: transform 0.2s ease;
+    }
+
+    .tabela-fichas tr.linha-aberta .toggle-macros svg {
+        transform: rotate(180deg);
+    }
+
+    .tabela-fichas td.col-acoes {
+        padding-left: 14px;
+        text-align: left;
+    }
+
+    .tabela-fichas td.col-acoes::before {
+        content: none;
+    }
+
+    .tabela-fichas .linha-acoes {
+        justify-content: flex-start;
+    }
+}
+
 /* ═══════════════════════════════════════════════════════
    AÇÕES EM LINHA DE TABELA
 ═══════════════════════════════════════════════════════ */

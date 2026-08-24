@@ -5,6 +5,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Refeições — Nutra</title>
     <link rel="stylesheet" href="/css/dashboard.css">
     <link rel="stylesheet" href="/css/navbar.css">
@@ -466,14 +467,14 @@
 
                     tbody.innerHTML += `
                         <tr>
-                            <td><div class="alimento-nome"><strong>${nome}</strong>${selo}</div>
+                            <td data-label="Refeição"><div class="alimento-nome"><strong>${nome}</strong>${selo}</div>
                                 <span class="alimento-autor">${refeicao.totalFichas} ficha(s)</span></td>
-                            <td class="fichas-resumo">${fichas}</td>
-                            <td class="num">${numero(refeicao.kcal, 0)}</td>
-                            <td class="num">${numero(refeicao.proteina, 1)}</td>
-                            <td class="num">${numero(refeicao.carboidrato, 1)}</td>
-                            <td class="num">${numero(refeicao.lipidio, 1)}</td>
-                            <td><div class="linha-acoes">${acoes}</div></td>
+                            <td class="fichas-resumo" data-label="Fichas técnicas">${fichas}</td>
+                            <td class="num" data-label="Energia (kcal)">${numero(refeicao.kcal, 0)}</td>
+                            <td class="num" data-label="Proteína (g)">${numero(refeicao.proteina, 1)}</td>
+                            <td class="num" data-label="Carboidrato (g)">${numero(refeicao.carboidrato, 1)}</td>
+                            <td class="num" data-label="Lipídio (g)">${numero(refeicao.lipidio, 1)}</td>
+                            <td data-label="Ações"><div class="linha-acoes">${acoes}</div></td>
                         </tr>`;
                 });
             })
