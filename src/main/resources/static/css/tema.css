@@ -212,7 +212,7 @@ button[type="submit"]:active {
 /* ── Botão secundário / fantasma ─────────────────────── */
 .btn-secondary,
 .btn-voltar,
-button[type="button"]:not(.btn-excluir):not(.btn-perfil):not(.alimento-card):not(.pop-fechar) {
+button[type="button"]:not(.btn-excluir):not(.btn-perfil):not(.alimento-card):not(.pop-fechar):not(.campo__olho) {
     background: var(--superficie);
     background-image: none;
     color: var(--verde-700);
@@ -229,7 +229,7 @@ button[type="button"]:not(.btn-excluir):not(.btn-perfil):not(.alimento-card):not
 
 .btn-secondary:hover,
 .btn-voltar:hover,
-button[type="button"]:not(.btn-excluir):not(.btn-perfil):not(.alimento-card):not(.pop-fechar):hover {
+button[type="button"]:not(.btn-excluir):not(.btn-perfil):not(.alimento-card):not(.pop-fechar):not(.campo__olho):hover {
     background: var(--verde-50);
     color: var(--verde-900);
     border-color: var(--verde-500);

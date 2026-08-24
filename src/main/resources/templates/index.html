@@ -3,62 +3,140 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nutra</title>
+    <title>Nutra: fichas técnicas nutricionais</title>
+    <meta name="description" content="Monte fichas técnicas com ingredientes, porções, valores nutricionais e custo por porção.">
     <link rel="stylesheet" href="/css/index.css">
     <link rel="stylesheet" href="/css/animacoes.css">
     <link rel="stylesheet" href="/css/tema.css">
     <link rel="stylesheet" href="/css/autenticacao.css">
     <script src="/js/animacoes.js" defer></script>
+    <script src="/js/logo-animado.js" defer></script>
+    <script src="/js/senha-visivel.js" defer></script>
 </head>
 <body>
-<div class="container">
-    <div class="content-left">
-        <h1 class="main-title">
-            <img src="/images/logoNutra.png" alt="Nutra" class="main-logo">
-        </h1>
 
-        <div class="description">
-            <h2>Gerencie suas<br>fichas técnicas<br>de maneira simples<br>e descomplicada.</h2>
+<!-- Abertura em tela cheia. O vídeo preenche a janela inteira e fica centrado
+     (object-fit: cover + object-position: center), então não sobra borda em
+     nenhuma proporção — retrato, paisagem ou ultrawide. Ao terminar, a camada
+     some e revela a página. Clique ou Esc pula. Fica fora de .pagina para não
+     herdar nenhum empilhamento dela. -->
+<div class="intro-video" id="introVideo" aria-hidden="true">
+    <video class="intro-video__midia" muted playsinline preload="none" tabindex="-1">
+        <source src="/videos/videoLogoNutra.mp4" type="video/mp4">
+    </video>
+</div>
 
-            <p>Aqui você pode criar, editar e organizar fichas técnicas nutricionais com facilidade.
-                Tenha acesso rápido a informações como ingredientes, valores nutricionais, porções e custos, tudo em um só lugar.
-                Ideal para nutricionistas, restaurantes e indústrias alimentícias que buscam praticidade e precisão no controle
-                de suas receitas. Simplifique seu fluxo de trabalho e garante padrões consistentes em cada preparação!
-        </div>
-    </div>
+<div class="pagina">
+    <header class="marca">
+        <img src="/images/logoNutra.png" alt="Nutra" class="marca__logo" width="150" height="48">
+    </header>
 
-    <div class="content-right">
-        <div class="aviso aviso--erro" th:if="${param.error}">
-            Usuário ou senha inválidos.
-        </div>
-        <div class="aviso aviso--info" th:if="${param.disabled}">
-            Sua conta ainda não está ativa. A solicitação de registro foi enviada ao sistema e um
-            administrador precisa aprovar o acesso e definir o seu cargo. Assim que isso acontecer,
-            você poderá entrar normalmente.
-        </div>
-        <div class="aviso aviso--sucesso" th:if="${param.logout}">
-            Sessão encerrada. Até logo!
-        </div>
-        <div class="login-box hero-anim">
-            <form th:action="@{/login}" method="post">
-                <div class="form-group">
-                    <label for="username">Username</label>
-                    <input type="text" id="username" name="username" placeholder="username" required>
+    <main class="palco">
+
+        <!-- Apresentação -->
+        <section class="hero">
+            <p class="hero__eyebrow">Fichas técnicas nutricionais</p>
+
+            <h1 class="hero__titulo">
+                Toda receita com valor<br>
+                nutricional e custo <em>no lugar</em>.
+            </h1>
+
+            <p class="hero__lead">
+                Monte fichas com ingredientes, porções, valores nutricionais e custo
+                por porção. Mantenha o mesmo padrão em toda a operação.
+            </p>
+
+            <!-- A peça que a Nutra produz, mostrada como ela mesma:
+                 números tabulares na fonte de dados do sistema. -->
+            <figure class="ficha" aria-labelledby="ficha-nome">
+                <figcaption class="ficha__topo">
+                    <span class="ficha__etiqueta">Exemplo</span>
+                    <h2 class="ficha__nome" id="ficha-nome">Salada de grão-de-bico</h2>
+                    <p class="ficha__meta">Rende 4 porções · valores por 100&nbsp;g</p>
+                </figcaption>
+
+                <dl class="ficha__tabela">
+                    <div class="ficha__linha">
+                        <dt>Energia</dt>
+                        <dd><span class="ficha__num">182</span> <span class="ficha__un">kcal</span></dd>
+                    </div>
+                    <div class="ficha__linha">
+                        <dt>Carboidratos</dt>
+                        <dd><span class="ficha__num">24,0</span> <span class="ficha__un">g</span></dd>
+                    </div>
+                    <div class="ficha__linha">
+                        <dt>Proteínas</dt>
+                        <dd><span class="ficha__num">7,4</span> <span class="ficha__un">g</span></dd>
+                    </div>
+                    <div class="ficha__linha">
+                        <dt>Gorduras totais</dt>
+                        <dd><span class="ficha__num">6,1</span> <span class="ficha__un">g</span></dd>
+                    </div>
+                    <div class="ficha__linha">
+                        <dt>Fibra alimentar</dt>
+                        <dd><span class="ficha__num">5,2</span> <span class="ficha__un">g</span></dd>
+                    </div>
+                    <div class="ficha__linha">
+                        <dt>Sódio</dt>
+                        <dd><span class="ficha__num">210</span> <span class="ficha__un">mg</span></dd>
+                    </div>
+                </dl>
+
+                <p class="ficha__custo">
+                    <span>Custo por porção</span>
+                    <strong class="ficha__num">R$&nbsp;3,18</strong>
+                </p>
+            </figure>
+        </section>
+
+        <!-- Acesso -->
+        <section class="acesso" aria-labelledby="acesso-titulo">
+            <div class="acesso__cartao hero-anim">
+
+                <div class="aviso aviso--erro" th:if="${param.error}" role="alert">
+                    Usuário ou senha inválidos. Confira os dados e tente de novo.
                 </div>
-                <div class="form-group">
-                    <label for="password">Senha</label>
-                    <input type="password" id="password" name="password" placeholder="senha" required>
+                <div class="aviso aviso--info" th:if="${param.disabled}" role="alert">
+                    Sua conta ainda não está ativa. A solicitação de registro foi enviada e um
+                    administrador precisa aprovar o acesso e definir o seu cargo. Assim que isso
+                    acontecer, você entra normalmente.
                 </div>
-                <button type="submit" class="login-btn">Login</button>
-
-                <div class="register">
-                    <a href="/registro" class="register-link">Não tem uma conta? Cadastre-se</a>
+                <div class="aviso aviso--sucesso" th:if="${param.logout}" role="status">
+                    Sessão encerrada. Até logo!
                 </div>
-            </form>
 
-        </div>
-    </div>
+                <h2 class="acesso__titulo" id="acesso-titulo">Acesse sua conta</h2>
 
+                <form th:action="@{/login}" method="post" class="acesso__form">
+                    <div class="campo">
+                        <label for="username">Usuário</label>
+                        <input type="text" id="username" name="username"
+                               autocomplete="username" autocapitalize="none"
+                               spellcheck="false" required>
+                    </div>
+
+                    <div class="campo">
+                        <label for="password">Senha</label>
+                        <!-- O botão de olho é montado por senha-visivel.js.
+                             Sem JS o campo continua sendo um password normal. -->
+                        <div class="campo__caixa" data-senha>
+                            <input type="password" id="password" name="password"
+                                   autocomplete="current-password" required>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="acesso__enviar">Entrar</button>
+                </form>
+
+                <p class="acesso__registro">
+                    Ainda não tem acesso?
+                    <a href="/registro">Criar conta</a>
+                </p>
+            </div>
+        </section>
+
+    </main>
 </div>
 </body>
 </html>

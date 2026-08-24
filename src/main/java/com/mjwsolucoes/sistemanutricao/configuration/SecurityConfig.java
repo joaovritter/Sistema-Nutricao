@@ -41,6 +41,7 @@ public class SecurityConfig {
                                 "/css/**",
                                 "/js/**",
                                 "/images/**",
+                                "/videos/**",
                                 "/support"
                         ).permitAll()
 
