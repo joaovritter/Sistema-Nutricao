@@ -5,13 +5,18 @@ import com.mjwsolucoes.sistemanutricao.dto.RefeicaoInputDTO;
 import com.mjwsolucoes.sistemanutricao.dto.ReceitaResumoDTO;
 import com.mjwsolucoes.sistemanutricao.model.AlvoAtividade;
 import com.mjwsolucoes.sistemanutricao.model.Refeicao;
+import com.mjwsolucoes.sistemanutricao.model.Role;
 import com.mjwsolucoes.sistemanutricao.model.TipoAtividade;
 import com.mjwsolucoes.sistemanutricao.model.Receita;
+import com.mjwsolucoes.sistemanutricao.model.User;
 import com.mjwsolucoes.sistemanutricao.repository.RefeicaoRepository;
 import com.mjwsolucoes.sistemanutricao.repository.ReceitaRepository;
+import com.mjwsolucoes.sistemanutricao.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +29,8 @@ public class RefeicaoService {
     @Autowired
     private ReceitaRepository receitaRepository;
     @Autowired
+    private UserRepository userRepository;
+    @Autowired
     private AtividadeService atividadeService;
 
     /** Somente as refeicoes em uso; as arquivadas ficam fora das listas. */
@@ -32,11 +39,12 @@ public class RefeicaoService {
     }
 
     @Transactional
-    public RefeicaoDTO criar(RefeicaoInputDTO dto) {
+    public RefeicaoDTO criar(RefeicaoInputDTO dto, String username) {
         Refeicao refeicao = new Refeicao();
         refeicao.setNome(dto.getNome());
         List<Receita> receitas = receitaRepository.findAllById(dto.getReceitasIds());
         refeicao.setReceitas(receitas);
+        refeicao.setCriadoPor(buscarUsuario(username));
         refeicao = refeicaoRepository.save(refeicao);
         atividadeService.registrar(TipoAtividade.CRIACAO, AlvoAtividade.REFEICAO,
                 "Refeicao \"" + refeicao.getNome() + "\" criada", refeicao.getId());
@@ -44,10 +52,10 @@ public class RefeicaoService {
     }
 
     @Transactional
-    public RefeicaoDTO editar(Long id, RefeicaoInputDTO dto) {
-        Optional<Refeicao> opt = refeicaoRepository.findById(id);
-        if (opt.isEmpty()) throw new RuntimeException("Refeição não encontrada");
-        Refeicao refeicao = opt.get();
+    public RefeicaoDTO editar(Long id, RefeicaoInputDTO dto, String username) {
+        Refeicao refeicao = refeicaoRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Refeição não encontrada"));
+        validarPermissaoEdicao(refeicao, username);
         refeicao.setNome(dto.getNome());
         List<Receita> receitas = receitaRepository.findAllById(dto.getReceitasIds());
         refeicao.setReceitas(receitas);
@@ -55,6 +63,25 @@ public class RefeicaoService {
         atividadeService.registrar(TipoAtividade.EDICAO, AlvoAtividade.REFEICAO,
                 "Refeicao \"" + refeicao.getNome() + "\" editada", refeicao.getId());
         return toDTO(refeicao);
+    }
+
+    /**
+     * Só quem criou a refeicao (ou um admin) pode editá-la. Refeicoes antigas,
+     * sem dono registrado, continuam editáveis por qualquer AUTOR.
+     */
+    private void validarPermissaoEdicao(Refeicao refeicao, String username) {
+        if (refeicao.getCriadoPor() == null) return;
+        User usuario = buscarUsuario(username);
+        boolean dono = refeicao.getCriadoPor().getId().equals(usuario.getId());
+        if (!dono && usuario.getRole() != Role.ADMIN) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                    "Você só pode editar refeições criadas por você.");
+        }
+    }
+
+    private User buscarUsuario(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
     }
 
     @Transactional

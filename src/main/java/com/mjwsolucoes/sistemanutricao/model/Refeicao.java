@@ -23,6 +23,15 @@ public class Refeicao {
     @Column(nullable = false)
     private boolean arquivada;
 
+    /**
+     * Quem criou a refeicao. Nulo para refeicoes antigas, criadas antes desse
+     * controle existir - nesse caso a edicao fica liberada para qualquer AUTOR,
+     * como acontecia antes.
+     */
+    @ManyToOne
+    @JoinColumn(name = "criado_por_id")
+    private User criadoPor;
+
     // Getters e setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -32,4 +41,6 @@ public class Refeicao {
     public void setReceitas(List<Receita> receitas) { this.receitas = receitas; }
     public boolean isArquivada() { return arquivada; }
     public void setArquivada(boolean arquivada) { this.arquivada = arquivada; }
+    public User getCriadoPor() { return criadoPor; }
+    public void setCriadoPor(User criadoPor) { this.criadoPor = criadoPor; }
 }
