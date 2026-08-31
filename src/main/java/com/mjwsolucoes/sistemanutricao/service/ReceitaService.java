@@ -114,7 +114,7 @@ public class ReceitaService {
 
         boolean dono = receita.getNutricionista() != null
                 && receita.getNutricionista().getId().equals(usuario.getId());
-        if (!dono && usuario.getRole() != Role.ADMIN) {
+        if (!podeEditarConteudoDeOutro(usuario, dono)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN,
                     "Você só pode adicionar alimentos às suas próprias fichas.");
         }
@@ -187,9 +187,10 @@ public class ReceitaService {
         User nutricionista = userRepository.findByUsername(usernameNutricionista)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Nutricionista não encontrado"));
 
-        // Verificar se o usuário é o dono da receita ou tem role ADMIN
-        if (!receita.getNutricionista().getId().equals(nutricionista.getId()) && 
-            !nutricionista.getRole().equals(Role.ADMIN)) {
+        // Dono edita sempre; nutricionista/admin corrigem fichas de qualquer usuário;
+        // estudante só edita o que ele mesmo criou.
+        boolean dono = receita.getNutricionista().getId().equals(nutricionista.getId());
+        if (!podeEditarConteudoDeOutro(nutricionista, dono)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Você não tem permissão para editar esta receita");
         }
 
@@ -396,5 +397,14 @@ public class ReceitaService {
             dto.setReceitaId(perfil.getReceita().getId());
         }
         return dto;
+    }
+
+    /**
+     * Dono sempre edita o que é seu. Nutricionista e admin também editam
+     * conteúdo de outros usuários (o nutricionista corrige fichas de
+     * estudantes, como um professor). Estudante só edita o que ele mesmo criou.
+     */
+    private boolean podeEditarConteudoDeOutro(User usuario, boolean dono) {
+        return dono || usuario.getRole() == Role.ADMIN || usuario.getRole() == Role.NUTRICIONISTA;
     }
 }

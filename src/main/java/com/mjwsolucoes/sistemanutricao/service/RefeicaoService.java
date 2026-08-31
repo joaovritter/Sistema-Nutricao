@@ -66,14 +66,18 @@ public class RefeicaoService {
     }
 
     /**
-     * Só quem criou a refeicao (ou um admin) pode editá-la. Refeicoes antigas,
-     * sem dono registrado, continuam editáveis por qualquer AUTOR.
+     * Dono sempre edita a refeicao que criou. Nutricionista e admin também
+     * editam refeicoes de outros usuários (o nutricionista corrige refeições
+     * de estudantes, como um professor). Estudante só edita o que ele mesmo
+     * criou. Refeicoes antigas, sem dono registrado, continuam editáveis por
+     * qualquer AUTOR.
      */
     private void validarPermissaoEdicao(Refeicao refeicao, String username) {
         if (refeicao.getCriadoPor() == null) return;
         User usuario = buscarUsuario(username);
         boolean dono = refeicao.getCriadoPor().getId().equals(usuario.getId());
-        if (!dono && usuario.getRole() != Role.ADMIN) {
+        boolean pode = dono || usuario.getRole() == Role.ADMIN || usuario.getRole() == Role.NUTRICIONISTA;
+        if (!pode) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN,
                     "Você só pode editar refeições criadas por você.");
         }
